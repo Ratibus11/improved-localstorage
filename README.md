@@ -46,7 +46,7 @@ Get an element from the local storage.
 #### Throw
 
 -   `RangeError` - If `key` is not provided.
--   `TypeError` - If the entry's cannot be parsed as JSON.
+-   `TypeError` - If the entry's value cannot be parsed as JSON.
 
 #### Examples
 
@@ -189,10 +189,10 @@ clean(); // false
 
 #### Content
 
-|       Name       |  Type   |    Facultative     | Description                                                                               |
-| :--------------: | :-----: | :----------------: | ----------------------------------------------------------------------------------------- |
-|    `destroy`     | boolean | :white_check_mark: | If `true`, will destroy the entry after calling this function (even if an error occured). |
-| `destroyOnError` | boolean | :white_check_mark: | If `true`, will destroy the entry only if an error occured.                               |
+|       Name       |  Type   |    Facultative     | Description                                                                              |
+| :--------------: | :-----: | :----------------: | ---------------------------------------------------------------------------------------- |
+|    `destroy`     | boolean | :white_check_mark: | If `true`, will destroy the entry after calling this function (even if an error occured) |
+| `destroyOnError` | boolean | :white_check_mark: | If `true`, will destroy the entry only if an error occured                               |
 
 ## Contributing
 
