@@ -1,8 +1,8 @@
 # better-localstorage
 
-## :pencil: Table of content
+## Table of content
 
--   [Installation](#inboxtray-installation)
+-   [Installation](#installation)
 -   Usage
     -   Functions
         -   [`get(key[, options]`](#getkey-options)
@@ -12,10 +12,10 @@
         -   [`clean()`](#clean)
     -   Types
         -   [`GetOptions`](#getoptions)
--   [Contributing](#bustsinsilhouette-contributing)
--   [License](#scroll-license)
+-   [Contributing](#contributing)
+-   [License](#license)
 
-## :inbox_tray: Installation
+## Installation
 
 This module is published through the [NPM registry](https://npmjs.com). You can easly install it with the following command:
 
@@ -23,7 +23,7 @@ This module is published through the [NPM registry](https://npmjs.com). You can 
 npm i better-localstorage
 ```
 
-## :bookmark_tabs: Usage
+## Usage
 
 This module allow to interact with client's localstorage and store JSON-parsed data, so each entry can contains JSON-like data.
 
@@ -194,11 +194,11 @@ clean(); // false
 |    `destroy`     | boolean | :white_check_mark: | If `true`, will destroy the entry after calling this function (even if an error occured). |
 | `destroyOnError` | boolean | :white_check_mark: | If `true`, will destroy the entry only if an error occured.                               |
 
-## :busts_in_silhouette: Contributing
+## Contributing
 
 Feel free to [open an issue](https://github.com/Ratibus11/npm-localstorage/issues/new) if you want to report bugs or discuss about suggestions!
 
-## :scroll: License
+## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
