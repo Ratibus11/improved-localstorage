@@ -196,7 +196,7 @@ clean(); // false
 
 ## Contributing
 
-Feel free to [open an issue](https://github.com/Ratibus11/npm-localstorage/issues/new) if you want to report bugs or discuss about suggestions!
+Feel free to [open an issue](https://github.com/Ratibus11/better-localstorage/issues/new) if you want to report bugs or discuss about suggestions!
 
 ## License
 
