@@ -200,6 +200,6 @@ Feel free to [open an issue](https://github.com/Ratibus11/better-localstorage/is
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](https://github.com/Ratibus11/better-localstorage/blob/v1/LICENSE)
 
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>
