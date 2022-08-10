@@ -1,0 +1,28 @@
+{
+	"name": "better-localstorage",
+	"displayName": "Better Localstorage",
+	"description": "NPM package for interactions with localstorage with JSON-like data.",
+	"keywords": [
+		"localstorage",
+		"json"
+	],
+	"license": "SEE IN LICENCE",
+	"author": {
+		"email": "bastian.lucas@icloud.com",
+		"name": "Lucas Bastian",
+		"url": "https://linktr.ee/ratibus11"
+	},
+	"scripts": {
+		"build": "gulp build",
+		"dev": "tsc --project tsconfig.json --watch",
+		"test": "jsdoc2md types/main.d.ts"
+	},
+	"devDependencies": {
+		"glob": "^8.0.3",
+		"gulp": "^4.0.2",
+		"gulp-minify": "^3.1.0",
+		"gulp-rename": "^2.0.0",
+		"gulp-typescript": "^6.0.0-alpha.1",
+		"merge2": "^1.4.1"
+	}
+}

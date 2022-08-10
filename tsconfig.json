@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "ES6",
+		"module": "ES2022",
+
+		"baseUrl": ".",
+		"outDir": "app",
+
+		"declaration": true,
+		"declarationMap": false,
+		"declarationDir": "types",
+		"removeComments": false,
+
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noImplicitUseStrict": true
+	},
+	"include": ["src/**/*.ts"]
+}
