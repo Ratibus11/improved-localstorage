@@ -6,7 +6,7 @@
  * @throw `TypeError` if the entry's value cannot be parsed.
  */
 function get(key: string, options?: GetOptions): Object | undefined | never {
-	if (!key) throw new RangeError("No key provided");
+	if (!key) throw new RangeError("No key provided.");
 
 	const content = localStorage.getItem(key);
 
@@ -33,9 +33,9 @@ interface GetOptions {
 	destroyOnError?: boolean;
 }
 
-function set(key: string, value: Object): void {
-	if (!key) throw new RangeError("No key provided");
-	if (!value) throw new RangeError("No value provided");
+function set(key: string, value: Object): void | never {
+	if (!key) throw new RangeError("No key provided.");
+	if (!value) throw new RangeError("No value provided.");
 
 	try {
 		localStorage.setItem(key, JSON.stringify(value));
@@ -44,13 +44,18 @@ function set(key: string, value: Object): void {
 	}
 }
 
-function exists(key: string): boolean {
+function exists(key: string): boolean | never {
+	if (!key) throw new RangeError("No key provided.");
+
 	return localStorage.getItem(key) !== null;
 }
 
-function destroy(key: string): boolean {
+function destroy(key: string): boolean | never {
+	if (!key) throw new RangeError("No key provided.");
+
 	const existingEntry = exists(key);
 	localStorage.removeItem(key);
+
 	return existingEntry;
 }
 

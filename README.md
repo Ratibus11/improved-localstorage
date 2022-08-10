@@ -45,6 +45,7 @@ Get an element from the local storage.
 
 #### Throw
 
+-   `RangeError` - If `key` is not provided.
 -   `TypeError` - If the entry's cannot be parsed as JSON.
 
 #### Examples
@@ -81,6 +82,7 @@ Set an element to the local storage.
 
 #### Throw
 
+-   `RangeError` - If `key` or `value` is not provided.
 -   `TypeError` if the value cannot be strigified as JSON.
 
 #### Examples
@@ -111,6 +113,10 @@ Check if an entry exists in the local storage.
 | :---: | :----: | :---------: | ------------ |
 | `key` | string |             | Entry's name |
 
+#### Throw
+
+-   `RangeError` - If `key` is not provided.
+
 #### Examples
 
 ```ts
@@ -136,6 +142,10 @@ Remove an entry from the local storage.
 | Name  |  Type  | Facultative | Description  |
 | :---: | :----: | :---------: | ------------ |
 | `key` | string |             | Entry's name |
+
+#### Throw
+
+-   `RangeError` - If `key` is not provided.
 
 #### Examples
 
