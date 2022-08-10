@@ -1,8 +1,8 @@
 # better-localstorage
 
-## Table of content
+## :pencil: Table of content
 
--   [Installation](#installation)
+-   [Installation](#inboxtray-installation)
 -   Usage
     -   Functions
         -   [`get(key[, options]`](#getkey-options)
@@ -12,10 +12,10 @@
         -   [`clean()`](#clean)
     -   Types
         -   [`GetOptions`](#getoptions)
--   [Contributing](#contributing)
--   [License](#license)
+-   [Contributing](#bustsinsilhouette-contributing)
+-   [License](#scroll-license)
 
-## Installation
+## :inbox_tray: Installation
 
 This module is published through the [NPM registry](https://npmjs.com). You can easly install it with the following command:
 
@@ -184,11 +184,11 @@ clean(); // false
 |    `destroy`     | boolean | :white_check_mark: | If `true`, will destroy the entry after calling this function (even if an error occured). |
 | `destroyOnError` | boolean | :white_check_mark: | If `true`, will destroy the entry only if an error occured.                               |
 
-## Contributing
+## :busts_in_silhouette: Contributing
 
 Feel free to [open an issue](https://github.com/Ratibus11/npm-localstorage/issues/new) if you want to report bugs or discuss about suggestions!
 
-## License
+## :scroll: License
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
