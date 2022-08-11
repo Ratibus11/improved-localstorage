@@ -15,8 +15,6 @@
 	},
 	"scripts": {
 		"build": "gulp build",
-		"dev": "tsc --project tsconfig.json --watch",
-		"test": "jsdoc2md types/main.d.ts"
 	},
 	"devDependencies": {
 		"glob": "^8.0.3",
