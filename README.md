@@ -21,7 +21,7 @@ A better way to interact and store data in a browser's localstorage.
 This module is published through the [NPM registry](https://npmjs.com). You can easly install it with the following command:
 
 ```
-npm i better-localstorage
+npm i improved-localstorage
 ```
 
 ## Usage
