@@ -151,13 +151,13 @@ Remove an entry from the local storage.
 
 ```ts
 // { test: "hi", something: "everyone" }
-exists("test"); // true
+destroy("test"); // true
 // { something: "everyone" }
 ```
 
 ```ts
 // { test: "hi" }
-exists("something"); // false
+destroy("something"); // false
 // { test: "hi" }
 ```
 
