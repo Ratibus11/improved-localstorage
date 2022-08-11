@@ -10,7 +10,7 @@
 		"node_modules": true,
 		"package-lock.json": true,
 
-		"app": false,
+		"app": true,
 		"types": true
 	}
 }
