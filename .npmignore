@@ -1,0 +1,9 @@
+# Project
+.vscode
+.github
+.gitignore
+
+# Project
+src
+tsconfig.json
+gulpfile.js
