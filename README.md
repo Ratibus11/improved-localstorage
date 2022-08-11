@@ -9,7 +9,7 @@
         -   [`set(key, value)`](#setkey-value)
         -   [`exists(key)`](#existskey)
         -   [`destroy(key)`](#destroykey)
-        -   [`clean()`](#clean)
+        -   [`clear()`](#clear)
     -   Types
         -   [`GetOptions`](#getoptions)
 -   [Contributing](#contributing)
@@ -161,7 +161,7 @@ destroy("something"); // false
 // { test: "hi" }
 ```
 
-### `clean()`
+### `clear()`
 
 Clear all entries from the local storage.
 
@@ -173,13 +173,13 @@ Clear all entries from the local storage.
 
 ```ts
 // { test: "hi", something: "everyone" }
-clean(); // true
+clear(); // true
 // {  }
 ```
 
 ```ts
 // {  }
-clean(); // false
+clear(); // false
 // {  }
 ```
 

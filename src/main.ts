@@ -119,18 +119,18 @@ function destroy(key: string): boolean | never {
  * @returns `boolean` - `true` if the entries have been removed by the function's call, `false` otherwise.
  * @example
  * // { test: "hi", something: "everyone" }
- * clean(); // true
+ * clear(); // true
  * // {  }
  * @example
  * // {  }
- * clean(); // false
+ * clear(); // false
  * // {  }
  */
-function clean(): boolean {
+function clear(): boolean {
 	const existingEntries = localStorage.length > 0;
 
 	localStorage.clear();
 	return existingEntries;
 }
 
-export { get, set, exists, destroy, clean };
+export { get, set, exists, destroy, clear };
