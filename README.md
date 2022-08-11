@@ -1,4 +1,4 @@
-# better-localstorage - v1.1.1
+# better-localstorage
 
 ## Table of content
 
