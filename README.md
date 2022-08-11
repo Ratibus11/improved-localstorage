@@ -1,4 +1,4 @@
-# better-localstorage
+# improved-localstorage
 A better way to interact and store data in a browser's localstorage.
 
 ## Table of content
