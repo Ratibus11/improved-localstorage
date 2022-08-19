@@ -26,7 +26,7 @@ npm i improved-localstorage
 
 ## Usage
 
-This module allow to interact with client's localstorage and store JSON-parsed data, so each entry can contains JSON-like data.
+This module allows to interact with the client's localstorage and store JSON-parsed data, so each entry can contain JSON-like data.
 
 ### `get(key[, options])`
 
