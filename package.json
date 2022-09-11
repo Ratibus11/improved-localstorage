@@ -13,6 +13,8 @@
 		"name": "Lucas Bastian",
 		"url": "https://linktr.ee/ratibus11"
 	},
+	"main": "app/main.js",
+	"types": "types/main.d.ts",
 	"scripts": {
 		"build": "gulp build"
 	},
