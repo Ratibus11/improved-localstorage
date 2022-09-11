@@ -11,7 +11,7 @@
 	"author": {
 		"email": "bastian.lucas@icloud.com",
 		"name": "Lucas Bastian",
-		"url": "https://linktr.ee/ratibus11"
+		"url": "https://ratibus11.github.io"
 	},
 	"main": "app/main.js",
 	"types": "types/main.d.ts",
