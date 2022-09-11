@@ -1,10 +1,12 @@
 # improved-localstorage
-A better way to interact and store data in a browser's localstorage.
+
+A better way to interact and store data in a `localstorage` container.
 
 ## Table of content
 
 -   [Installation](#installation)
 -   Usage
+
     -   Functions
         -   [`get(key[, options]`](#getkey-options)
         -   [`set(key, value)`](#setkey-value)
@@ -13,6 +15,12 @@ A better way to interact and store data in a browser's localstorage.
         -   [`clear()`](#clear)
     -   Types
         -   [`GetOptions`](#getoptions)
+    -   Errors
+        -   [`CannotParseJson`](#cannotparsejsoncontent)
+        -   [`CannotStringifyJson`](#cannotstringifyjsoncontent)
+        -   [`MissingContent`](#missingcontent)
+        -   [`MissingKey`](#missingkey)
+
 -   [Contributing](#contributing)
 -   [License](#license)
 
@@ -26,7 +34,7 @@ npm i improved-localstorage
 
 ## Usage
 
-This module allows to interact with the client's localstorage and store JSON-parsed data, so each entry can contain JSON-like data.
+This module allows to interact with the client's local storage and store JSON-strigified data, so each entry can contain JSON-like data.
 
 ### `get(key[, options])`
 
@@ -41,13 +49,13 @@ Get an element from the local storage.
 
 |   Name    |           Type            |    Facultative     | Description      |
 | :-------: | :-----------------------: | :----------------: | ---------------- |
-|   `key`   |          string           |                    | Entry's name     |
+|   `key`   |          string           |        :x:         | Entry's name     |
 | `options` | [GetOptions](#getoptions) | :white_check_mark: | Getter's options |
 
 #### Throw
 
--   `RangeError` - If `key` is not provided.
--   `TypeError` - If the entry's value cannot be parsed as JSON.
+-   [`MissingKey`](#missingkey) - If `key` is not provided.
+-   [`CannotParseJson`](#cannotparsejson) - If the entry's value cannot be parsed as JSON.
 
 #### Examples
 
@@ -78,13 +86,14 @@ Set an element to the local storage.
 
 |  Name   | Facultative | Facultative | Description                        |
 | :-----: | :---------: | :---------: | ---------------------------------- |
-|  `key`  |   string    |             | Entry's name                       |
-| `value` |   Object    |             | Content to set in the localstorage |
+|  `key`  |   string    |     :x:     | Entry's name                       |
+| `value` |   Object    |     :x:     | Content to set in the localstorage |
 
 #### Throw
 
--   `RangeError` - If `key` or `value` is not provided.
--   `TypeError` if the value cannot be strigified as JSON.
+-   [`MissingKey`](#missingkey) - If `key` is not provided.
+-   [`MissingContent`](#missingcontent) - If `value` is not provided.
+-   [`CannotStringifyJson`](#cannotstringifyjson) - If `value` cannot be strigified as JSON.
 
 #### Examples
 
@@ -112,11 +121,11 @@ Check if an entry exists in the local storage.
 
 | Name  |  Type  | Facultative | Description  |
 | :---: | :----: | :---------: | ------------ |
-| `key` | string |             | Entry's name |
+| `key` | string |     :x:     | Entry's name |
 
 #### Throw
 
--   `RangeError` - If `key` is not provided.
+-   [`MissingKey`](#missingkey) - If `key` is not provided.
 
 #### Examples
 
@@ -142,11 +151,11 @@ Remove an entry from the local storage.
 
 | Name  |  Type  | Facultative | Description  |
 | :---: | :----: | :---------: | ------------ |
-| `key` | string |             | Entry's name |
+| `key` | string |     :x:     | Entry's name |
 
 #### Throw
 
--   `RangeError` - If `key` is not provided.
+-   [`MissingKey`](#missingkey) - If `key` is not provided.
 
 #### Examples
 
@@ -184,6 +193,8 @@ clear(); // false
 // {  }
 ```
 
+## Types
+
 ### `GetOptions`
 
 [`get()`](#getkey-options) options.
@@ -195,12 +206,30 @@ clear(); // false
 |    `destroy`     | boolean | :white_check_mark: | If `true`, will destroy the entry after calling this function (even if an error occured) |
 | `destroyOnError` | boolean | :white_check_mark: | If `true`, will destroy the entry only if an error occured                               |
 
+## Errors
+
+### `CannotParseJson`
+
+Throw when a string cannot be parsed as JSON.
+
+### `CannotStringifyJson`
+
+Thrown when a JSON cannot be strigified.
+
+### `MissingContent`
+
+Thrown when an entry's content is not provided.
+
+### `MissingKey`
+
+Thrown when an entry's key name is not provided.
+
 ## Contributing
 
 Feel free to [open an issue](https://github.com/Ratibus11/improved-localstorage/issues/new) if you want to report bugs or discuss about suggestions!
 
 ## License
 
-[MIT](https://github.com/Ratibus11/better-localstorage/blob/v1/LICENSE)
+This package is published under the [MIT](https://github.com/Ratibus11/better-localstorage/blob/v1/LICENSE) license.
 
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>

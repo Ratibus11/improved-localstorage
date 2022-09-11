@@ -1,3 +1,10 @@
+import {
+	CannotParseJson,
+	CannotStringifyJson,
+	MissingContent,
+	MissingKey,
+} from "./exceptions";
+
 /**
  * Get an element from the local storage.
  * @param key Entry's name.
@@ -6,8 +13,8 @@
  * - `Object` - Entry's content if it exists and its content as been parsed.
  * - `undefined` - If the entry doesn't exists.
  * @throw
- * - `RangeError` - If `key` is not provided.
- * - `TypeError` - If the entry's value cannot be parsed as JSON.
+ * - `MissingKey`      - If `key` is not provided.
+ * - `CannotParseJson` - If the entry's value cannot be parsed as JSON.
  * @example
  * // { test: { something: true } }
  * get("test"); // { something: true }
@@ -19,7 +26,7 @@
  * get("test"); // 1
  */
 function get(key: string, options?: GetOptions): Object | undefined | never {
-	if (!key) throw new RangeError("No key provided.");
+	if (!key) throw new MissingKey();
 
 	const content = localStorage.getItem(key);
 
@@ -29,9 +36,7 @@ function get(key: string, options?: GetOptions): Object | undefined | never {
 		return content ? JSON.parse(content) : undefined;
 	} catch {
 		if (options?.destroyOnError) localStorage.removeItem(key);
-		throw new TypeError(
-			`Cannot parse content from localstorage: ${content}`
-		);
+		throw new CannotParseJson(content);
 	}
 }
 
@@ -51,8 +56,9 @@ interface GetOptions {
  * @param key Entry's name.
  * @param value Content to set in the localstorage.
  * @throw
- * - `RangeError` - If `key` or `value` is not provided.
- * - `TypeError` if the value cannot be strigified as JSON.
+ * - `MissingKey`          - If `key` is not provided.
+ * - `MissingContent`      - If `value` is not provided.
+ * - `CannotStringifyJson` - If `value` cannot be strigified as JSON.
  * @example
  * // { test: { something: true } }
  * set("test", true);
@@ -63,13 +69,13 @@ interface GetOptions {
  * // { test: { something: true }, hi: "everyone" }
  */
 function set(key: string, value: Object): void | never {
-	if (!key) throw new RangeError("No key provided.");
-	if (!value) throw new RangeError("No value provided.");
+	if (!key) throw new MissingKey();
+	if (!value) throw new MissingContent();
 
 	try {
 		localStorage.setItem(key, JSON.stringify(value));
 	} catch {
-		throw new TypeError(`Cannot parse content to localstorage: ${value}`);
+		throw new CannotStringifyJson(value);
 	}
 }
 
@@ -77,7 +83,7 @@ function set(key: string, value: Object): void | never {
  * Check if an entry exists in the local storage.
  * @param key Entry's name.
  * @returns `boolean` - `true` if the entry exists, `false` otherwise.
- * @throw `RangeError` - If `key` is not provided.
+ * @throw `MissingKey` - If `key` is not provided.
  * @example
  * // { test: "hi" }
  * exists("test"); // true
@@ -86,7 +92,7 @@ function set(key: string, value: Object): void | never {
  * exists("something"); // false
  */
 function exists(key: string): boolean | never {
-	if (!key) throw new RangeError("No key provided.");
+	if (!key) throw new MissingKey();
 
 	return localStorage.getItem(key) !== null;
 }
@@ -95,7 +101,7 @@ function exists(key: string): boolean | never {
  * Remove an entry from the local storage.
  * @param key Entry's name.
  * @returns `boolean` - `true` if the entry has been removed by the function's call, `false` otherwise.
- * @throw `RangeError` - If `key` is not provided.
+ * @throw `MissingKey` - If `key` is not provided.
  * @example
  * // { test: "hi", something: "everyone" }
  * exists("test"); // true
@@ -106,7 +112,7 @@ function exists(key: string): boolean | never {
  * // { test: "hi" }
  */
 function destroy(key: string): boolean | never {
-	if (!key) throw new RangeError("No key provided.");
+	if (!key) throw new MissingKey();
 
 	const existingEntry = exists(key);
 	localStorage.removeItem(key);
