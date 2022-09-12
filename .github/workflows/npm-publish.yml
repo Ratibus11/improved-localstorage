@@ -18,7 +18,7 @@ jobs:
             - run: npm i
             - run: npm run build
 
-    publish-npm:
+    publish:
         needs: build
         runs-on: ubuntu-latest
         steps:
