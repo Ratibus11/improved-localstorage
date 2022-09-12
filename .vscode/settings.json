@@ -11,6 +11,7 @@
 		"package-lock.json": true,
 
 		"app": true,
-		"types": true
+		"types": true,
+		"tests/localstorage": true
 	}
 }
