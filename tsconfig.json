@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "ES6",
-		"module": "ES2022",
+		"module": "CommonJS",
 
 		"baseUrl": ".",
 		"outDir": "app",
