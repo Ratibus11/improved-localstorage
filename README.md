@@ -15,7 +15,7 @@ A better way to interact and store data in a `localstorage` container.
         -   [`clear()`](#clear)
     -   Types
         -   [`GetOptions`](#getoptions)
-    -   Errors
+    -   Errors (`errors` namespace)
         -   [`CannotParseJson`](#cannotparsejsoncontent)
         -   [`CannotStringifyJson`](#cannotstringifyjsoncontent)
         -   [`MissingContent`](#missingcontent)
@@ -206,7 +206,7 @@ clear(); // false
 |    `destroy`     | boolean | :white_check_mark: | If `true`, will destroy the entry after calling this function (even if an error occured) |
 | `destroyOnError` | boolean | :white_check_mark: | If `true`, will destroy the entry only if an error occured                               |
 
-## Errors
+## Errors (`errors` namespace)
 
 ### `CannotParseJson`
 

@@ -1,9 +1,15 @@
-import {
-	CannotParseJson,
-	CannotStringifyJson,
-	MissingContent,
-	MissingKey,
-} from "./exceptions";
+import * as errors from "./errors";
+
+interface GetOptions {
+	/**
+	 * If `true`, will destroy the entry after calling this function (even if an error occured).
+	 */
+	destroy?: boolean;
+	/**
+	 * If `true`, will destroy the entry only if an error occured.
+	 */
+	destroyOnError?: boolean;
+}
 
 /**
  * Get an element from the local storage.
@@ -26,7 +32,7 @@ import {
  * get("test"); // 1
  */
 function get(key: string, options?: GetOptions): Object | undefined | never {
-	if (!key) throw new MissingKey();
+	if (!key) throw new errors.MissingKey();
 
 	const content = localStorage.getItem(key);
 
@@ -36,19 +42,8 @@ function get(key: string, options?: GetOptions): Object | undefined | never {
 		return content ? JSON.parse(content) : undefined;
 	} catch {
 		if (options?.destroyOnError) localStorage.removeItem(key);
-		throw new CannotParseJson(content);
+		throw new errors.CannotParseJson(content);
 	}
-}
-
-interface GetOptions {
-	/**
-	 * If `true`, will destroy the entry after calling this function (even if an error occured).
-	 */
-	destroy?: boolean;
-	/**
-	 * If `true`, will destroy the entry only if an error occured.
-	 */
-	destroyOnError?: boolean;
 }
 
 /**
@@ -69,13 +64,13 @@ interface GetOptions {
  * // { test: { something: true }, hi: "everyone" }
  */
 function set(key: string, value: Object): void | never {
-	if (!key) throw new MissingKey();
-	if (!value) throw new MissingContent();
+	if (!key) throw new errors.MissingKey();
+	if (!value) throw new errors.MissingContent();
 
 	try {
 		localStorage.setItem(key, JSON.stringify(value));
 	} catch {
-		throw new CannotStringifyJson(value);
+		throw new errors.CannotStringifyJson(value);
 	}
 }
 
@@ -92,7 +87,7 @@ function set(key: string, value: Object): void | never {
  * exists("something"); // false
  */
 function exists(key: string): boolean | never {
-	if (!key) throw new MissingKey();
+	if (!key) throw new errors.MissingKey();
 
 	return localStorage.getItem(key) !== null;
 }
@@ -112,7 +107,7 @@ function exists(key: string): boolean | never {
  * // { test: "hi" }
  */
 function destroy(key: string): boolean | never {
-	if (!key) throw new MissingKey();
+	if (!key) throw new errors.MissingKey();
 
 	const existingEntry = exists(key);
 	localStorage.removeItem(key);
@@ -139,4 +134,4 @@ function clear(): boolean {
 	return existingEntries;
 }
 
-export { get, set, exists, destroy, clear };
+export { get, set, exists, destroy, clear, GetOptions, errors };
