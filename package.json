@@ -16,14 +16,23 @@
 	"main": "app/main.js",
 	"types": "types/main.d.ts",
 	"scripts": {
-		"build": "gulp build"
+		"build": "gulp build",
+		"test": "ts-mocha -p tsconfig.json tests/**/*.ts"
 	},
 	"devDependencies": {
+		"@types/chai": "^4.3.3",
+		"@types/mocha": "^9.1.1",
+		"@types/node": "^18.7.16",
+		"chai": "^4.3.6",
+		"deep-eql": "^4.1.0",
 		"glob": "^8.0.3",
 		"gulp": "^4.0.2",
 		"gulp-minify": "^3.1.0",
 		"gulp-rename": "^2.0.0",
 		"gulp-typescript": "^6.0.0-alpha.1",
-		"merge2": "^1.4.1"
+		"merge2": "^1.4.1",
+		"node-localstorage": "^2.2.1",
+		"rewire": "^6.0.0",
+		"ts-mocha": "^10.0.0"
 	}
 }

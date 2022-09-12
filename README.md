@@ -42,20 +42,21 @@ Get an element from the local storage.
 
 #### Returns
 
--   `Object` - Entry's content if it exists and its content as been parsed.
+-   `Object` - Entry's key if it exists and its content as been parsed.
 -   `undefined` - If the entry doesn't exists.
 
 #### Parameters
 
 |   Name    |           Type            |    Facultative     | Description      |
 | :-------: | :-----------------------: | :----------------: | ---------------- |
-|   `key`   |          string           |        :x:         | Entry's name     |
+|   `key`   |          string           |        :x:         | Entry's key      |
 | `options` | [GetOptions](#getoptions) | :white_check_mark: | Getter's options |
 
 #### Throw
 
 -   [`MissingKey`](#missingkey) - If `key` is not provided.
--   [`CannotParseJson`](#cannotparsejson) - If the entry's value cannot be parsed as JSON.
+-   [`KeyNotString`](#keynotstring) - If `key` is not a string.
+-   [`CannotParseJson`](#cannotparsejson) - If the entry's key value cannot be parsed as JSON.
 
 #### Examples
 
@@ -86,14 +87,16 @@ Set an element to the local storage.
 
 |  Name   | Facultative | Facultative | Description                        |
 | :-----: | :---------: | :---------: | ---------------------------------- |
-|  `key`  |   string    |     :x:     | Entry's name                       |
+|  `key`  |   string    |     :x:     | Entry's key                        |
 | `value` |   Object    |     :x:     | Content to set in the localstorage |
 
 #### Throw
 
--   [`MissingKey`](#missingkey) - If `key` is not provided.
+-   [`MissingKey`](#missingkey) - If `key` is not provided (equal to `if (!key)`).
+-   [`KeyNotString`](#keynotstring) - If `key` is not a string.
 -   [`MissingContent`](#missingcontent) - If `value` is not provided.
 -   [`CannotStringifyJson`](#cannotstringifyjson) - If `value` cannot be strigified as JSON.
+-   [`UndefinedStringified`](#undefinedstringified) - If the `JSON.stringify`'s result is equal to `undefined`.
 
 #### Examples
 
@@ -119,13 +122,14 @@ Check if an entry exists in the local storage.
 
 #### Parameters
 
-| Name  |  Type  | Facultative | Description  |
-| :---: | :----: | :---------: | ------------ |
-| `key` | string |     :x:     | Entry's name |
+| Name  |  Type  | Facultative | Description |
+| :---: | :----: | :---------: | ----------- |
+| `key` | string |     :x:     | Entry's key |
 
 #### Throw
 
--   [`MissingKey`](#missingkey) - If `key` is not provided.
+-   [`MissingKey`](#missingcontent) - If `key` is not provided (equal to `if (!key)`).
+-   [`KeyNotString`](#keynotstring) - If `key` is not a string.
 
 #### Examples
 
@@ -149,13 +153,14 @@ Remove an entry from the local storage.
 
 #### Parameters
 
-| Name  |  Type  | Facultative | Description  |
-| :---: | :----: | :---------: | ------------ |
-| `key` | string |     :x:     | Entry's name |
+| Name  |  Type  | Facultative | Description |
+| :---: | :----: | :---------: | ----------- |
+| `key` | string |     :x:     | Entry's key |
 
 #### Throw
 
--   [`MissingKey`](#missingkey) - If `key` is not provided.
+-   [`MissingKey`](#missingkey) - If `key` is not provided (equal to `if (!key)`).
+-   [`KeyNotString`](#keynotstring) - If `key` is not a string.
 
 #### Examples
 
@@ -216,13 +221,21 @@ Throw when a string cannot be parsed as JSON.
 
 Thrown when a JSON cannot be strigified.
 
+### `KeyNotString`
+
+Throw when an entry's key is not a string.
+
 ### `MissingContent`
 
 Thrown when an entry's content is not provided.
 
 ### `MissingKey`
 
-Thrown when an entry's key name is not provided.
+Thrown when an entry's key is not provided.
+
+### `UndefinedStringified`
+
+Throw when a strigified data is equal to `undefined`.
 
 ## Contributing
 

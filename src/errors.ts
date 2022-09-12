@@ -10,21 +10,31 @@ class MissingArgument extends Error {
 }
 
 /**
- * Missing entry's key name error.
+ * Missing Entry's key error.
  */
 class MissingKey extends MissingArgument {
 	constructor() {
-		super("Entry's key name");
+		super("Entry's key");
 		this.name = "MissingKey";
 	}
 }
 
 /**
- * Missing entry's content error.
+ * Entry's key is not a string
+ */
+class KeyNotString extends TypeError {
+	constructor() {
+		super("Entry's key must be a string.");
+		this.name = "KeyNotString";
+	}
+}
+
+/**
+ * Missing Entry's key content error.
  */
 class MissingContent extends MissingArgument {
 	constructor() {
-		super("Entry's content");
+		super("Entry's key content");
 		this.name = "MissingContent";
 	}
 }
@@ -62,4 +72,28 @@ class CannotParseJson extends JsonError {
 	}
 }
 
-export { MissingKey, MissingContent, CannotStringifyJson, CannotParseJson };
+/**
+ * Error when the stringify result is equal to 'undefined'
+ * @param content JSON tried to parse
+ */
+class UndefinedStringified extends JsonError {
+	constructor(content: Object) {
+		try {
+			super(`JSON.strigify result is 'undefined' : ${content}`);
+		} catch {
+			super(
+				`JSON.strigify result is 'undefined'. Original value cannot be displayed in string.`
+			);
+		}
+		this.name = "UndefinedStringified";
+	}
+}
+
+export {
+	MissingKey,
+	KeyNotString,
+	MissingContent,
+	CannotStringifyJson,
+	CannotParseJson,
+	UndefinedStringified,
+};

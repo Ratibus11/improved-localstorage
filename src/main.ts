@@ -13,14 +13,15 @@ interface GetOptions {
 
 /**
  * Get an element from the local storage.
- * @param key Entry's name.
+ * @param key Entry's key.
  * @param options Getter's options.
  * @returns
- * - `Object` - Entry's content if it exists and its content as been parsed.
+ * - `Object` - Entry's key if it exists and its content as been parsed.
  * - `undefined` - If the entry doesn't exists.
  * @throw
- * - `MissingKey`      - If `key` is not provided.
- * - `CannotParseJson` - If the entry's value cannot be parsed as JSON.
+ * - `MissingKey`      - If `key` is not provided (equal to `if (!key)`).
+ * - `KeyNotString`    - If `key` is not a string.
+ * - `CannotParseJson` - If the Entry's content cannot be parsed as JSON.
  * @example
  * // { test: { something: true } }
  * get("test"); // { something: true }
@@ -32,7 +33,7 @@ interface GetOptions {
  * get("test"); // 1
  */
 function get(key: string, options?: GetOptions): Object | undefined | never {
-	if (!key) throw new errors.MissingKey();
+	verifyKey(key);
 
 	const content = localStorage.getItem(key);
 
@@ -48,12 +49,15 @@ function get(key: string, options?: GetOptions): Object | undefined | never {
 
 /**
  * Set an element to the local storage.
- * @param key Entry's name.
+ * @param key Entry's key.
  * @param value Content to set in the localstorage.
  * @throw
- * - `MissingKey`          - If `key` is not provided.
- * - `MissingContent`      - If `value` is not provided.
- * - `CannotStringifyJson` - If `value` cannot be strigified as JSON.
+ * - `MissingKey`           - If `key` is not provided (equal to `if (!key)`).
+ * - `KeyNotString`         - If `key` is not a string.
+ * - `MissingContent`       - If `value` is not provided.
+ * - `CannotStringifyJson`  - If `value` cannot be strigified as JSON.
+ * - `UndefinedStringified` - If the `JSON.stringify`'s result is equal to `undefined`.
+ *
  * @example
  * // { test: { something: true } }
  * set("test", true);
@@ -64,21 +68,28 @@ function get(key: string, options?: GetOptions): Object | undefined | never {
  * // { test: { something: true }, hi: "everyone" }
  */
 function set(key: string, value: Object): void | never {
-	if (!key) throw new errors.MissingKey();
-	if (!value) throw new errors.MissingContent();
+	verifyKey(key);
+	if (value === undefined) throw new errors.MissingContent();
 
+	var content;
 	try {
-		localStorage.setItem(key, JSON.stringify(value));
+		content = JSON.stringify(value);
 	} catch {
 		throw new errors.CannotStringifyJson(value);
 	}
+
+	if (!content) throw new errors.UndefinedStringified(value);
+
+	localStorage.setItem(key, content);
 }
 
 /**
  * Check if an entry exists in the local storage.
- * @param key Entry's name.
+ * @param key Entry's key.
  * @returns `boolean` - `true` if the entry exists, `false` otherwise.
- * @throw `MissingKey` - If `key` is not provided.
+ * @throw
+ * - `MissingKey`   - If `key` is not provided (equal to `if (!key)`).
+ * - `KeyNotString` - If `key` is not a string.
  * @example
  * // { test: "hi" }
  * exists("test"); // true
@@ -87,16 +98,18 @@ function set(key: string, value: Object): void | never {
  * exists("something"); // false
  */
 function exists(key: string): boolean | never {
-	if (!key) throw new errors.MissingKey();
+	verifyKey(key);
 
 	return localStorage.getItem(key) !== null;
 }
 
 /**
  * Remove an entry from the local storage.
- * @param key Entry's name.
+ * @param key Entry's key.
  * @returns `boolean` - `true` if the entry has been removed by the function's call, `false` otherwise.
- * @throw `MissingKey` - If `key` is not provided.
+ * @throw
+ * - `MissingKey`   - If `key` is not provided (equal to `if (!key)`).
+ * - `KeyNotString` - If `key` is not a string.
  * @example
  * // { test: "hi", something: "everyone" }
  * exists("test"); // true
@@ -107,7 +120,7 @@ function exists(key: string): boolean | never {
  * // { test: "hi" }
  */
 function destroy(key: string): boolean | never {
-	if (!key) throw new errors.MissingKey();
+	verifyKey(key);
 
 	const existingEntry = exists(key);
 	localStorage.removeItem(key);
@@ -132,6 +145,18 @@ function clear(): boolean {
 
 	localStorage.clear();
 	return existingEntries;
+}
+
+/**
+ * Verify a key's validity
+ * @param key Entry's key.
+ * @throw
+ * - `MissingKey`      - If `key` is not provided (equal to `if (!key)`).
+ * - `KeyNotString`    - If `key` is not a string.
+ */
+function verifyKey(key: string): void | never {
+	if (!key) throw new errors.MissingKey();
+	if (typeof key !== "string") throw new errors.KeyNotString();
 }
 
 export { get, set, exists, destroy, clear, GetOptions, errors };
