@@ -1,5 +1,7 @@
-# Project
+# Editor
 .vscode
+
+# Git
 .github
 .gitignore
 
@@ -7,3 +9,4 @@
 src
 tsconfig.json
 gulpfile.js
+tests
