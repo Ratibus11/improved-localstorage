@@ -24,6 +24,7 @@ A better way to interact and store data in a `localstorage` container.
 -   [API structure](#api-structure)
 -   [Contributing](#contributing)
 -   [License](#license)
+-   [Credits to dependancies](#credits-to-dependancies)
 
 ## Installation
 
@@ -266,5 +267,24 @@ Feel free to [open an issue](https://github.com/Ratibus11/improved-localstorage/
 ## License
 
 This package is published under the [MIT](https://github.com/Ratibus11/better-localstorage/blob/v1/LICENSE) license.
+
+## Credits to dependancies
+
+Using multiple modules:
+
+-   Dependancies:
+    -   _nothing, all made with love_
+-   Development dependancies:
+    -   [`Chai.js`](https://www.npmjs.com/package/chai) - Assertions (tests)
+    -   [`Deep-Eql`](https://www.npmjs.com/package/deep-eql) - Chai.js project for deep and strict objects assertions
+    -   [`Glob`](https://www.npmjs.com/package/glob) - Multiple files selection (build)
+    -   [`gulp`](https://www.npmjs.com/package/gulp) - Tasks runner (build)
+    -   [`gulp-minify`](https://www.npmjs.com/package/gulp-minify) - Gulp plugin for files minifying (build)
+    -   [`gulp-rename`](https://www.npmjs.com/package/gulp-rename) - Gulp plugin for files renaming (build)
+    -   [`gulp-typescript`](https://www.npmjs.com/package/gulp-typescript) - Gulp plugin for Typescript compilation (build)
+    -   [`merge2`](https://www.npmjs.com/package/merge2) - Combine streams (build)
+    -   [`node-localstorage`](https://www.npmjs.com/package/node-localstorage) - Localstorage simulation on Node.js (tests)
+    -   [`rewire`](https://www.npmjs.com/package/rewire) - Access module's private elements (tests)
+    -   [`TS-Mocha`](https://www.npmjs.com/package/ts-mocha) - Typescript version of Mocha (tests)
 
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>
