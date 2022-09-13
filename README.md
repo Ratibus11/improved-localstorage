@@ -266,7 +266,7 @@ Feel free to [open an issue](https://github.com/Ratibus11/improved-localstorage/
 
 ## License
 
-This package is published under the [MIT](https://github.com/Ratibus11/better-localstorage/blob/v1/LICENSE) license.
+This package is published under the [MIT](https://choosealicense.com/licenses/mit/) license.
 
 ## Credits to dependencies
 
