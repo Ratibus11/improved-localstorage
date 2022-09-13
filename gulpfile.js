@@ -12,6 +12,10 @@ const glob = require("glob");
 
 const typescriptProject = gulp_typescript.createProject("tsconfig.json");
 
+/**
+ * Delete build folders (app for compiled TS to JS / types for TS declaration files).
+ * @param {*} callback Callback when the task is done.
+ */
 function clean(callback) {
 	["app", "types"].map((path) => {
 		if (fs.existsSync(path)) fs.rmSync(path, { recursive: true });
@@ -20,7 +24,11 @@ function clean(callback) {
 	callback();
 }
 
-function build(callback) {
+/**
+ * Compile TS to JS in `app` folder and TS declaration files in `types`.
+ * @returns Task pipes
+ */
+function build() {
 	const typescriptResult = typescriptProject.src().pipe(typescriptProject());
 
 	return merge2([
@@ -29,7 +37,11 @@ function build(callback) {
 	]);
 }
 
-function minify(callback) {
+/**
+ * Minify JS build files.
+ * @returns Task pipes.
+ */
+function minify() {
 	return gulp
 		.src("app/**/*.js")
 		.pipe(gulp_minify({ ext: { src: ".js", min: ".min.js" } }))
@@ -50,6 +62,12 @@ function minify(callback) {
 		});
 }
 
+/**
+ * Only delete the build folders
+ */
 gulp.task("clean", gulp.series(clean));
 
+/**
+ * Delete build folders, build and minify the project.
+ */
 gulp.task("build", gulp.series(clean, build, minify));
