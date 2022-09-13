@@ -33,6 +33,14 @@ describe("destroy() - Remove an entry", () => {
 		expect(destroy("notExists")).to.be.false;
 	});
 
+	it("The destroyed element must not exists", () => {
+		localStorage.setItem("test", "");
+
+		destroy("test");
+
+		expect(localStorage.getItem("test")).to.be.null;
+	});
+
 	it("The local storage's length should be reduced by one if an entry has been is deleted", () => {
 		localStorage.setItem("test1", "");
 		localStorage.setItem("test2", "");
