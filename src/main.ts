@@ -37,12 +37,12 @@ function get(key: string, options?: GetOptions): Object | undefined | never {
 
 	const content = localStorage.getItem(key);
 
-	if (options?.destroy) localStorage.removeItem(key);
+	if (options?.destroy) destroy(key);
 
 	try {
 		return content ? JSON.parse(content) : undefined;
 	} catch {
-		if (options?.destroyOnError) localStorage.removeItem(key);
+		if (options?.destroyOnError) destroy(key);
 		throw new errors.CannotParseJson(content);
 	}
 }

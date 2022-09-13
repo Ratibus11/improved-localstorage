@@ -2,7 +2,7 @@
 	"name": "improved-localstorage",
 	"displayName": "Improved Localstorage",
 	"description": "NPM package for interactions with localstorage with JSON-like data.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"keywords": [
 		"localstorage",
 		"json"
