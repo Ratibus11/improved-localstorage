@@ -250,13 +250,13 @@ improved-localstorage
   |- set(key, value)
   |
   \- errors
-       |
-	   |- CannotParseJson
-	   |- CannotStringifyJson
-	   |- KeyNotString
-	   |- MissingContent
-       |- MissingKey
-	   \- UndefinedStringified
+      |
+      |- CannotParseJson
+      |- CannotStringifyJson
+      |- KeyNotString
+      |- MissingContent
+      |- MissingKey
+      \- UndefinedStringified
 ```
 
 ## Contributing
