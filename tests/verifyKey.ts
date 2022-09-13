@@ -2,7 +2,7 @@
 // Assertion
 import { expect } from "chai";
 // Localstorage simulation for Node.js
-import { LocalStorage } from "node-localstorage";
+import { LocalStorage as nodeLocalStorage } from "node-localstorage";
 // Accessing private function
 import * as rewire from "rewire";
 

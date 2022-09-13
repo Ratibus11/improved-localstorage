@@ -3,7 +3,7 @@
 import { expect } from "chai";
 import * as deepEql from "deep-eql";
 // Localstorage simulation for Node.js
-import { LocalStorage } from "node-localstorage";
+import { LocalStorage as nodeLocalStorage } from "node-localstorage";
 
 // Tested function
 import { set } from "../src/main";
@@ -16,7 +16,7 @@ import {
 describe("set() - Set an entry", () => {
 	// Initializing localstorage simulation
 	before(() => {
-		localStorage = new LocalStorage(`${__dirname}/localstorage`);
+		localStorage = new nodeLocalStorage(`${__dirname}/localstorage`);
 	});
 
 	// Empty the localstorage before each test.

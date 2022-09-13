@@ -2,7 +2,7 @@
 // Assertion
 import { expect } from "chai";
 // Localstorage simulation for Node.js
-import { LocalStorage } from "node-localstorage";
+import { LocalStorage as nodeLocalStorage } from "node-localstorage";
 
 // Tested function
 import { clear } from "../src/main";
@@ -10,7 +10,7 @@ import { clear } from "../src/main";
 describe("clear() - Empty the local storage", () => {
 	// Initializing localstorage simulation
 	before(() => {
-		localStorage = new LocalStorage(`${__dirname}/localstorage`);
+		localStorage = new nodeLocalStorage(`${__dirname}/localstorage`);
 	});
 
 	// Empty the localstorage before each test.
