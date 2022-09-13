@@ -24,7 +24,7 @@ A better way to interact and store data in a `localstorage` container.
 -   [API structure](#api-structure)
 -   [Contributing](#contributing)
 -   [License](#license)
--   [Credits to dependancies](#credits-to-dependancies)
+-   [Credits to dependencies](#credits-to-dependencies)
 
 ## Installation
 
@@ -268,13 +268,13 @@ Feel free to [open an issue](https://github.com/Ratibus11/improved-localstorage/
 
 This package is published under the [MIT](https://github.com/Ratibus11/better-localstorage/blob/v1/LICENSE) license.
 
-## Credits to dependancies
+## Credits to dependencies
 
 Using multiple modules:
 
--   Dependancies:
+-   dependencies:
     -   _nothing, all made with love_
--   Development dependancies:
+-   Development dependencies:
     -   [`Chai.js`](https://www.npmjs.com/package/chai) - Assertions (tests)
     -   [`Deep-Eql`](https://www.npmjs.com/package/deep-eql) - Chai.js project for deep and strict objects assertions
     -   [`Glob`](https://www.npmjs.com/package/glob) - Multiple files selection (build)
