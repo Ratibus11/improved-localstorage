@@ -18,7 +18,7 @@
 	"scripts": {
 		"build": "gulp build",
 		"test": "ts-mocha -p tsconfig.json tests/**/*.ts",
-		"prepublishOnly": "npm run build && npm run test"
+		"prepublishOnly": "npm run test && npm run build"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.3.3",
