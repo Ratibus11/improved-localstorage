@@ -5,7 +5,7 @@ A better way to interact and store data in a `localstorage` container.
 ## Table of content
 
 -   [Installation](#installation)
--   Usage
+-   Usage (see API structure [here](#api-structure))
 
     -   Functions
         -   [`get(key[, options]`](#getkey-options)
@@ -15,12 +15,13 @@ A better way to interact and store data in a `localstorage` container.
         -   [`clear()`](#clear)
     -   Types
         -   [`GetOptions`](#getoptions)
-    -   Errors (`errors` namespace)
+    -   Errors
         -   [`CannotParseJson`](#cannotparsejsoncontent)
         -   [`CannotStringifyJson`](#cannotstringifyjsoncontent)
         -   [`MissingContent`](#missingcontent)
         -   [`MissingKey`](#missingkey)
 
+-   [API structure](#api-structure)
 -   [Contributing](#contributing)
 -   [License](#license)
 
@@ -236,6 +237,27 @@ Thrown when an entry's key is not provided.
 ### `UndefinedStringified`
 
 Throw when a strigified data is equal to `undefined`.
+
+## API structure
+
+```
+improved-localstorage
+  |
+  |- clear()
+  |- destroy(key)
+  |- exists(key)
+  |- get(key[, options])
+  |- set(key, value)
+  |
+  \- errors
+       |
+	   |- CannotParseJson
+	   |- CannotStringifyJson
+	   |- KeyNotString
+	   |- MissingContent
+       |- MissingKey
+	   \- UndefinedStringified
+```
 
 ## Contributing
 
