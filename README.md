@@ -8,7 +8,7 @@ A better way to interact and store data in a `localstorage` container.
 -   Usage (see API structure [here](#api-structure))
 
     -   Functions
-        -   [`get(key[, options]`](#getkey-options)
+        -   [`get(key[, options])`](#getkey-options)
         -   [`set(key, value)`](#setkey-value)
         -   [`exists(key)`](#existskey)
         -   [`destroy(key)`](#destroykey)
@@ -63,17 +63,17 @@ Get an element from the local storage.
 #### Examples
 
 ```ts
-// { test: { something: true } }
+// { test: "{\"something\":true}" }
 get("test"); // { something: true }
 ```
 
 ```ts
-// { test: { something: true } }
+// { test: "{\"something\":true}" }
 get("something"); // undefined
 ```
 
 ```ts
-// { test: 1 }
+// { test: "1" }
 get("test"); // 1
 ```
 
@@ -103,15 +103,15 @@ Set an element to the local storage.
 #### Examples
 
 ```ts
-// { test: { something: true } }
+// { test: "{\"something\":true}" }
 set("test", true);
-// { test: true }
+// { test: "true" }
 ```
 
 ```ts
-// { test: { something: true } }
+// { test: "{\"something\":true}" }
 set("something", { hi: "everyone" });
-// { test: { something: true }, something: { hi: "everyone" } }
+// { test: "{\"something\":true}", something: "{\"hi\":\"everyone\"}" }
 ```
 
 ### `exists(key)`
