@@ -48,6 +48,10 @@ describe("set() - Set an entry", () => {
 				value: null,
 				expected: "null",
 			},
+			{
+				value: "test",
+				expected: `\"test\"`,
+			},
 		];
 
 		values.forEach((value) => {

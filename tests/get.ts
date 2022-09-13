@@ -57,6 +57,10 @@ describe("get() - Get an entry", () => {
 				value: "false",
 				expected: false,
 			},
+			{
+				value: `\"test\"`,
+				expected: "test",
+			},
 		];
 
 		values.forEach((value) => {
