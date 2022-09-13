@@ -9,7 +9,6 @@ const gulp_rename = require("gulp-rename");
 const fs = require("fs");
 const merge2 = require("merge2");
 const glob = require("glob");
-const childProcess = require("child_process");
 
 const typescriptProject = gulp_typescript.createProject("tsconfig.json");
 
