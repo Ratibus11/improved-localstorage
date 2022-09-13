@@ -17,7 +17,8 @@
 	"types": "types/main.d.ts",
 	"scripts": {
 		"build": "gulp build",
-		"test": "ts-mocha -p tsconfig.json tests/**/*.ts"
+		"test": "ts-mocha -p tsconfig.json tests/**/*.ts",
+		"prepublishOnly": "npm run build && npm run test"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.3.3",
