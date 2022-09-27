@@ -19,7 +19,7 @@ interface GetOptions {
  * - `Object` - Entry's key if it exists and its content as been parsed.
  * - `undefined` - If the entry doesn't exists.
  * @throw
- * - `MissingKey`      - If `key` is not provided (equal to `if (!key)`).
+ * - `MissingKey`      - If `key` is not provided (undefined, null, empty string, ...).
  * - `KeyNotString`    - If `key` is not a string.
  * - `CannotParseJson` - If the Entry's content cannot be parsed as JSON.
  * @example
@@ -57,7 +57,7 @@ function get(key: string, options?: GetOptions): Object | undefined | never {
  * @param key Entry's key.
  * @param value Content to set in the localstorage.
  * @throw
- * - `MissingKey`           - If `key` is not provided (equal to `if (!key)`).
+ * - `MissingKey`           - If `key` is not provided (undefined, null, empty string, ...).
  * - `KeyNotString`         - If `key` is not a string.
  * - `MissingContent`       - If `value` is not provided.
  * - `CannotStringifyJson`  - If `value` cannot be strigified as JSON.
@@ -93,7 +93,7 @@ function set(key: string, value: Object): void | never {
  * @param key Entry's key.
  * @returns `boolean` - `true` if the entry exists, `false` otherwise.
  * @throw
- * - `MissingKey`   - If `key` is not provided (equal to `if (!key)`).
+ * - `MissingKey`   - If `key` is not provided (undefined, null, empty string, ...).
  * - `KeyNotString` - If `key` is not a string.
  * @example
  * // { test: "hi" }
@@ -113,7 +113,7 @@ function exists(key: string): boolean | never {
  * @param key Entry's key.
  * @returns `boolean` - `true` if the entry has been removed by the function's call, `false` otherwise.
  * @throw
- * - `MissingKey`   - If `key` is not provided (equal to `if (!key)`).
+ * - `MissingKey`   - If `key` is not provided (undefined, null, empty string, ...).
  * - `KeyNotString` - If `key` is not a string.
  * @example
  * // { test: "hi", something: "everyone" }
@@ -156,7 +156,7 @@ function clear(): boolean {
  * Verify a key's validity
  * @param key Entry's key.
  * @throw
- * - `MissingKey`      - If `key` is not provided (equal to `if (!key)`).
+ * - `MissingKey`      - If `key` is not provided (undefined, null, empty string, ...).
  * - `KeyNotString`    - If `key` is not a string.
  */
 function verifyKey(key: string): void | never {

@@ -56,7 +56,7 @@ Get an element from the local storage.
 
 #### Throw
 
--   [`MissingKey`](#missingkey) - If `key` is not provided.
+-   [`MissingKey`](#missingkey) - If `key` is not provided (undefined, null, empty string, ...).
 -   [`KeyNotString`](#keynotstring) - If `key` is not a string.
 -   [`CannotParseJson`](#cannotparsejson) - If the entry's key value cannot be parsed as JSON.
 
@@ -94,7 +94,7 @@ Set an element to the local storage.
 
 #### Throw
 
--   [`MissingKey`](#missingkey) - If `key` is not provided (equal to `if (!key)`).
+-   [`MissingKey`](#missingkey) - If `key` is not provided (undefined, null, empty string, ...).
 -   [`KeyNotString`](#keynotstring) - If `key` is not a string.
 -   [`MissingContent`](#missingcontent) - If `value` is not provided.
 -   [`CannotStringifyJson`](#cannotstringifyjson) - If `value` cannot be strigified as JSON.
@@ -130,7 +130,7 @@ Check if an entry exists in the local storage.
 
 #### Throw
 
--   [`MissingKey`](#missingcontent) - If `key` is not provided (equal to `if (!key)`).
+-   [`MissingKey`](#missingcontent) - If `key` is not provided (undefined, null, empty string, ...).
 -   [`KeyNotString`](#keynotstring) - If `key` is not a string.
 
 #### Examples
@@ -161,7 +161,7 @@ Remove an entry from the local storage.
 
 #### Throw
 
--   [`MissingKey`](#missingkey) - If `key` is not provided (equal to `if (!key)`).
+-   [`MissingKey`](#missingkey) - If `key` is not provided (undefined, null, empty string, ...).
 -   [`KeyNotString`](#keynotstring) - If `key` is not a string.
 
 #### Examples
