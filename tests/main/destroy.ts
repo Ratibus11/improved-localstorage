@@ -21,7 +21,7 @@ describe("destroy() - Destroy a specific entry", () => {
 
 	// TESTS
 
-	describe("key - Key to destroy", () => {
+	describe("key - Entry to destroy", () => {
 		describe("Should throw 'MissingKey' if no provided", () => {
 			it("With undefined", () => {
 				expect(() => {
