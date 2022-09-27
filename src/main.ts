@@ -1,4 +1,4 @@
-import * as errors from "@src/errors";
+import * as errors from "./errors";
 
 interface GetOptions {
 	/**

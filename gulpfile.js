@@ -4,7 +4,6 @@ const gulp = require("gulp");
 const gulp_typescript = require("gulp-typescript");
 const gulp_minify = require("gulp-minify");
 const gulp_rename = require("gulp-rename");
-const gulp_ts_alias = require("gulp-ts-alias");
 
 // Utils
 const fs = require("fs");
@@ -34,9 +33,7 @@ function build() {
 
 	return merge2([
 		typescriptResult.js.pipe(gulp.dest("app")),
-		typescriptResult.dts
-			.pipe(gulp_ts_alias({ configuration: typescriptProject.config }))
-			.pipe(gulp.dest("types")),
+		typescriptResult.dts.pipe(gulp.dest("types")),
 	]);
 }
 
