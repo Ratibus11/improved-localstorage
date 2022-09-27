@@ -204,21 +204,21 @@ clear(); // false
 
 #### Content
 
-|       Name       |  Type   |    Facultative     | Description                                                                                         |
-| :--------------: | :-----: | :----------------: | --------------------------------------------------------------------------------------------------- |
-|    `destroy`     | boolean | :white_check_mark: | If strictly `true`, will destroy the entry after calling this function (even if an error occurred). |
-| `destroyOnError` | boolean | :white_check_mark: | If strictly `true`, will destroy the entry only if an error occurred.                               |
+|       Name       |  Type   |    Facultative     | Description                                                                                        |
+| :--------------: | :-----: | :----------------: | -------------------------------------------------------------------------------------------------- |
+|    `destroy`     | boolean | :white_check_mark: | If strictly `true`, will destroy the entry after calling this function (even if an error occurred) |
+| `destroyOnError` | boolean | :white_check_mark: | If strictly `true`, will destroy the entry only if an error occurred                               |
 
 ## Errors (`errors` namespace)
 
-|          Name          | Description                                                           |
-| :--------------------: | --------------------------------------------------------------------- |
-|   `CannotParseJson`    | The string cannot be parsed as JSON.                                  |
-| `CannotStringifyJson`  | The JSON cannot be strigified.                                        |
-|     `KeyNotString`     | The entry's key is not a string.                                      |
-|    `MissingContent`    | The entry's content is not provided.                                  |
-|      `MissingKey`      | The entry's key is not provided (undefined, null, empty string, ...). |
-| `UndefinedStringified` | The strigified data is equal to `undefined`.                          |
+|          Name          | Description                                                          |
+| :--------------------: | -------------------------------------------------------------------- |
+|   `CannotParseJson`    | The string cannot be parsed as JSON                                  |
+| `CannotStringifyJson`  | The JSON cannot be strigified                                        |
+|     `KeyNotString`     | The entry's key is not a string                                      |
+|    `MissingContent`    | The entry's content is not provided                                  |
+|      `MissingKey`      | The entry's key is not provided (undefined, null, empty string, ...) |
+| `UndefinedStringified` | The strigified data is equal to `undefined`                          |
 
 ## API structure
 
