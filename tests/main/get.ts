@@ -64,133 +64,136 @@ describe("get() - Get an entry", () => {
 	});
 
 	describe("options - Getter's options", () => {
-		it("Should remove the entry after being loaded if 'options.destroy' is strictly equal to 'true'", () => {
-			localStorage.setItem("test", "");
-			get("test", { destroy: true });
+		describe("options.destroy", () => {
+			it("Should remove the entry after being loaded if is strictly equal to 'true'", () => {
+				localStorage.setItem("test", "");
+				get("test", { destroy: true });
 
-			expect(localStorage.getItem("test")).to.be.null;
+				expect(localStorage.getItem("test")).to.be.null;
+			});
+
+			describe("Should not remove the entry after being loaded if is strictly different to 'true'", () => {
+				it("With false", () => {
+					localStorage.setItem("test", "");
+					get("test", { destroy: false });
+
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
+
+				it("With null", () => {
+					localStorage.setItem("test", "");
+					get("test", { destroy: null });
+
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
+
+				it("With undefined", () => {
+					localStorage.setItem("test", "");
+					get("test", { destroy: undefined });
+
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
+
+				it("With a number (1)", () => {
+					localStorage.setItem("test", "");
+					get("test", { destroy: 1 as any });
+
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
+
+				it("With an empty string", () => {
+					localStorage.setItem("test", "");
+					get("test", { destroy: "" as any });
+
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
+
+				it('With a string ("test")', () => {
+					localStorage.setItem("test", "");
+					get("test", { destroy: "test" as any });
+
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
+
+				it('With an object ({ test: "hi"})', () => {
+					localStorage.setItem("test", "");
+					get("test", { destroy: { test: "hi" } as any });
+
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
+			});
 		});
-
-		describe("Should not remove the entry after being loaded if 'options.destroy' is strictly different to 'true'", () => {
-			it("With false", () => {
-				localStorage.setItem("test", "");
-				get("test", { destroy: false });
-
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
-
-			it("With null", () => {
-				localStorage.setItem("test", "");
-				get("test", { destroy: null });
-
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
-
-			it("With undefined", () => {
-				localStorage.setItem("test", "");
-				get("test", { destroy: undefined });
-
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
-
-			it("With a number (1)", () => {
-				localStorage.setItem("test", "");
-				get("test", { destroy: 1 as any });
-
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
-
-			it("With an empty string", () => {
-				localStorage.setItem("test", "");
-				get("test", { destroy: "" as any });
-
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
-
-			it('With a string ("test")', () => {
-				localStorage.setItem("test", "");
-				get("test", { destroy: "test" as any });
-
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
-
-			it('With an object ({ test: "hi"})', () => {
-				localStorage.setItem("test", "");
-				get("test", { destroy: { test: "hi" } as any });
-
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
-		});
-
-		it("Should remove the entry if it cannot be parsed if 'options.destroyOnErrorOnError' is strictly equal to 'true'", () => {
-			localStorage.setItem("test", '{test:"hi" }');
-			try {
-				get("test", { destroyOnError: true });
-			} catch {}
-
-			expect(localStorage.getItem("test")).to.be.null;
-		});
-
-		describe("Should not remove the entry if it cannot be parsed if 'options.destroyOnErrorOnError' is strictly different to 'true'", () => {
-			it("With false", () => {
-				localStorage.setItem("test", '{test:"hi"}');
+		describe("options.destroyOnError", () => {
+			it("Should remove the entry if it cannot be parsed if is strictly equal to 'true'", () => {
+				localStorage.setItem("test", '{test:"hi" }');
 				try {
-					get("test", { destroyOnError: false });
+					get("test", { destroyOnError: true });
 				} catch {}
 
-				expect(localStorage.getItem("test")).to.be.not.null;
+				expect(localStorage.getItem("test")).to.be.null;
 			});
 
-			it("With null", () => {
-				localStorage.setItem("test", '{test:"hi"}');
-				try {
-					get("test", { destroyOnError: null });
-				} catch {}
+			describe("Should not remove the entry if it cannot be parsed if is strictly different to 'true'", () => {
+				it("With false", () => {
+					localStorage.setItem("test", '{test:"hi"}');
+					try {
+						get("test", { destroyOnError: false });
+					} catch {}
 
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
 
-			it("With undefined", () => {
-				localStorage.setItem("test", '{test:"hi"}');
-				try {
-					get("test", { destroyOnError: undefined });
-				} catch {}
+				it("With null", () => {
+					localStorage.setItem("test", '{test:"hi"}');
+					try {
+						get("test", { destroyOnError: null });
+					} catch {}
 
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
 
-			it("With a number (1)", () => {
-				localStorage.setItem("test", '{test:"hi"}');
-				try {
-					get("test", { destroyOnError: 1 as any });
-				} catch {}
+				it("With undefined", () => {
+					localStorage.setItem("test", '{test:"hi"}');
+					try {
+						get("test", { destroyOnError: undefined });
+					} catch {}
 
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
 
-			it("With an empty string", () => {
-				localStorage.setItem("test", '{test:"hi"}');
-				try {
-					get("test", { destroyOnError: "" as any });
-				} catch {}
+				it("With a number (1)", () => {
+					localStorage.setItem("test", '{test:"hi"}');
+					try {
+						get("test", { destroyOnError: 1 as any });
+					} catch {}
 
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
 
-			it('With a string ("test")', () => {
-				localStorage.setItem("test", '{test:"hi"}');
-				try {
-					get("test", { destroyOnError: "test" as any });
-				} catch {}
+				it("With an empty string", () => {
+					localStorage.setItem("test", '{test:"hi"}');
+					try {
+						get("test", { destroyOnError: "" as any });
+					} catch {}
 
-				expect(localStorage.getItem("test")).to.be.not.null;
-			});
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
 
-			it('With an object ({ test: "hi" })', () => {
-				localStorage.setItem("test", "");
-				get("test", { destroyOnError: { test: "hi" } as any });
+				it('With a string ("test")', () => {
+					localStorage.setItem("test", '{test:"hi"}');
+					try {
+						get("test", { destroyOnError: "test" as any });
+					} catch {}
 
-				expect(localStorage.getItem("test")).to.be.not.null;
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
+
+				it('With an object ({ test: "hi" })', () => {
+					localStorage.setItem("test", "");
+					get("test", { destroyOnError: { test: "hi" } as any });
+
+					expect(localStorage.getItem("test")).to.be.not.null;
+				});
 			});
 		});
 	});
