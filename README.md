@@ -262,16 +262,15 @@ Using multiple modules:
 -   dependencies:
     -   _nothing, all made with love_
 -   Development dependencies:
-    -   [`Chai.js`](https://www.npmjs.com/package/chai) - Assertions (tests)
-    -   [`Deep-Eql`](https://www.npmjs.com/package/deep-eql) - Chai.js project for deep and strict objects assertions
-    -   [`Glob`](https://www.npmjs.com/package/glob) - Multiple files selection (build)
+    -   [`chai.js`](https://www.npmjs.com/package/chai) - Assertions (tests)
+    -   [`glob`](https://www.npmjs.com/package/glob) - Multiple files selection (build)
     -   [`gulp`](https://www.npmjs.com/package/gulp) - Tasks runner (build)
     -   [`gulp-minify`](https://www.npmjs.com/package/gulp-minify) - Gulp plugin for files minifying (build)
     -   [`gulp-rename`](https://www.npmjs.com/package/gulp-rename) - Gulp plugin for files renaming (build)
     -   [`gulp-typescript`](https://www.npmjs.com/package/gulp-typescript) - Gulp plugin for Typescript compilation (build)
     -   [`merge2`](https://www.npmjs.com/package/merge2) - Combine streams (build)
     -   [`node-localstorage`](https://www.npmjs.com/package/node-localstorage) - Localstorage simulation on Node.js (tests)
-    -   [`rewire`](https://www.npmjs.com/package/rewire) - Access module's private elements (tests)
-    -   [`TS-Mocha`](https://www.npmjs.com/package/ts-mocha) - Typescript version of Mocha (tests)
+    -   [`ts-Mocha`](https://www.npmjs.com/package/ts-mocha) - Typescript version of Mocha (tests)
+    -   [`tsconfig-paths`](https://www.npmjs.com/package/tsconfig-paths) - Loader for `tsconfig.json` paths
 
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>
