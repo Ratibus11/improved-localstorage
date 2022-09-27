@@ -211,14 +211,14 @@ clear(); // false
 
 ## Errors (`errors` namespace)
 
-|          Name          | Description                                                                      |
-| :--------------------: | -------------------------------------------------------------------------------- |
-|   `CannotParseJson`    | Throw when a string cannot be parsed as JSON.                                    |
-| `CannotStringifyJson`  | Thrown when a JSON cannot be strigified.                                         |
-|     `KeyNotString`     | Throw when an entry's key is not a string.                                       |
-|    `MissingContent`    | Thrown when an entry's content is not provided.                                  |
-|      `MissingKey`      | Thrown when an entry's key is not provided (undefined, null, empty string, ...). |
-| `UndefinedStringified` | Throw when a strigified data is equal to `undefined`.                            |
+|          Name          | Description                                                           |
+| :--------------------: | --------------------------------------------------------------------- |
+|   `CannotParseJson`    | The string cannot be parsed as JSON.                                  |
+| `CannotStringifyJson`  | The JSON cannot be strigified.                                        |
+|     `KeyNotString`     | The entry's key is not a string.                                      |
+|    `MissingContent`    | The entry's content is not provided.                                  |
+|      `MissingKey`      | The entry's key is not provided (undefined, null, empty string, ...). |
+| `UndefinedStringified` | The strigified data is equal to `undefined`.                          |
 
 ## API structure
 
