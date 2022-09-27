@@ -262,12 +262,12 @@ Using multiple modules:
 -   dependencies:
     -   _nothing, all made with love_
 -   Development dependencies:
-    -   [`chai.js`](https://www.npmjs.com/package/chai) - Assertions (tests)
+    -   [`chai.`](https://www.npmjs.com/package/chai) - Assertions (tests)
     -   [`glob`](https://www.npmjs.com/package/glob) - Multiple files selection (build)
     -   [`gulp`](https://www.npmjs.com/package/gulp) - Tasks runner (build)
     -   [`gulp-minify`](https://www.npmjs.com/package/gulp-minify) - Gulp plugin for files minifying (build)
     -   [`gulp-rename`](https://www.npmjs.com/package/gulp-rename) - Gulp plugin for files renaming (build)
-    -   [`gulp-ts-alias`](https://www.npmjs.com/package/gulp-ts-alias) - Rewrite aliases to native paths in declaration files
+    -   [`gulp-ts-alias`](https://www.npmjs.com/package/gulp-ts-alias) - Rewrite aliases to native paths in declaration files (build)
     -   [`gulp-typescript`](https://www.npmjs.com/package/gulp-typescript) - Gulp plugin for Typescript compilation (build)
     -   [`merge2`](https://www.npmjs.com/package/merge2) - Combine streams (build)
     -   [`node-localstorage`](https://www.npmjs.com/package/node-localstorage) - Localstorage simulation on Node.js (tests)
