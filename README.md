@@ -52,9 +52,9 @@ Get an element from the local storage.
 
 #### Throw
 
--   [`MissingKey`](#missingkey) - If `key` is not provided (undefined, null, empty string, ...).
--   [`KeyNotString`](#keynotstring) - If `key` is not a string.
--   [`CannotParseJson`](#cannotparsejson) - If the entry's key value cannot be parsed as JSON.
+-   `MissingKey` - If `key` is not provided (undefined, null, empty string, ...).
+-   `KeyNotString` - If `key` is not a string.
+-   `CannotParseJson` - If the entry's key value cannot be parsed as JSON.
 
 #### Examples
 
@@ -90,11 +90,11 @@ Set an element to the local storage.
 
 #### Throw
 
--   [`MissingKey`](#missingkey) - If `key` is not provided (undefined, null, empty string, ...).
--   [`KeyNotString`](#keynotstring) - If `key` is not a string.
--   [`MissingContent`](#missingcontent) - If `value` is not provided.
--   [`CannotStringifyJson`](#cannotstringifyjson) - If `value` cannot be strigified as JSON.
--   [`UndefinedStringified`](#undefinedstringified) - If the `JSON.stringify`'s result is equal to `undefined`.
+-   `MissingKey` - If `key` is not provided (undefined, null, empty string, ...).
+-   `KeyNotString` - If `key` is not a string.
+-   `MissingContent` - If `value` is not provided.
+-   `CannotStringifyJson` - If `value` cannot be strigified as JSON.
+-   `UndefinedStringified` - If the `JSON.stringify`'s result is equal to `undefined`.
 
 #### Examples
 
@@ -126,8 +126,8 @@ Check if an entry exists in the local storage.
 
 #### Throw
 
--   [`MissingKey`](#missingcontent) - If `key` is not provided (undefined, null, empty string, ...).
--   [`KeyNotString`](#keynotstring) - If `key` is not a string.
+-   `MissingKey` - If `key` is not provided (undefined, null, empty string, ...).
+-   `KeyNotString` - If `key` is not a string.
 
 #### Examples
 
@@ -157,8 +157,8 @@ Remove an entry from the local storage.
 
 #### Throw
 
--   [`MissingKey`](#missingkey) - If `key` is not provided (undefined, null, empty string, ...).
--   [`KeyNotString`](#keynotstring) - If `key` is not a string.
+-   `MissingKey` - If `key` is not provided (undefined, null, empty string, ...).
+-   `KeyNotString` - If `key` is not a string.
 
 #### Examples
 
@@ -267,6 +267,6 @@ Using multiple modules:
     -   [`merge2`](https://www.npmjs.com/package/merge2) - Combine streams (build)
     -   [`node-localstorage`](https://www.npmjs.com/package/node-localstorage) - Localstorage simulation on Node.js (tests)
     -   [`ts-mocha`](https://www.npmjs.com/package/ts-mocha) - Typescript version of Mocha (tests)
-    -   [`tsconfig-paths`](https://www.npmjs.com/package/tsconfig-paths) - Loader for `tsconfig.json` paths
+    -   [`tsconfig-paths`](https://www.npmjs.com/package/tsconfig-paths) - Loader for `tsconfig.json` paths (tests)
 
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>
