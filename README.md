@@ -204,10 +204,10 @@ clear(); // false
 
 #### Content
 
-|       Name       |  Type   |    Facultative     | Description                                                                              |
-| :--------------: | :-----: | :----------------: | ---------------------------------------------------------------------------------------- |
-|    `destroy`     | boolean | :white_check_mark: | If `true`, will destroy the entry after calling this function (even if an error occured) |
-| `destroyOnError` | boolean | :white_check_mark: | If `true`, will destroy the entry only if an error occured                               |
+|       Name       |  Type   |    Facultative     | Description                                                                                         |
+| :--------------: | :-----: | :----------------: | --------------------------------------------------------------------------------------------------- |
+|    `destroy`     | boolean | :white_check_mark: | If strictly `true`, will destroy the entry after calling this function (even if an error occurred). |
+| `destroyOnError` | boolean | :white_check_mark: | If strictly `true`, will destroy the entry only if an error occurred.                               |
 
 ## Errors (`errors` namespace)
 

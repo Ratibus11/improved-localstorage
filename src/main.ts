@@ -2,11 +2,11 @@ import * as errors from "./errors";
 
 interface GetOptions {
 	/**
-	 * If `true`, will destroy the entry after calling this function (even if an error occured).
+	 * If strictly `true`, will destroy the entry after calling this function (even if an error occurred).
 	 */
 	destroy?: boolean;
 	/**
-	 * If `true`, will destroy the entry only if an error occured.
+	 * If strictly `true`, will destroy the entry only if an error occurred.
 	 */
 	destroyOnError?: boolean;
 }
@@ -16,9 +16,9 @@ interface GetOptions {
  * @param key Entry's key.
  * @param options Getter's options.
  * @returns
- * - `Object` - Entry's key if it exists and its content as been parsed.
+ * - `Object`    - Entry's key if it exists and its content as been parsed.
  * - `undefined` - If the entry doesn't exists.
- * @throw
+ * @throws
  * - `MissingKey`      - If `key` is not provided (undefined, null, empty string, ...).
  * - `KeyNotString`    - If `key` is not a string.
  * - `CannotParseJson` - If the Entry's content cannot be parsed as JSON.
@@ -56,13 +56,12 @@ function get(key: string, options?: GetOptions): Object | undefined | never {
  * Set an element to the local storage.
  * @param key Entry's key.
  * @param value Content to set in the localstorage.
- * @throw
+ * @throws
  * - `MissingKey`           - If `key` is not provided (undefined, null, empty string, ...).
  * - `KeyNotString`         - If `key` is not a string.
  * - `MissingContent`       - If `value` is not provided.
  * - `CannotStringifyJson`  - If `value` cannot be strigified as JSON.
  * - `UndefinedStringified` - If the `JSON.stringify`'s result is equal to `undefined`.
- *
  * @example
  * // { test: { something: true } }
  * set("test", true);
@@ -92,7 +91,7 @@ function set(key: string, value: Object): void | never {
  * Check if an entry exists in the local storage.
  * @param key Entry's key.
  * @returns `boolean` - `true` if the entry exists, `false` otherwise.
- * @throw
+ * @throws
  * - `MissingKey`   - If `key` is not provided (undefined, null, empty string, ...).
  * - `KeyNotString` - If `key` is not a string.
  * @example
@@ -112,7 +111,7 @@ function exists(key: string): boolean | never {
  * Remove an entry from the local storage.
  * @param key Entry's key.
  * @returns `boolean` - `true` if the entry has been removed by the function's call, `false` otherwise.
- * @throw
+ * @throws
  * - `MissingKey`   - If `key` is not provided (undefined, null, empty string, ...).
  * - `KeyNotString` - If `key` is not a string.
  * @example
@@ -155,9 +154,9 @@ function clear(): boolean {
 /**
  * Verify a key's validity
  * @param key Entry's key.
- * @throw
- * - `MissingKey`      - If `key` is not provided (undefined, null, empty string, ...).
- * - `KeyNotString`    - If `key` is not a string.
+ * @throws
+ * - `MissingKey`   - If `key` is not provided (undefined, null, empty string, ...).
+ * - `KeyNotString` - If `key` is not a string.
  */
 function verifyKey(key: string): void | never {
 	if (!key && (key as any) !== false) throw new errors.MissingKey();
