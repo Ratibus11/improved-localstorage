@@ -4,13 +4,12 @@ const gulp = require("gulp");
 const gulp_typescript = require("gulp-typescript");
 const gulp_minify = require("gulp-minify");
 const gulp_rename = require("gulp-rename");
+const gulp_ts_alias = require("gulp-ts-alias");
 
 // Utils
 const fs = require("fs");
 const merge2 = require("merge2");
 const glob = require("glob");
-
-const typescriptProject = gulp_typescript.createProject("tsconfig.json");
 
 /**
  * Delete build folders (app for compiled TS to JS / types for TS declaration files).
@@ -29,11 +28,15 @@ function clean(callback) {
  * @returns Task pipes
  */
 function build() {
-	const typescriptResult = typescriptProject.src().pipe(typescriptProject());
+	const typescriptProject = gulp_typescript.createProject("tsconfig.json");
+
+	const typescriptResult = gulp.src("src/**/*.ts").pipe(typescriptProject());
 
 	return merge2([
 		typescriptResult.js.pipe(gulp.dest("app")),
-		typescriptResult.dts.pipe(gulp.dest("types")),
+		typescriptResult.dts
+			.pipe(gulp_ts_alias({ configuration: typescriptProject.config }))
+			.pipe(gulp.dest("types")),
 	]);
 }
 

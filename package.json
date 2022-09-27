@@ -32,6 +32,7 @@
 		"gulp": "^4.0.2",
 		"gulp-minify": "^3.1.0",
 		"gulp-rename": "^2.0.0",
+		"gulp-ts-alias": "^2.0.0",
 		"gulp-typescript": "^6.0.0-alpha.1",
 		"merge2": "^1.4.1",
 		"node-localstorage": "^2.2.1",
