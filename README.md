@@ -15,11 +15,7 @@ A better way to interact and store data in a `localstorage` container.
         -   [`clear()`](#clear)
     -   Types
         -   [`GetOptions`](#getoptions)
-    -   Errors
-        -   [`CannotParseJson`](#cannotparsejsoncontent)
-        -   [`CannotStringifyJson`](#cannotstringifyjsoncontent)
-        -   [`MissingContent`](#missingcontent)
-        -   [`MissingKey`](#missingkey)
+    -   [Errors](#errors-errors-namespace)
 
 -   [API structure](#api-structure)
 -   [Contributing](#contributing)
