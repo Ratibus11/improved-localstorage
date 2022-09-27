@@ -15,7 +15,11 @@
 		"noImplicitOverride": true,
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
-		"noImplicitUseStrict": true
+		"noImplicitUseStrict": true,
+
+		"paths": {
+			"@src/*": ["src/*"]
+		}
 	},
-	"include": ["src/**/*.ts"]
+	"include": ["src/**/*.ts", "tests/**/*.ts"]
 }

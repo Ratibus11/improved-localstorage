@@ -250,6 +250,8 @@ improved-localstorage
   |- get(key[, options])
   |- set(key, value)
   |
+  |- GetOptions
+  |
   \- errors
       |
       |- CannotParseJson

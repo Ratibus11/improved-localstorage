@@ -1,4 +1,4 @@
-import * as errors from "./errors";
+import * as errors from "@src/errors";
 
 interface GetOptions {
 	/**
@@ -35,14 +35,19 @@ interface GetOptions {
 function get(key: string, options?: GetOptions): Object | undefined | never {
 	verifyKey(key);
 
+	options = {
+		destroy: options?.destroy === true,
+		destroyOnError: options?.destroyOnError === true,
+	};
+
 	const content = localStorage.getItem(key);
 
-	if (options?.destroy) destroy(key);
+	if (options.destroy) destroy(key);
 
 	try {
 		return content ? JSON.parse(content) : undefined;
 	} catch {
-		if (options?.destroyOnError) destroy(key);
+		if (options.destroyOnError) destroy(key);
 		throw new errors.CannotParseJson(content);
 	}
 }
@@ -155,7 +160,7 @@ function clear(): boolean {
  * - `KeyNotString`    - If `key` is not a string.
  */
 function verifyKey(key: string): void | never {
-	if (!key) throw new errors.MissingKey();
+	if (!key && (key as any) !== false) throw new errors.MissingKey();
 	if (typeof key !== "string") throw new errors.KeyNotString();
 }
 
