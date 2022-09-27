@@ -14,7 +14,7 @@ import {
 } from "@src/errors";
 import { set } from "@src/main";
 
-describe("set() - Set an entry", () => {
+describe("set() - Entry an entry", () => {
 	before(() => {
 		localStorage = new nodeLocalStorage(`${__dirname}/localstorage`);
 	});

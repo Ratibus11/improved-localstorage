@@ -21,7 +21,7 @@ describe("get() - Get an entry", () => {
 
 	// TESTS
 
-	describe("key - Key to get", () => {
+	describe("key - Entry to get", () => {
 		describe("Should throw 'MissingKey' if no provided", () => {
 			it("With undefined", () => {
 				expect(() => {
