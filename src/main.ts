@@ -90,7 +90,7 @@ function get(
 function set(key: string, newValue: any): void | never {
     check.key(key);
 
-    const [result, success] = (() => {
+    const [result, success]: [string, boolean] = (() => {
         try {
             return [JSON.stringify(newValue), true];
         } catch (error) {

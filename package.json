@@ -19,7 +19,7 @@
     "types": "types/main.d.ts",
     "scripts": {
         "build": "gulp build",
-        "test": "ts-mocha -r tsconfig-paths/register -p tsconfig.json tests/tests/**/*.ts",
+        "test": "ts-mocha -r tsconfig-paths/register -p tsconfig.json tests/functions/**/*.ts",
         "prepublishOnly": "npm run test && npm run build"
     },
     "devDependencies": {

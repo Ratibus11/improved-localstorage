@@ -19,8 +19,8 @@
 
 		"paths": {
 			"@src/*": ["src/*"],
-			"@tests/*": ["tests/tests/*"],
-			"@testsOptions/*": ["tests/options/*"],
+			"@tests/*": ["tests/functions/*"],
+			"@testsArguments/*": ["tests/arguments/*"],
 			"@testsRoutines": ["tests/routines"]
 		}
 	},

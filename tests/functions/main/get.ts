@@ -8,7 +8,7 @@ import * as routines from "@testsRoutines";
 
 // OPTIONS
 // key
-import * as keyTests from "@testsOptions/key";
+import * as keyTests from "@testsArguments/key";
 
 // TESTED FEATURES
 import { get } from "@src/main";
