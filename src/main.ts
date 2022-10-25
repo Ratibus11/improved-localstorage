@@ -4,8 +4,8 @@ import * as check from "@src/check";
  * Get an entry from the local storage.
  * @param key Entry's key.
  * @param options Getter's options:
- * - `destroy` - If strictly `true`, is destroyed after being loaded (even if an error occurred).
- * - `destroyOnError` - If strictly `true`, is destroyed only if an error occurred.
+ * - `destroy` - If strictly `true`, the entry is destroyed after being loaded (even if an error occurred).
+ * - `destroyOnError` - If strictly `true`, the entry is destroyed only if an error occurred.
  * @returns {any} JSON-parsed entry's content, or `null` if the entry don't exists.
  * @note Although `"undefined"` is not a valid JSON string, it will return `undefined`. See `set(key, newValue)` for more details.
  * @throws {TypeError} If `key` is is not a string.
@@ -18,8 +18,8 @@ import * as check from "@src/check";
  * // { hi: "\"everyone\"" }
  * get("something"); // null
  * @example
- * // { hi: "null" }
- * get("hi", { destroy: true }); // null
+ * // { hi: "undefined" }
+ * get("hi", { destroy: true }); // undefined
  * // {}
  * @example
  * // { hi: "{anError:true}" }
@@ -30,8 +30,8 @@ import * as check from "@src/check";
 function get(
     key: string,
     options?: {
-        destroy: boolean;
-        destroyOnError: boolean;
+        destroy?: boolean;
+        destroyOnError?: boolean;
     }
 ): any | never {
     check.key(key);
@@ -59,9 +59,7 @@ function get(
         if (options.destroyOnError) {
             remove(key);
         }
-        throw SyntaxError(
-            `Content stored in the local storage cannot be parsed as string.`
-        );
+        throw SyntaxError(`'${entryContent}' cannot be parsed as string.`);
     }
 }
 
@@ -101,9 +99,7 @@ function set(key: string, newValue: any): void | never {
     })();
 
     if (!success) {
-        throw new Error(
-            `Something went wrong while stringifying the value to JSON: ${result}`
-        );
+        throw new Error(`Something went wrong while stringifying the value to JSON: ${result}`);
     }
 
     localStorage.setItem(key, result);

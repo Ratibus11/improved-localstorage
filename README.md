@@ -41,10 +41,10 @@ Get an entry from the local storage.
 
 #### Parameters
 
-|   Name    |    Facultative     |   Type   | Description                                                                                                                                                                                               |
-| :-------: | :----------------: | :------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|   `key`   |                    | `string` | Entry's key                                                                                                                                                                                               |
-| `options` | :white_check_mark: | `object` | Getter's options:<br/>- `destroy` - If strictly `true`, is destroyed after being loaded (even if an error occurred).<br/>- `destroyOnError` - If strictly `true`, is destroyed only if an error occurred. |
+|   Name    |    Facultative     |   Type   | Description                                                                                                                                                                                                                 |
+| :-------: | :----------------: | :------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   `key`   |                    | `string` | Entry's key                                                                                                                                                                                                                 |
+| `options` | :white_check_mark: | `object` | Getter's options:<br/>- `destroy` - If strictly `true`, the entry is destroyed after being loaded (even if an error occurred)<br/>- `destroyOnError` - If strictly `true`, the entry is destroyed only if an error occurred |
 
 #### Errors
 
@@ -67,8 +67,8 @@ get("something"); // null
 ```
 
 ```js
-// { hi: "null" }
-get("hi", { destroy: true }); // null
+// { hi: "undefined" }
+get("hi", { destroy: true }); // undefined
 // {}
 ```
 

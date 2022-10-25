@@ -19,9 +19,9 @@
 
 		"paths": {
 			"@src/*": ["src/*"],
-			"@tests/functions/*": ["tests/functions/*"],
-			"@tests/options/*": ["tests/options/*"],
-			"@tests/utils/*": ["tests/utils/*"]
+			"@tests/*": ["tests/tests/*"],
+			"@testsOptions/*": ["tests/options/*"],
+			"@testsRoutines": ["tests/routines"]
 		}
 	},
 	"include": ["src/**/*.ts", "tests/**/*.ts"]

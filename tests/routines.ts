@@ -7,7 +7,7 @@ const before = () => {
 };
 
 const beforeEach = () => {
-    //localStorage.clear();
+    localStorage.clear();
 };
 
 const after = () => {
