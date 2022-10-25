@@ -1,4 +1,18 @@
-import * as check from "@src/check";
+/**
+ * Check `key` option validity.
+ * @param key Key to test.
+ * @throws `TypeError` if the key is not a string.
+ * @throws `RangeError` if the key is an empty string.
+ */
+function checkKey(key: string): void | never {
+    if (typeof key !== "string") {
+        throw new TypeError(`Entry's key must be a string. A ${typeof key} `);
+    }
+
+    if (key === "") {
+        throw new RangeError(`Entry's key cannot be an empty string.`);
+    }
+}
 
 /**
  * Get an entry from the local storage.
@@ -34,7 +48,7 @@ function get(
         destroyOnError?: boolean;
     }
 ): any | never {
-    check.key(key);
+    checkKey(key);
 
     options = {
         destroy: options?.destroy === true,
@@ -88,7 +102,7 @@ function get(
  * // { hi: "undefined" }
  */
 function set(key: string, newValue: any): void | never {
-    check.key(key);
+    checkKey(key);
 
     const [result, success]: [string, boolean] = (() => {
         try {
@@ -119,7 +133,7 @@ function set(key: string, newValue: any): void | never {
  * exists("something"); // false
  */
 function exists(key: string): boolean | never {
-    check.key(key);
+    checkKey(key);
     return localStorage.getItem(key) !== null;
 }
 
@@ -139,7 +153,7 @@ function exists(key: string): boolean | never {
  * // { hi: "everyone" }
  */
 function remove(key: string): boolean | never {
-    check.key(key);
+    checkKey(key);
     const entryExists = exists(key);
     localStorage.removeItem(key);
     return entryExists;
