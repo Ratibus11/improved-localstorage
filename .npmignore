@@ -1,7 +1,11 @@
 # Editor
 .vscode
 
+# NPM
+.npmignore
+
 # Git
+.git
 .github
 .gitignore
 
