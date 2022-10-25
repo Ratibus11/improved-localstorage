@@ -1,246 +1,236 @@
 # improved-localstorage
 
-A better way to interact and store data in a `localstorage` container.
+A better way to interact and store data with a browser's local storage.
 
 ## Table of content
 
 -   [Installation](#installation)
--   Usage (see API structure [here](#api-structure))
-
-    -   Functions
-        -   [`get(key[, options])`](#getkey-options)
-        -   [`set(key, value)`](#setkey-value)
-        -   [`exists(key)`](#existskey)
-        -   [`destroy(key)`](#destroykey)
-        -   [`clear()`](#clear)
-    -   Types
-        -   [`GetOptions`](#getoptions)
-    -   [Errors](#errors-errors-namespace)
-
+-   Usage
+    -   [`get(key[, options])`](#getkey-options)
+    -   [`set(key, newValue)`](#setkey-newvalue)
+    -   [`exists(key)`](#existskey)
+    -   [`remove(key)`](#removekey)
+    -   [`clear()`](#clear)
 -   [API structure](#api-structure)
 -   [Contributing](#contributing)
 -   [License](#license)
--   [Credits to dependencies](#credits-to-dependencies)
+-   [Credits to dependancies](#credits-to-dependancies)
 
 ## Installation
 
-This module is published through the [NPM registry](https://npmjs.com). You can easly install it with the following command:
+This package is published through the [NPM registry](https://www.npmjs.com/). You can easily install it with the following command:
 
 ```
-npm i improved-localstorage
+npm install improved-localstorage
 ```
 
 ## Usage
 
-This module allows to interact with the client's local storage and store JSON-stringified data, so each entry can contain JSON-like data.
-
 ### `get(key[, options])`
 
-Get an element from the local storage.
+Get an entry from the local storage.
 
 #### Returns
 
--   `Object` - Entry's key if it exists and its content as been parsed.
--   `undefined` - If the entry doesn't exists.
+`any` - JSON-parsed entry's content, or `null` if the entry don't exists.
+
+#### Note
+
+-   Although `"undefined"` is not a valid JSON string, it will return `undefined`. See [`set(key, newValue)`](#setkey-newvalue) for more details.
+-   As `null` can be getted from a entry and is the returned value if the entry don't exists, it is recommanded to use [`exists(key)`](#existskey) if you want to check an entry's existence.
 
 #### Parameters
 
-|   Name    |           Type            |    Facultative     | Description      |
-| :-------: | :-----------------------: | :----------------: | ---------------- |
-|   `key`   |          string           |        :x:         | Entry's key      |
-| `options` | [GetOptions](#getoptions) | :white_check_mark: | Getter's options |
+|   Name    |    Facultative     |   Type   | Description                                                                                                                                                                                               |
+| :-------: | :----------------: | :------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   `key`   |                    | `string` | Entry's key                                                                                                                                                                                               |
+| `options` | :white_check_mark: | `object` | Getter's options:<br/>- `destroy` - If strictly `true`, is destroyed after being loaded (even if an error occurred).<br/>- `destroyOnError` - If strictly `true`, is destroyed only if an error occurred. |
 
-#### Throw
+#### Errors
 
--   `MissingKey` - If `key` is not provided (undefined, null, empty string, ...).
--   `KeyNotString` - If `key` is not a string.
--   `CannotParseJson` - If the entry's key value cannot be parsed as JSON.
+|     Type      | Reason                                       |
+| :-----------: | -------------------------------------------- |
+|  `TypeError`  | `key` is not a string                        |
+| `RangeError`  | `key` is an empty string                     |
+| `SyntaxError` | The entry's content cannot be parsed as JSON |
 
 #### Examples
 
-```ts
-// { test: "{\"something\":true}" }
-get("test"); // { something: true }
+```js
+// { hi: "{\"everyone\":true}" }
+get("hi"); // { everyone: true }
 ```
 
-```ts
-// { test: "{\"something\":true}" }
-get("something"); // undefined
+```js
+// { hi: "\"everyone\"" }
+get("something"); // null
 ```
 
-```ts
-// { test: "1" }
-get("test"); // 1
+```js
+// { hi: "null" }
+get("hi", { destroy: true }); // null
+// {}
 ```
 
-### `set(key, value)`
+```js
+// { hi: "{anError:true}" }
+get("hi", { destroyOnError: true }); // Throws SyntaxError
+// { }
+```
 
-Set an element to the local storage.
+### `set(key, newValue)`
+
+Set a entry in the local storage.
 
 #### Returns
 
--   `undefined`.
+`void`
+
+#### Note
+
+-   Although `undefined` can be stringified to JSON as `"undefined"` but not parsed from it, it's anyway possible to set and get `undefined`. See [`get(key[, options]`](#getkey-options) for more details.
 
 #### Parameters
 
-|  Name   | Facultative | Facultative | Description                        |
-| :-----: | :---------: | :---------: | ---------------------------------- |
-|  `key`  |   string    |     :x:     | Entry's key                        |
-| `value` |   Object    |     :x:     | Content to set in the localstorage |
+|    Name    |    Facultative     |   Type   | Description               |
+| :--------: | :----------------: | :------: | ------------------------- |
+|   `key`    |                    | `string` | Entry's key               |
+| `newValue` | :white_check_mark: |  `any`   | Value to set in the entry |
 
-#### Throw
+#### Errors
 
--   `MissingKey` - If `key` is not provided (undefined, null, empty string, ...).
--   `KeyNotString` - If `key` is not a string.
--   `MissingContent` - If `value` is not provided.
--   `CannotStringifyJson` - If `value` cannot be strigified as JSON.
--   `UndefinedStringified` - If the `JSON.stringify`'s result is equal to `undefined`.
+|     Type     | Reason                                                    |
+| :----------: | --------------------------------------------------------- |
+| `TypeError`  | `key` is not a string                                     |
+| `RangeError` | `key` is an empty string                                  |
+|   `Error`    | Something went wrong while stringifying the value to JSON |
 
 #### Examples
 
-```ts
-// { test: "{\"something\":true}" }
-set("test", true);
-// { test: "true" }
+```js
+// {}
+set("hi", "everyone");
+// { hi: "\"everyone\"" }
 ```
 
-```ts
-// { test: "{\"something\":true}" }
-set("something", { hi: "everyone" });
-// { test: "{\"something\":true}", something: "{\"hi\":\"everyone\"}" }
+```js
+// { hi: "\"nobody\"" }
+set("hi", { everyone: true });
+// { hi: "{\"everyone\":true}" }
+```
+
+```js
+// {}
+set("hi", null);
+// { hi: "null" }
+```
+
+```js
+// {}
+set("hi", undefined);
+// { hi: "undefined" }
 ```
 
 ### `exists(key)`
 
-Check if an entry exists in the local storage.
+Check if an entry with a specific key exists.
 
 #### Returns
 
--   `boolean` - `true` if the entry exists, `false` otherwise.
+`boolean` - `true` if the entry with this key exists, `false` otherwise.
 
 #### Parameters
 
-| Name  |  Type  | Facultative | Description |
-| :---: | :----: | :---------: | ----------- |
-| `key` | string |     :x:     | Entry's key |
+| Name  | Facultative |   Type   | Description |
+| :---: | :---------: | :------: | ----------- |
+| `key` |             | `string` | Entry's key |
 
-#### Throw
+#### Errors
 
--   `MissingKey` - If `key` is not provided (undefined, null, empty string, ...).
--   `KeyNotString` - If `key` is not a string.
+|     Type     | Reason                   |
+| :----------: | ------------------------ |
+| `TypeError`  | `key` is not a string    |
+| `RangeError` | `key` is an empty string |
 
 #### Examples
 
-```ts
-// { test: "hi" }
-exists("test"); // true
+```js
+// { hi: "everyone" }
+exists("hi"); // true
 ```
 
-```ts
-// { test: "hi" }
+```js
+// { hi: "everyone" }
 exists("something"); // false
 ```
 
-### `destroy(key)`
+### `remove(key)`
 
-Remove an entry from the local storage.
+Remove an entry with a specific key from the local storage.
 
-### Returns
+#### Returns
 
--   `boolean` - `true` if the entry has been removed by the function's call, `false` otherwise.
+`boolean` - `true` if the entry exists while calling the function, `false` otherwise.
 
 #### Parameters
 
-| Name  |  Type  | Facultative | Description |
-| :---: | :----: | :---------: | ----------- |
-| `key` | string |     :x:     | Entry's key |
+| Name  | Facultative |   Type   | Description |
+| :---: | :---------: | :------: | ----------- |
+| `key` |             | `string` | Entry's key |
 
-#### Throw
+#### Errors
 
--   `MissingKey` - If `key` is not provided (undefined, null, empty string, ...).
--   `KeyNotString` - If `key` is not a string.
+|     Type     | Reason                   |
+| :----------: | ------------------------ |
+| `TypeError`  | `key` is not a string    |
+| `RangeError` | `key` is an empty string |
 
 #### Examples
 
-```ts
-// { test: "hi", something: "everyone" }
-destroy("test"); // true
-// { something: "everyone" }
+```js
+// { hi: "everyone" }
+remove("hi"); // true
+// {}
 ```
 
-```ts
-// { test: "hi" }
-destroy("something"); // false
-// { test: "hi" }
+```js
+// { hi: "everyone" }
+remove("something"); // false
+// { hi: "everyone" }
 ```
 
 ### `clear()`
 
-Clear all entries from the local storage.
+Remove all local storage's entries.
 
-### Returns
+#### Returns
 
--   `boolean` - `true` if the entries have been removed by the function's call, `false` otherwise.
+`boolean` - `true` if the local storage contains entries while calling the function, `false` otherwise.
 
 #### Examples
 
-```ts
-// { test: "hi", something: "everyone" }
-clear(); // true
-// {  }
-```
-
-```ts
-// {  }
+```js
+// {}
 clear(); // false
-// {  }
+// {}
 ```
 
-## Types
-
-### `GetOptions`
-
-[`get()`](#getkey-options) options.
-
-#### Content
-
-|       Name       |  Type   |    Facultative     | Description                                                                                        |
-| :--------------: | :-----: | :----------------: | -------------------------------------------------------------------------------------------------- |
-|    `destroy`     | boolean | :white_check_mark: | If strictly `true`, will destroy the entry after calling this function (even if an error occurred) |
-| `destroyOnError` | boolean | :white_check_mark: | If strictly `true`, will destroy the entry only if an error occurred                               |
-
-## Errors (`errors` namespace)
-
-|          Name          | Description                                                          |
-| :--------------------: | -------------------------------------------------------------------- |
-|   `CannotParseJson`    | The string cannot be parsed as JSON                                  |
-| `CannotStringifyJson`  | The JSON cannot be strigified                                        |
-|     `KeyNotString`     | The entry's key is not a string                                      |
-|    `MissingContent`    | The entry's content is not provided                                  |
-|      `MissingKey`      | The entry's key is not provided (undefined, null, empty string, ...) |
-| `UndefinedStringified` | The strigified data is equal to `undefined`                          |
+```js
+// { hi: "everyone" }
+clear(); // true
+// {}
+```
 
 ## API structure
 
 ```
 improved-localstorage
   |
-  |- clear()
-  |- destroy(key)
-  |- exists(key)
   |- get(key[, options])
-  |- set(key, value)
-  |
-  |- GetOptions
-  |
-  \- errors
-      |
-      |- CannotParseJson
-      |- CannotStringifyJson
-      |- KeyNotString
-      |- MissingContent
-      |- MissingKey
-      \- UndefinedStringified
+  |- set(key, newValue)
+  |- exists(key)
+  |- remove(key)
+  \- clear()
 ```
 
 ## Contributing
@@ -250,23 +240,19 @@ Feel free to [open an issue](https://github.com/Ratibus11/improved-localstorage/
 ## License
 
 This package is published under the [MIT](https://choosealicense.com/licenses/mit/) license.
+See in LICENSE in the repo's root.
 
-## Credits to dependencies
+## Credits to dependancies
 
-Using multiple modules:
-
--   dependencies:
-    -   _nothing, all made with love_
--   Development dependencies:
-    -   [`chai`](https://www.npmjs.com/package/chai) - Assertions (tests)
-    -   [`glob`](https://www.npmjs.com/package/glob) - Multiple files selection (build)
-    -   [`gulp`](https://www.npmjs.com/package/gulp) - Tasks runner (build)
-    -   [`gulp-minify`](https://www.npmjs.com/package/gulp-minify) - Gulp plugin for files minifying (build)
-    -   [`gulp-rename`](https://www.npmjs.com/package/gulp-rename) - Gulp plugin for files renaming (build)
-    -   [`gulp-typescript`](https://www.npmjs.com/package/gulp-typescript) - Gulp plugin for Typescript compilation (build)
-    -   [`merge2`](https://www.npmjs.com/package/merge2) - Combine streams (build)
-    -   [`node-localstorage`](https://www.npmjs.com/package/node-localstorage) - Localstorage simulation on Node.js (tests)
-    -   [`ts-mocha`](https://www.npmjs.com/package/ts-mocha) - Typescript version of Mocha (tests)
-    -   [`tsconfig-paths`](https://www.npmjs.com/package/tsconfig-paths) - Loader for `tsconfig.json` paths (tests)
+-   [`chai`](https://www.npmjs.com/package/chai) - Assertions with `expect` _(tests)_
+-   [`glob`](https://www.npmjs.com/package/glob) - Multi-files selection _(build)_
+-   [`gulp`](https://www.npmjs.com/package/gulp) - Tasks runner _(build)_
+-   [`gulp-minify`](https://www.npmjs.com/package/gulp-minify) - `.js` minifier for Gulp _(build)_
+-   [`gulp-rename`](https://www.npmjs.com/package/gulp-rename) - Files renamer for Gulp _(build)_
+-   [`gulp-typescript`](https://www.npmjs.com/package/gulp-typescript) - Typescript transpiler for Gulp _(build)_
+-   [`merge2`](https://www.npmjs.com/package/merge2) - Multiple streams adapter _(build)_
+-   [`node-localstorage`](https://www.npmjs.com/package/node-localstorage) - Local storage for Node.js _(tests)_
+-   [`ts-mocha`](https://www.npmjs.com/package/ts-mocha) - Mocha version for Typescript _(tests)_
+-   [`tsconfig-paths`](https://www.npmjs.com/package/tsconfig-paths) - Loader for `tsconfig.json` aliases _(tests)_
 
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>

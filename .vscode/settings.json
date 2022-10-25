@@ -8,6 +8,6 @@
 
 		"app": true,
 		"types": true,
-		"tests/localstorage": true
+		"tests/utils/localstorage": true
 	}
 }

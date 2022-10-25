@@ -1,166 +1,170 @@
-import * as errors from "./errors";
-
-interface GetOptions {
-	/**
-	 * If strictly `true`, will destroy the entry after calling this function (even if an error occurred).
-	 */
-	destroy?: boolean;
-	/**
-	 * If strictly `true`, will destroy the entry only if an error occurred.
-	 */
-	destroyOnError?: boolean;
-}
+import * as check from "@src/check";
 
 /**
- * Get an element from the local storage.
+ * Get an entry from the local storage.
  * @param key Entry's key.
- * @param options Getter's options.
- * @returns
- * - `Object`    - Entry's key if it exists and its content as been parsed.
- * - `undefined` - If the entry doesn't exists.
- * @throws
- * - `MissingKey`      - If `key` is not provided (undefined, null, empty string, ...).
- * - `KeyNotString`    - If `key` is not a string.
- * - `CannotParseJson` - If the Entry's content cannot be parsed as JSON.
+ * @param options Getter's options:
+ * - `destroy` - If strictly `true`, is destroyed after being loaded (even if an error occurred).
+ * - `destroyOnError` - If strictly `true`, is destroyed only if an error occurred.
+ * @returns {any} JSON-parsed entry's content, or `null` if the entry don't exists.
+ * @note Although `"undefined"` is not a valid JSON string, it will return `undefined`. See `set(key, newValue)` for more details.
+ * @throws {TypeError} If `key` is is not a string.
+ * @throws {RangeError} If `key` is is an empty string.
+ * @throws {SyntaxError} If the entry's content cannot be parsed as JSON.
  * @example
- * // { test: { something: true } }
- * get("test"); // { something: true }
+ * // { hi: "{\"everyone\":true}" }
+ * get("hi"); // { everyone: true }
  * @example
- * // { test: { something: true } }
- * get("something"); // undefined
+ * // { hi: "\"everyone\"" }
+ * get("something"); // null
  * @example
- * // { test: 1 }
- * get("test"); // 1
+ * // { hi: "null" }
+ * get("hi", { destroy: true }); // null
+ * // {}
+ * @example
+ * // { hi: "{anError:true}" }
+ * get("hi", { destroyOnError: true }); // Throws SyntaxError
+ * // { }
+ * @example
  */
-function get(key: string, options?: GetOptions): Object | undefined | never {
-	verifyKey(key);
+function get(
+    key: string,
+    options?: {
+        destroy: boolean;
+        destroyOnError: boolean;
+    }
+): any | never {
+    check.key(key);
 
-	options = {
-		destroy: options?.destroy === true,
-		destroyOnError: options?.destroyOnError === true,
-	};
+    options = {
+        destroy: options?.destroy === true,
+        destroyOnError: options?.destroyOnError === true,
+    };
 
-	const content = localStorage.getItem(key);
+    const entryContent = localStorage.getItem(key);
+    if (options.destroy) {
+        remove(key);
+    }
 
-	if (options.destroy) destroy(key);
+    switch (entryContent) {
+        case null:
+            return null;
+        case "undefined":
+            return undefined;
+    }
 
-	try {
-		return content ? JSON.parse(content) : undefined;
-	} catch {
-		if (options.destroyOnError) destroy(key);
-		throw new errors.CannotParseJson(content);
-	}
+    try {
+        return JSON.parse(entryContent);
+    } catch {
+        if (options.destroyOnError) {
+            remove(key);
+        }
+        throw SyntaxError(
+            `Content stored in the local storage cannot be parsed as string.`
+        );
+    }
 }
 
 /**
- * Set an element to the local storage.
+ * Set a entry in the local storage.
  * @param key Entry's key.
- * @param value Content to set in the localstorage.
- * @throws
- * - `MissingKey`           - If `key` is not provided (undefined, null, empty string, ...).
- * - `KeyNotString`         - If `key` is not a string.
- * - `MissingContent`       - If `value` is not provided.
- * - `CannotStringifyJson`  - If `value` cannot be strigified as JSON.
- * - `UndefinedStringified` - If the `JSON.stringify`'s result is equal to `undefined`.
+ * @param newValue Value to set in the entry.
+ * @throws {TypeError} If `key` is is not a string.
+ * @throws {RangeError} If `key` is is an empty string.
+ * @throws {Error} If something went wrong while stringifying the value to JSON.
  * @example
- * // { test: { something: true } }
- * set("test", true);
- * // { test: true }
+ * // {}
+ * set("hi", "everyone");
+ * // { hi: "\"everyone\"" }
  * @example
- * // { test: { something: true } }
- * set("something", { hi: "everyone" });
- * // { test: { something: true }, hi: "everyone" }
+ * // { hi: "\"nobody\"" }
+ * set("hi", { everyone: true });
+ * // { hi: "{\"everyone\":true}" }
+ * @example
+ * // {}
+ * set("hi", null);
+ * // { hi: "null" }
+ * @example
+ * // {}
+ * set("hi", undefined);
+ * // { hi: "undefined" }
  */
-function set(key: string, value: Object): void | never {
-	verifyKey(key);
-	if (value === undefined) throw new errors.MissingContent();
+function set(key: string, newValue: any): void | never {
+    check.key(key);
 
-	var content;
-	try {
-		content = JSON.stringify(value);
-	} catch {
-		throw new errors.CannotStringifyJson(value);
-	}
+    const [result, success] = (() => {
+        try {
+            return [JSON.stringify(newValue), true];
+        } catch (error) {
+            return [error, false];
+        }
+    })();
 
-	if (!content) throw new errors.UndefinedStringified(value);
+    if (!success) {
+        throw new Error(
+            `Something went wrong while stringifying the value to JSON: ${result}`
+        );
+    }
 
-	localStorage.setItem(key, content);
+    localStorage.setItem(key, result);
 }
 
 /**
- * Check if an entry exists in the local storage.
- * @param key Entry's key.
- * @returns `boolean` - `true` if the entry exists, `false` otherwise.
- * @throws
- * - `MissingKey`   - If `key` is not provided (undefined, null, empty string, ...).
- * - `KeyNotString` - If `key` is not a string.
+ * Check if an entry with a specific key exists.
+ * @param key Key to check it's existence.
+ * @returns {boolean} `true` if the entry with this key exists, `false` otherwise.
+ * @throws {TypeError} If `key` is is not a string.
+ * @throws {RangeError} If `key` is is an empty string.
  * @example
- * // { test: "hi" }
- * exists("test"); // true
+ * // { hi: "everyone" }
+ * exists("hi"); // true
  * @example
- * // { test: "hi" }
+ * // { hi: "everyone" }
  * exists("something"); // false
  */
 function exists(key: string): boolean | never {
-	verifyKey(key);
-
-	return localStorage.getItem(key) !== null;
+    check.key(key);
+    return localStorage.getItem(key) !== null;
 }
 
 /**
- * Remove an entry from the local storage.
- * @param key Entry's key.
- * @returns `boolean` - `true` if the entry has been removed by the function's call, `false` otherwise.
- * @throws
- * - `MissingKey`   - If `key` is not provided (undefined, null, empty string, ...).
- * - `KeyNotString` - If `key` is not a string.
+ * Remove an entry with a specific key from the local storage.
+ * @param key Entry to remove's key.
+ * @returns {boolean} `true` if the entry exists while calling the function, `false` otherwise.
+ * @throws {TypeError} If `key` is is not a string.
+ * @throws {RangeError} If `key` is is an empty string.
  * @example
- * // { test: "hi", something: "everyone" }
- * exists("test"); // true
- * // { something: "everyone" }
+ * // { hi: "everyone" }
+ * remove("hi"); // true
+ * // {}
  * @example
- * // { test: "hi" }
- * exists("something"); // false
- * // { test: "hi" }
+ * // { hi: "everyone" }
+ * remove("something"); // false
+ * // { hi: "everyone" }
  */
-function destroy(key: string): boolean | never {
-	verifyKey(key);
-
-	const existingEntry = exists(key);
-	localStorage.removeItem(key);
-
-	return existingEntry;
+function remove(key: string): boolean | never {
+    check.key(key);
+    const entryExists = exists(key);
+    localStorage.removeItem(key);
+    return entryExists;
 }
 
 /**
- * Clear all entries from the local storage.
- * @returns `boolean` - `true` if the entries have been removed by the function's call, `false` otherwise.
+ * Remove all local storage's entries.
+ * @returns {boolean} `true` if the local storage contains entries while calling the function, `false` otherwise.
  * @example
- * // { test: "hi", something: "everyone" }
- * clear(); // true
- * // {  }
+ * // {}
+ * clear() // false
+ * // {}
  * @example
- * // {  }
- * clear(); // false
- * // {  }
+ * // { hi: "everyone" }
+ * clear() // true
+ * // {}
  */
 function clear(): boolean {
-	const existingEntries = localStorage.length > 0;
-
-	localStorage.clear();
-	return existingEntries;
+    const hasContent = localStorage.length > 0;
+    localStorage.clear();
+    return hasContent;
 }
 
-/**
- * Verify a key's validity
- * @param key Entry's key.
- * @throws
- * - `MissingKey`   - If `key` is not provided (undefined, null, empty string, ...).
- * - `KeyNotString` - If `key` is not a string.
- */
-function verifyKey(key: string): void | never {
-	if (!key && (key as any) !== false) throw new errors.MissingKey();
-	if (typeof key !== "string") throw new errors.KeyNotString();
-}
-
-export { get, set, exists, destroy, clear, GetOptions, errors };
+export { get, set, exists, remove, clear };

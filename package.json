@@ -1,41 +1,41 @@
 {
-	"name": "improved-localstorage",
-	"displayName": "Improved Localstorage",
-	"description": "NPM package for interactions with localstorage with JSON-like data.",
-	"version": "1.1.3",
-	"keywords": [
-		"localstorage",
-		"json"
-	],
-	"license": "SEE IN LICENSE",
-	"author": {
-		"email": "bastian.lucas@icloud.com",
-		"name": "Lucas Bastian",
-		"url": "https://ratibus11.github.io"
-	},
-	"homepage": "https://github.com/Ratibus11/improved-localstorage",
-	"bugs": "https://github.com/Ratibus11/improved-localstorage/issues",
-	"main": "app/main.js",
-	"types": "types/main.d.ts",
-	"scripts": {
-		"build": "gulp build",
-		"test": "ts-mocha -r tsconfig-paths/register -p tsconfig.json tests/**/*.ts",
-		"prepublishOnly": "npm run test && npm run build"
-	},
-	"devDependencies": {
-		"@types/chai": "^4.3.3",
-		"@types/mocha": "^9.1.1",
-		"@types/node": "^18.7.16",
-		"@types/node-localstorage": "^1.3.0",
-		"chai": "^4.3.6",
-		"glob": "^8.0.3",
-		"gulp": "^4.0.2",
-		"gulp-minify": "^3.1.0",
-		"gulp-rename": "^2.0.0",
-		"gulp-typescript": "^6.0.0-alpha.1",
-		"merge2": "^1.4.1",
-		"node-localstorage": "^2.2.1",
-		"ts-mocha": "^10.0.0",
-		"tsconfig-paths": "^4.1.0"
-	}
+    "name": "improved-localstorage",
+    "displayName": "Improved Localstorage",
+    "description": "NPM package for interactions with localstorage with JSON-like data.",
+    "version": "2.0.0",
+    "keywords": [
+        "localstorage",
+        "json"
+    ],
+    "license": "SEE IN LICENSE",
+    "author": {
+        "email": "bastian.lucas@icloud.com",
+        "name": "Lucas Bastian",
+        "url": "https://ratibus11.github.io"
+    },
+    "homepage": "https://github.com/Ratibus11/improved-localstorage",
+    "bugs": "https://github.com/Ratibus11/improved-localstorage/issues",
+    "main": "app/main.js",
+    "types": "types/main.d.ts",
+    "scripts": {
+        "build": "gulp build",
+        "test": "ts-mocha -r tsconfig-paths/register -p tsconfig.json tests/functions/**/*.ts",
+        "prepublishOnly": "npm run test && npm run build"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.3.3",
+        "@types/mocha": "^9.1.1",
+        "@types/node": "^18.7.16",
+        "@types/node-localstorage": "^1.3.0",
+        "chai": "^4.3.6",
+        "glob": "^8.0.3",
+        "gulp": "^4.0.2",
+        "gulp-minify": "^3.1.0",
+        "gulp-rename": "^2.0.0",
+        "gulp-typescript": "^6.0.0-alpha.1",
+        "merge2": "^1.4.1",
+        "node-localstorage": "^2.2.1",
+        "ts-mocha": "^10.0.0",
+        "tsconfig-paths": "^4.1.0"
+    }
 }

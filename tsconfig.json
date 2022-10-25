@@ -18,7 +18,10 @@
 		"noImplicitUseStrict": true,
 
 		"paths": {
-			"@src/*": ["src/*"]
+			"@src/*": ["src/*"],
+			"@tests/functions/*": ["tests/functions/*"],
+			"@tests/options/*": ["tests/options/*"],
+			"@tests/utils/*": ["tests/utils/*"]
 		}
 	},
 	"include": ["src/**/*.ts", "tests/**/*.ts"]

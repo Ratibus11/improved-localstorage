@@ -12,7 +12,7 @@ const glob = require("glob");
 
 /**
  * Delete build folders (app for compiled TS to JS / types for TS declaration files).
- * @param {*} callback Callback when the task is done.
+ * @param {any} callback Callback when the task is done.
  */
 function clean(callback) {
 	["app", "types"].map((path) => {
@@ -24,7 +24,7 @@ function clean(callback) {
 
 /**
  * Compile TS to JS in `app` folder and TS declaration files in `types`.
- * @returns Task pipes
+ * @returns {any} Task pipes
  */
 function build() {
 	const typescriptProject = gulp_typescript.createProject("tsconfig.json");
@@ -62,12 +62,8 @@ function minify() {
 		});
 }
 
-/**
- * Only delete the build folders
- */
+// Only delete the build folders
 gulp.task("clean", gulp.series(clean));
 
-/**
- * Delete build folders, build and minify the project.
- */
+// Delete build folders, build and minify the project.
 gulp.task("build", gulp.series(clean, build, minify));
