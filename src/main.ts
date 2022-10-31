@@ -1,3 +1,5 @@
+import * as fs from "fs";
+
 /**
  * Check `key` option validity.
  * @param key Key to test.
@@ -6,7 +8,7 @@
  */
 function checkKey(key: string): void | never {
     if (typeof key !== "string") {
-        throw new TypeError(`Entry's key must be a string. A ${typeof key} `);
+        throw new TypeError(`Entry's key must be a string. A ${typeof key} was provided.`);
     }
 
     if (key === "") {
@@ -104,15 +106,15 @@ function get(
 function set(key: string, newValue: any): void | never {
     checkKey(key);
 
-    const [result, success]: [string, boolean] = (() => {
+    const [error, result]: [TypeError, undefined] | [undefined, string] = (() => {
         try {
-            return [JSON.stringify(newValue), true];
+            return [undefined, JSON.stringify(newValue)];
         } catch (error) {
-            return [error, false];
+            return [error, undefined];
         }
     })();
 
-    if (!success) {
+    if (error) {
         throw new Error(`Something went wrong while stringifying the value to JSON: ${result}`);
     }
 
