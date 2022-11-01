@@ -12,11 +12,15 @@ namespace options {
         export class NotString extends TypeError {
             /**
              * @param invalidKey Invalid key.
-             * @note Will display, if possible, the invalid key. Otherwise, it will not be displayed.
+             * @note Will display, if possible and if not strictly `undefined`, the invalid key. Otherwise, it will not be displayed.
              */
             constructor(invalidKey: any) {
                 try {
-                    super(`Key ('${invalidKey}') must be a string. A ${typeof invalidKey} was provided.`);
+                    super(
+                        `Key ${
+                            invalidKey === undefined ? "" : "${invalidKey}"
+                        } must be a string. A ${typeof invalidKey} was provided.`
+                    );
                 } catch {
                     super(`Key must be a string. A ${typeof invalidKey} was provided.`);
                 }
@@ -61,7 +65,7 @@ namespace entry {
     }
 
     /**
-     * The value cannot be stringified to JSON.
+     * The provided value cannot be stringified to JSON.
      */
     export class CannotStringify extends TypeError {
         /**
