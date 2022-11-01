@@ -26,7 +26,7 @@ function checkKey(key: string): void | never {
  * @note Although `"undefined"` is not a valid JSON string, it will return `undefined`. See `set(key, newValue)` for more details.
  * @throws {errors.options.key.NotString} If `key` is is not a string.
  * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
- * @throws {errors.options.entry.CannotParse} If the entry's content cannot be parsed as JSON.
+ * @throws {errors.options.entry.CannotParse} If the entry's content cannot be parsed from JSON.
  * @example
  * // { hi: "{\"everyone\":true}" }
  * get("hi"); // { everyone: true }
