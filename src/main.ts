@@ -2,10 +2,11 @@ import * as errors from "@src/errors";
 
 /**
  * Check `key` option validity.
- * @param key Key to test.
+ * @param {string} key Key to test.
  * @throws `TypeError` if the key is not a string.
  * @throws `RangeError` if the key is an empty string.
  */
+
 function checkKey(key: string): void | never {
     if (typeof key !== "string") {
         throw new errors.options.key.NotString(key);
@@ -18,8 +19,8 @@ function checkKey(key: string): void | never {
 
 /**
  * Get an entry from the local storage.
- * @param key Entry's key.
- * @param options Getter's options:
+ * @param {string} key Entry's key.
+ * @param {object} options Getter's options:
  * - `destroy` - If strictly `true`, the entry is destroyed after being loaded (even if an error occurred).
  * - `destroyOnError` - If strictly `true`, the entry is destroyed only if an error occurred.
  * @returns {any} JSON-parsed entry's content, or `null` if the entry doesn't exists.
@@ -80,8 +81,8 @@ function get(
 
 /**
  * Set a entry in the local storage.
- * @param key Entry's key.
- * @param newValue Value to set in the entry.
+ * @param {string} key Entry's key.
+ * @param {any} newValue Value to set in the entry.
  * @note Although `undefined` can be stringified to JSON but not parsed from it by JavaScript's `JSON` object, `undefined` can be setted and getted with `get()` and `set()`. See `get(key[, options])` for more details.
  * @throws {errors.options.key.NotString} If `key` is is not a string.
  * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
@@ -123,7 +124,7 @@ function set(key: string, newValue: any): void | never {
 
 /**
  * Check if an entry with a specific key exists.
- * @param key Key to check it's existence.
+ * @param {string} key Key to check it's existence.
  * @returns {boolean} `true` if the entry with this key exists, `false` otherwise.
  * @throws {errors.options.key.NotString} If `key` is is not a string.
  * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
@@ -141,7 +142,7 @@ function exists(key: string): boolean | never {
 
 /**
  * Remove an entry with a specific key from the local storage.
- * @param key Entry to remove's key.
+ * @param {string} key Entry to remove's key.
  * @returns {boolean} `true` if the entry exists while calling the function, `false` otherwise.
  * @throws {errors.options.key.NotString} If `key` is is not a string.
  * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
