@@ -41,7 +41,6 @@ function checkKey(key: string): void | never {
  * // { hi: "{anError:true}" }
  * get("hi", { destroyOnError: true }); // Throws SyntaxError
  * // { }
- * @example
  */
 function get(
     key: string,
