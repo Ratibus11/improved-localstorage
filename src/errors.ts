@@ -79,20 +79,4 @@ namespace entry {
     }
 }
 
-namespace typeError {
-    class Error extends TypeError {
-        constructor() {
-            super();
-            this.name = "TypeErrorError";
-        }
-    }
-
-    class Content extends TypeError {
-        constructor() {
-            super();
-            this.name = "TypeErrorContent";
-        }
-    }
-}
-
 export { options, entry };
