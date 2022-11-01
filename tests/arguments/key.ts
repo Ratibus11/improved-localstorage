@@ -2,6 +2,9 @@
 // Assertion
 import { expect } from "chai";
 
+// TESTED FEATURES
+import * as errors from "@src/errors";
+
 const shouldThrowTypeError = (functionToTest: (...args: any) => any, keyIndex: number, ...args: any[]) => {
     describe("Should throw a `TypeError` if the type is not a string.", () => {
         [null, undefined, 1, false, new Date()].forEach((invalidKey) => {
@@ -11,7 +14,7 @@ const shouldThrowTypeError = (functionToTest: (...args: any) => any, keyIndex: n
             it(`With ${invalidKey}`, () => {
                 expect(() => {
                     functionToTest.apply(this, splicedArgs as any);
-                }).to.throw(TypeError);
+                }).to.throw(errors.options.key.NotString);
             });
         });
     });
@@ -24,7 +27,7 @@ const shouldThrowRangeError = (functionToTest: (...args: any) => any, keyIndex: 
 
         expect(() => {
             functionToTest.apply(this, splicedArgs as any);
-        }).to.throw(RangeError);
+        }).to.throw(errors.options.key.EmptyString);
     });
 };
 const shouldThrowError = (functionToTest: (...args: any) => any, keyIndex: number, ...args: any[]) => {

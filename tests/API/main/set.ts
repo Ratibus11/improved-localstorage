@@ -11,7 +11,7 @@ import * as routines from "@testsRoutines";
 import * as keyTests from "@testsArguments/key";
 
 // TESTED FEATURES
-import { set } from "@src/main";
+import { set, errors } from "@main";
 
 describe("set(key, newValue) - Set a entry in the local storage.", () => {
     before(routines.before);
@@ -57,7 +57,7 @@ describe("set(key, newValue) - Set a entry in the local storage.", () => {
 
             expect(() => {
                 set("test", cyclicObject);
-            }).to.throw(Error);
+            }).to.throw(errors.entry.CannotStringify);
         });
     });
 });

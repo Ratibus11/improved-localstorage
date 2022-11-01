@@ -22,8 +22,9 @@
 		"strictPropertyInitialization": true,
 
 		"paths": {
+			"@main": ["src/main"],
 			"@src/*": ["src/*"],
-			"@tests/*": ["tests/functions/*"],
+			"@tests/*": ["tests/API/*"],
 			"@testsArguments/*": ["tests/arguments/*"],
 			"@testsRoutines": ["tests/routines"]
 		}

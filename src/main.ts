@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as errors from "@src/errors";
 
 /**
  * Check `key` option validity.
@@ -8,11 +8,11 @@ import * as fs from "fs";
  */
 function checkKey(key: string): void | never {
     if (typeof key !== "string") {
-        throw new TypeError(`Entry's key must be a string. A ${typeof key} was provided.`);
+        throw new errors.options.key.NotString(key);
     }
 
     if (key === "") {
-        throw new RangeError(`Entry's key cannot be an empty string.`);
+        throw new errors.options.key.EmptyString();
     }
 }
 
@@ -24,9 +24,9 @@ function checkKey(key: string): void | never {
  * - `destroyOnError` - If strictly `true`, the entry is destroyed only if an error occurred.
  * @returns {any} JSON-parsed entry's content, or `null` if the entry don't exists.
  * @note Although `"undefined"` is not a valid JSON string, it will return `undefined`. See `set(key, newValue)` for more details.
- * @throws {TypeError} If `key` is is not a string.
- * @throws {RangeError} If `key` is is an empty string.
- * @throws {SyntaxError} If the entry's content cannot be parsed as JSON.
+ * @throws {errors.options.key.NotString} If `key` is is not a string.
+ * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
+ * @throws {errors.options.entry.CannotParse} If the entry's content cannot be parsed as JSON.
  * @example
  * // { hi: "{\"everyone\":true}" }
  * get("hi"); // { everyone: true }
@@ -71,11 +71,11 @@ function get(
 
     try {
         return JSON.parse(entryContent);
-    } catch {
+    } catch (error) {
         if (options.destroyOnError) {
             remove(key);
         }
-        throw SyntaxError(`'${entryContent}' cannot be parsed as string.`);
+        throw new errors.entry.CannotParse(error as SyntaxError, entryContent);
     }
 }
 
@@ -83,9 +83,9 @@ function get(
  * Set a entry in the local storage.
  * @param key Entry's key.
  * @param newValue Value to set in the entry.
- * @throws {TypeError} If `key` is is not a string.
- * @throws {RangeError} If `key` is is an empty string.
- * @throws {Error} If something went wrong while stringifying the value to JSON.
+ * @throws {errors.options.key.NotString} If `key` is is not a string.
+ * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
+ * @throws {errors.options.entry.CannotStringify} If something went wrong while stringifying the value to JSON.
  * @example
  * // {}
  * set("hi", "everyone");
@@ -115,7 +115,7 @@ function set(key: string, newValue: any): void | never {
     })();
 
     if (error) {
-        throw new Error(`Something went wrong while stringifying the value to JSON: ${result}`);
+        throw new errors.entry.CannotStringify(error);
     }
 
     localStorage.setItem(key, result);
@@ -125,8 +125,8 @@ function set(key: string, newValue: any): void | never {
  * Check if an entry with a specific key exists.
  * @param key Key to check it's existence.
  * @returns {boolean} `true` if the entry with this key exists, `false` otherwise.
- * @throws {TypeError} If `key` is is not a string.
- * @throws {RangeError} If `key` is is an empty string.
+ * @throws {errors.options.key.NotString} If `key` is is not a string.
+ * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
  * @example
  * // { hi: "everyone" }
  * exists("hi"); // true
@@ -143,8 +143,8 @@ function exists(key: string): boolean | never {
  * Remove an entry with a specific key from the local storage.
  * @param key Entry to remove's key.
  * @returns {boolean} `true` if the entry exists while calling the function, `false` otherwise.
- * @throws {TypeError} If `key` is is not a string.
- * @throws {RangeError} If `key` is is an empty string.
+ * @throws {errors.options.key.NotString} If `key` is is not a string.
+ * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
  * @example
  * // { hi: "everyone" }
  * remove("hi"); // true
@@ -179,4 +179,4 @@ function clear(): boolean {
     return hasContent;
 }
 
-export { get, set, exists, remove, clear };
+export { get, set, exists, remove, clear, errors };

@@ -11,7 +11,7 @@ import * as routines from "@testsRoutines";
 import * as keyTests from "@testsArguments/key";
 
 // TESTED FEATURES
-import { get } from "@src/main";
+import { get, errors } from "@main";
 
 describe("get(key[, options]) - Get an entry from the local storage.", () => {
     before(routines.before);
@@ -138,6 +138,6 @@ describe("get(key[, options]) - Get an entry from the local storage.", () => {
 
         expect(() => {
             get(key);
-        }).to.throw(SyntaxError);
+        }).to.throw(errors.entry.CannotParse);
     });
 });
