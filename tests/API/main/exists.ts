@@ -30,8 +30,8 @@ describe("exists(key) - Check if an entry with a specific key exists.", () => {
         expect(exists(key)).to.be.true;
     });
 
-    it("Should return `false` if the entry don't exists.", () => {
-        const key = "dontExists";
+    it("Should return `false` if the entry doesn't exists.", () => {
+        const key = "doesntExists";
         expect(exists(key)).to.be.false;
     });
 });

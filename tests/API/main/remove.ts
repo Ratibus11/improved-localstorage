@@ -29,7 +29,7 @@ describe("remove(key) - Remove an entry with a specific key from the local stora
         expect(remove("existing")).to.be.true;
     });
 
-    it("Should return `false` if the entry don't exists before removing it.", () => {
+    it("Should return `false` if the entry doesn't exists before removing it.", () => {
         expect(remove("notExisting")).to.be.false;
     });
 

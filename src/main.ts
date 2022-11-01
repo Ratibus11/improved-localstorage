@@ -22,7 +22,7 @@ function checkKey(key: string): void | never {
  * @param options Getter's options:
  * - `destroy` - If strictly `true`, the entry is destroyed after being loaded (even if an error occurred).
  * - `destroyOnError` - If strictly `true`, the entry is destroyed only if an error occurred.
- * @returns {any} JSON-parsed entry's content, or `null` if the entry don't exists.
+ * @returns {any} JSON-parsed entry's content, or `null` if the entry doesn't exists.
  * @note Although `"undefined"` is not a valid JSON string, it will return `undefined`. See `set(key, newValue)` for more details.
  * @throws {errors.options.key.NotString} If `key` is is not a string.
  * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
@@ -82,6 +82,7 @@ function get(
  * Set a entry in the local storage.
  * @param key Entry's key.
  * @param newValue Value to set in the entry.
+ * @note Although `undefined` can be stringified to JSON but not parsed from it by JavaScript's `JSON` object, `undefined` can be setted and getted with `get()` and `set()`. See `get(key[, options])` for more details.
  * @throws {errors.options.key.NotString} If `key` is is not a string.
  * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
  * @throws {errors.options.entry.CannotStringify} If something went wrong while stringifying the value to JSON.
