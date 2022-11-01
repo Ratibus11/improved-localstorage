@@ -11,7 +11,14 @@ A better way to interact and store data in a browser's localstorage.
     -   [`exists(key)`](#existskey)
     -   [`remove(key)`](#removekey)
     -   [`clear()`](#clear)
--   [API structure](#api-structure)
+    -   `errors`
+        -   `entry`
+            -   [`CannotParse(error, content)`](#errorsentrycannotparseerror-content)
+            -   [`CannotStringify(error)`](#errorsentrycannotstringifyerror)
+        -   `options`
+            -   `key`
+                -   [`NotString(invalidKey)`](#errorsoptionskeynotstringinvalidkey)
+                -   [`EmptyString()`](#errorsoptionskeyemptystring)
 -   [Contributing](#contributing)
 -   [License](#license)
 -   [Credits to dependancies](#credits-to-dependancies)
@@ -30,31 +37,36 @@ npm install improved-localstorage
 
 Get an entry from the local storage.
 
-#### Returns
+<details>
+  <summary><b>Returns</b></summary>
 
-`any` - JSON-parsed entry's content, or `null` if the entry don't exists.
+`any` - JSON-parsed entry's content, or `null` if the entry doesn't exists.
 
-#### Note
+</details>
 
--   Although `"undefined"` is not a valid JSON string, it will return `undefined`. See [`set(key, newValue)`](#setkey-newvalue) for more details.
--   As `null` can be getted from a entry and is the returned value if the entry don't exists, it is recommanded to use [`exists(key)`](#existskey) if you want to check an entry's existence.
-
-#### Parameters
+<details>
+  <summary><b>Arguments</b></summary>
 
 |   Name    |    Facultative     |   Type   | Description                                                                                                                                                                                                                 |
 | :-------: | :----------------: | :------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |   `key`   |                    | `string` | Entry's key                                                                                                                                                                                                                 |
 | `options` | :white_check_mark: | `object` | Getter's options:<br/>- `destroy` - If strictly `true`, the entry is destroyed after being loaded (even if an error occurred)<br/>- `destroyOnError` - If strictly `true`, the entry is destroyed only if an error occurred |
 
-#### Errors
+</details>
 
-|     Type      | Reason                                       |
-| :-----------: | -------------------------------------------- |
-|  `TypeError`  | `key` is not a string                        |
-| `RangeError`  | `key` is an empty string                     |
-| `SyntaxError` | The entry's content cannot be parsed as JSON |
+<details>
+  <summary><b>Errors</b></summary>
 
-#### Examples
+|                         Type                          | Reason                                         |
+| :---------------------------------------------------: | ---------------------------------------------- |
+|  [`NotString`](#errorsoptionskeynotstringinvalidkey)  | `key` is not a string                          |
+|     [`EmptyString`](#errorsoptionskeyemptystring)     | `key` is an empty string                       |
+| [`CannotParse`](#errorsentrycannotparseerror-content) | The entry's content cannot be parsed from JSON |
+
+</details>
+
+<details>
+  <summary><b>Examples</b></summary>
 
 ```js
 // { hi: "{\"everyone\":true}" }
@@ -78,34 +90,41 @@ get("hi", { destroyOnError: true }); // Throws SyntaxError
 // { }
 ```
 
+</details>
+
+<details>
+  <summary><b>Notes</b></summary>
+
+-   Although `"undefined"` is not a valid JSON string, it will return `undefined`. See [`set(key, newValue)`](#setkey-newvalue) for more details.
+</details>
+
 ### `set(key, newValue)`
 
 Set a entry in the local storage.
 
-#### Returns
-
-`void`
-
-#### Note
-
--   Although `undefined` can be stringified to JSON as `"undefined"` but not parsed from it, it's anyway possible to set and get `undefined`. See [`get(key[, options]`](#getkey-options) for more details.
-
-#### Parameters
+<details>
+  <summary><b>Arguments</b></summary>
 
 |    Name    |    Facultative     |   Type   | Description               |
 | :--------: | :----------------: | :------: | ------------------------- |
 |   `key`    |                    | `string` | Entry's key               |
 | `newValue` | :white_check_mark: |  `any`   | Value to set in the entry |
 
-#### Errors
+</details>
 
-|     Type     | Reason                                                    |
-| :----------: | --------------------------------------------------------- |
-| `TypeError`  | `key` is not a string                                     |
-| `RangeError` | `key` is an empty string                                  |
-|   `Error`    | Something went wrong while stringifying the value to JSON |
+<details>
+  <summary><b>Errors</b></summary>
 
-#### Examples
+|                         Type                          | Reason                                                    |
+| :---------------------------------------------------: | --------------------------------------------------------- |
+|  [`NotString`](#errorsoptionskeynotstringinvalidkey)  | Argument `key` is not a string                            |
+|     [`EmptyString`](#errorsoptionskeyemptystring)     | Argument `key` is an empty string                         |
+| [`CannotStringify`](#errorsentrycannotstringifyerror) | Something went wrong while stringifying the value to JSON |
+
+</details>
+
+<details>
+  <summary><b>Examples</b></summary>
 
 ```js
 // {}
@@ -131,28 +150,40 @@ set("hi", undefined);
 // { hi: "undefined" }
 ```
 
+</details>
+
 ### `exists(key)`
 
 Check if an entry with a specific key exists.
 
-#### Returns
+<details>
+  <summary><b>Returns</b></summary>
 
 `boolean` - `true` if the entry with this key exists, `false` otherwise.
 
-#### Parameters
+</details>
+
+<details>
+  <summary><b>Arguments</b></summary>
 
 | Name  | Facultative |   Type   | Description |
 | :---: | :---------: | :------: | ----------- |
 | `key` |             | `string` | Entry's key |
 
-#### Errors
+</details>
 
-|     Type     | Reason                   |
-| :----------: | ------------------------ |
-| `TypeError`  | `key` is not a string    |
-| `RangeError` | `key` is an empty string |
+<details>
+  <summary><b>Errors</b></summary>
 
-#### Examples
+|                        Type                         | Reason                            |
+| :-------------------------------------------------: | --------------------------------- |
+| [`NotString`](#errorsoptionskeynotstringinvalidkey) | Argument `key` is not a string    |
+|    [`EmptyString`](#errorsoptionskeyemptystring)    | Argument `key` is an empty string |
+
+</details>
+
+<details>
+  <summary><b>Examples</b></summary>
 
 ```js
 // { hi: "everyone" }
@@ -164,28 +195,40 @@ exists("hi"); // true
 exists("something"); // false
 ```
 
+</details>
+
 ### `remove(key)`
 
 Remove an entry with a specific key from the local storage.
 
-#### Returns
+<details>
+  <summary><b>Returns</b></summary>
 
 `boolean` - `true` if the entry exists while calling the function, `false` otherwise.
 
-#### Parameters
+</details>
+
+<details>
+  <summary><b>Arguments</b></summary>
 
 | Name  | Facultative |   Type   | Description |
 | :---: | :---------: | :------: | ----------- |
 | `key` |             | `string` | Entry's key |
 
-#### Errors
+</details>
 
-|     Type     | Reason                   |
-| :----------: | ------------------------ |
-| `TypeError`  | `key` is not a string    |
-| `RangeError` | `key` is an empty string |
+<details>
+  <summary><b>Errors</b></summary>
 
-#### Examples
+|                        Type                         | Reason                            |
+| :-------------------------------------------------: | --------------------------------- |
+| [`NotString`](#errorsoptionskeynotstringinvalidkey) | Argument `key` is not a string    |
+|    [`EmptyString`](#errorsoptionskeyemptystring)    | Argument `key` is an empty string |
+
+</details>
+
+<details>
+  <summary><b>Examples</b></summary>
 
 ```js
 // { hi: "everyone" }
@@ -199,15 +242,21 @@ remove("something"); // false
 // { hi: "everyone" }
 ```
 
+</details>
+
 ### `clear()`
 
 Remove all local storage's entries.
 
-#### Returns
+<details>
+  <summary><b>Returns</b></summary>
 
 `boolean` - `true` if the local storage contains entries while calling the function, `false` otherwise.
 
-#### Examples
+</details>
+
+<details>
+  <summary><b>Examples</b></summary>
 
 ```js
 // {}
@@ -221,17 +270,80 @@ clear(); // true
 // {}
 ```
 
-## API structure
+</details>
 
-```
-improved-localstorage
-  |
-  |- get(key[, options])
-  |- set(key, newValue)
-  |- exists(key)
-  |- remove(key)
-  \- clear()
-```
+### `errors.options.key.NotString(invalidKey)`
+
+Argument `key` is not a string.
+
+Inherits from `TypeError`.
+
+<details>
+  <summary><b>Arguments</b></summary>
+
+|     Name     |    Facultative     | Type  | Description      |
+| :----------: | :----------------: | :---: | ---------------- |
+| `invalidKey` | :white_check_mark: | `any` | Invalid used key |
+
+</details>
+
+<details>
+  <summary><b>Notes</b></summary>
+
+-   Will display, if possible and if not strictly `undefined`, the invalid key. Otherwise, it will not be displayed.
+</details>
+
+### `errors.options.key.EmptyString()`
+
+Argument `key` is an empty string.
+
+Inherits from `RangeError`.
+
+### `errors.entry.CannotParse(error, content)`
+
+The entry's content cannot be parsed from JSON.
+
+Inherits from `SyntaxError`.
+
+<details>
+  <summary><b>Arguments</b></summary>
+
+|   Name    | Facultative |     Type      | Description                    |
+| :-------: | :---------: | :-----------: | ------------------------------ |
+|  `error`  |             | `SyntaxError` | Error thrown by `JSON.parse()` |
+| `content` |             |   `string`    | Loaded content                 |
+
+</details>
+
+<details>
+  <summary><b>Notes</b></summary>
+
+-   `error` will not be displayed in the error message if it's not a `SyntaxError` instance.
+-   `content` will not be displayed in the error message if it's not a string.
+
+</details>
+
+### `errors.entry.CannotStringify(error)`
+
+The provided value cannot be stringified to JSON.
+
+Inherits from `TypeError`.
+
+<details>
+  <summary><b>Arguments</b></summary>
+
+|  Name   | Facultative |    Type     | Description                        |
+| :-----: | :---------: | :---------: | ---------------------------------- |
+| `error` |             | `TypeError` | Error thrown by `JSON.stringify()` |
+
+</details>
+
+<details>
+  <summary><b>Notes</b></summary>
+
+-   `error` will not be displayed in the error message if it's not a `TypeError` instance.
+
+</details>
 
 ## Contributing
 
