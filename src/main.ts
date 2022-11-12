@@ -1,20 +1,40 @@
 import * as errors from "@src/errors";
+import * as check from "@src/check";
 
 /**
- * Check `key` option validity.
- * @param {string} key Key to test.
- * @throws `TypeError` if the key is not a string.
- * @throws `RangeError` if the key is an empty string.
+ * Remove all local storage's entries.
+ * @returns {boolean} `true` if the local storage contains entries while calling the function, `false` otherwise.
+ * @example
+ * // {}
+ * clear() // false
+ * // {}
+ * @example
+ * // { hi: "everyone" }
+ * clear() // true
+ * // {}
  */
+function clear(): boolean {
+    const hasContent = localStorage.length > 0;
+    localStorage.clear();
+    return hasContent;
+}
 
-function checkKey(key: string): void | never {
-    if (typeof key !== "string") {
-        throw new errors.options.key.NotString(key);
-    }
-
-    if (key === "") {
-        throw new errors.options.key.EmptyString();
-    }
+/**
+ * Check if an entry with a specific key exists.
+ * @param {string} key Key to check it's existence.
+ * @returns {boolean} `true` if the entry with this key exists, `false` otherwise.
+ * @throws {errors.options.key.NotString} If `key` is is not a string.
+ * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
+ * @example
+ * // { hi: "everyone" }
+ * exists("hi"); // true
+ * @example
+ * // { hi: "everyone" }
+ * exists("something"); // false
+ */
+function exists(key: string): boolean | never {
+    check.key(key);
+    return localStorage.getItem(key) !== null;
 }
 
 /**
@@ -50,7 +70,7 @@ function get(
         destroyOnError?: boolean;
     }
 ): any | never {
-    checkKey(key);
+    check.key(key);
 
     options = {
         destroy: options?.destroy === true,
@@ -80,6 +100,28 @@ function get(
 }
 
 /**
+ * Remove an entry with a specific key from the local storage.
+ * @param {string} key Entry to remove's key.
+ * @returns {boolean} `true` if the entry exists while calling the function, `false` otherwise.
+ * @throws {errors.options.key.NotString} If `key` is is not a string.
+ * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
+ * @example
+ * // { hi: "everyone" }
+ * remove("hi"); // true
+ * // {}
+ * @example
+ * // { hi: "everyone" }
+ * remove("something"); // false
+ * // { hi: "everyone" }
+ */
+function remove(key: string): boolean | never {
+    check.key(key);
+    const entryExists = exists(key);
+    localStorage.removeItem(key);
+    return entryExists;
+}
+
+/**
  * Set a entry in the local storage.
  * @param {string} key Entry's key.
  * @param {any} newValue Value to set in the entry.
@@ -105,7 +147,7 @@ function get(
  * // { hi: "undefined" }
  */
 function set(key: string, newValue: any): void | never {
-    checkKey(key);
+    check.key(key);
 
     const [error, result]: [TypeError, undefined] | [undefined, string] = (() => {
         try {
@@ -120,64 +162,6 @@ function set(key: string, newValue: any): void | never {
     }
 
     localStorage.setItem(key, result);
-}
-
-/**
- * Check if an entry with a specific key exists.
- * @param {string} key Key to check it's existence.
- * @returns {boolean} `true` if the entry with this key exists, `false` otherwise.
- * @throws {errors.options.key.NotString} If `key` is is not a string.
- * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
- * @example
- * // { hi: "everyone" }
- * exists("hi"); // true
- * @example
- * // { hi: "everyone" }
- * exists("something"); // false
- */
-function exists(key: string): boolean | never {
-    checkKey(key);
-    return localStorage.getItem(key) !== null;
-}
-
-/**
- * Remove an entry with a specific key from the local storage.
- * @param {string} key Entry to remove's key.
- * @returns {boolean} `true` if the entry exists while calling the function, `false` otherwise.
- * @throws {errors.options.key.NotString} If `key` is is not a string.
- * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
- * @example
- * // { hi: "everyone" }
- * remove("hi"); // true
- * // {}
- * @example
- * // { hi: "everyone" }
- * remove("something"); // false
- * // { hi: "everyone" }
- */
-function remove(key: string): boolean | never {
-    checkKey(key);
-    const entryExists = exists(key);
-    localStorage.removeItem(key);
-    return entryExists;
-}
-
-/**
- * Remove all local storage's entries.
- * @returns {boolean} `true` if the local storage contains entries while calling the function, `false` otherwise.
- * @example
- * // {}
- * clear() // false
- * // {}
- * @example
- * // { hi: "everyone" }
- * clear() // true
- * // {}
- */
-function clear(): boolean {
-    const hasContent = localStorage.length > 0;
-    localStorage.clear();
-    return hasContent;
 }
 
 export { get, set, exists, remove, clear, errors };
