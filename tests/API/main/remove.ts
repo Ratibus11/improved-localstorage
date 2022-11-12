@@ -11,7 +11,7 @@ import * as routines from "@testsRoutines";
 import * as keyTests from "@testsArguments/key";
 
 // TESTED FEATURES
-import { remove } from "@main";
+import { remove } from "@src/main";
 
 describe("remove(key) - Remove an entry with a specific key from the local storage.", () => {
     before(routines.before);

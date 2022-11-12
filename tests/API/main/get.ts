@@ -11,7 +11,7 @@ import * as routines from "@testsRoutines";
 import * as keyTests from "@testsArguments/key";
 
 // TESTED FEATURES
-import { get, errors } from "@main";
+import { get, errors } from "@src/main";
 
 describe("get(key[, options]) - Get an entry from the local storage.", () => {
     before(routines.before);

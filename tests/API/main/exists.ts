@@ -11,7 +11,7 @@ import * as routines from "@testsRoutines";
 import * as keyTests from "@testsArguments/key";
 
 // TESTED FEATURES
-import { exists } from "@main";
+import { exists } from "@src/main";
 
 describe("exists(key) - Check if an entry with a specific key exists.", () => {
     before(routines.before);

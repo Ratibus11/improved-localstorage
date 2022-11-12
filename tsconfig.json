@@ -1,33 +1,35 @@
 {
-	"compilerOptions": {
-		"target": "ES6",
-		"module": "CommonJS",
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "CommonJS",
 
-		"baseUrl": ".",
-		"outDir": "app",
+        "baseUrl": "src",
+        "outDir": "app",
 
-		"declaration": true,
-		"declarationMap": false,
-		"declarationDir": "types",
-		"removeComments": false,
+        "declaration": true,
+        "declarationMap": false,
+        "declarationDir": "types",
+        "removeComments": false,
 
-		"noImplicitAny": true,
-		"noImplicitOverride": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noImplicitUseStrict": true,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitUseStrict": true,
 
-		"strictNullChecks": true,
-		"strictFunctionTypes": true,
-		"strictPropertyInitialization": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true,
 
-		"paths": {
-			"@main": ["src/main"],
-			"@src/*": ["src/*"],
-			"@tests/*": ["tests/API/*"],
-			"@testsArguments/*": ["tests/arguments/*"],
-			"@testsRoutines": ["tests/routines"]
-		}
-	},
-	"include": ["src/**/*.ts", "tests/**/*.ts"]
+        "paths": {
+            "@main": ["main"],
+            "@src/*": ["*"]
+        },
+
+        "plugins": [
+            { "transform": "typescript-transform-paths" },
+            { "transform": "typescript-transform-paths", "afterDeclarations": true }
+        ]
+    },
+    "include": ["src/**/*.ts"]
 }
