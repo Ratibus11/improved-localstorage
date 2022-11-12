@@ -6,19 +6,19 @@ A better way to interact and store data in a browser's localstorage.
 
 -   [Installation](#installation)
 -   Usage
-    -   [`get(key[, options])`](#getkey-options)
-    -   [`set(key, newValue)`](#setkey-newvalue)
-    -   [`exists(key)`](#existskey)
-    -   [`remove(key)`](#removekey)
     -   [`clear()`](#clear)
+    -   [`exists(key)`](#existskey)
+    -   [`get(key[, options])`](#getkey-options)
+    -   [`remove(key)`](#removekey)
+    -   [`set(key, newValue)`](#setkey-newvalue)
     -   `errors`
         -   `entry`
             -   [`CannotParse(error, content)`](#errorsentrycannotparseerror-content)
             -   [`CannotStringify(error)`](#errorsentrycannotstringifyerror)
         -   `options`
             -   `key`
-                -   [`NotString(invalidKey)`](#errorsoptionskeynotstringinvalidkey)
                 -   [`EmptyString()`](#errorsoptionskeyemptystring)
+                -   [`NotString(invalidKey)`](#errorsoptionskeynotstringinvalidkey)
 -   [Contributing](#contributing)
 -   [License](#license)
 -   [Credits to dependancies](#credits-to-dependancies)
@@ -32,6 +32,79 @@ npm install improved-localstorage
 ```
 
 ## Usage
+
+### `clear()`
+
+Remove all local storage's entries.
+
+<details>
+  <summary><b>Returns</b></summary>
+
+`boolean` - `true` if the local storage contains entries while calling the function, `false` otherwise.
+
+</details>
+
+<details>
+  <summary><b>Examples</b></summary>
+
+```js
+// {}
+clear(); // false
+// {}
+```
+
+```js
+// { hi: "everyone" }
+clear(); // true
+// {}
+```
+
+</details>
+
+### `exists(key)`
+
+Check if an entry with a specific key exists.
+
+<details>
+  <summary><b>Returns</b></summary>
+
+`boolean` - `true` if the entry with this key exists, `false` otherwise.
+
+</details>
+
+<details>
+  <summary><b>Arguments</b></summary>
+
+| Name  | Facultative |   Type   | Description |
+| :---: | :---------: | :------: | ----------- |
+| `key` |             | `string` | Entry's key |
+
+</details>
+
+<details>
+  <summary><b>Errors</b></summary>
+
+|                        Type                         | Reason                            |
+| :-------------------------------------------------: | --------------------------------- |
+| [`NotString`](#errorsoptionskeynotstringinvalidkey) | Argument `key` is not a string    |
+|    [`EmptyString`](#errorsoptionskeyemptystring)    | Argument `key` is an empty string |
+
+</details>
+
+<details>
+  <summary><b>Examples</b></summary>
+
+```js
+// { hi: "everyone" }
+exists("hi"); // true
+```
+
+```js
+// { hi: "everyone" }
+exists("something"); // false
+```
+
+</details>
 
 ### `get(key[, options])`
 
@@ -98,6 +171,53 @@ get("hi", { destroyOnError: true }); // Throws SyntaxError
 -   Although `"undefined"` is not a valid JSON string, it will return `undefined`. See [`set(key, newValue)`](#setkey-newvalue) for more details.
 </details>
 
+### `remove(key)`
+
+Remove an entry with a specific key from the local storage.
+
+<details>
+  <summary><b>Returns</b></summary>
+
+`boolean` - `true` if the entry exists while calling the function, `false` otherwise.
+
+</details>
+
+<details>
+  <summary><b>Arguments</b></summary>
+
+| Name  | Facultative |   Type   | Description |
+| :---: | :---------: | :------: | ----------- |
+| `key` |             | `string` | Entry's key |
+
+</details>
+
+<details>
+  <summary><b>Errors</b></summary>
+
+|                        Type                         | Reason                            |
+| :-------------------------------------------------: | --------------------------------- |
+| [`NotString`](#errorsoptionskeynotstringinvalidkey) | Argument `key` is not a string    |
+|    [`EmptyString`](#errorsoptionskeyemptystring)    | Argument `key` is an empty string |
+
+</details>
+
+<details>
+  <summary><b>Examples</b></summary>
+
+```js
+// { hi: "everyone" }
+remove("hi"); // true
+// {}
+```
+
+```js
+// { hi: "everyone" }
+remove("something"); // false
+// { hi: "everyone" }
+```
+
+</details>
+
 ### `set(key, newValue)`
 
 Set a entry in the local storage.
@@ -152,153 +272,6 @@ set("hi", undefined);
 
 </details>
 
-### `exists(key)`
-
-Check if an entry with a specific key exists.
-
-<details>
-  <summary><b>Returns</b></summary>
-
-`boolean` - `true` if the entry with this key exists, `false` otherwise.
-
-</details>
-
-<details>
-  <summary><b>Arguments</b></summary>
-
-| Name  | Facultative |   Type   | Description |
-| :---: | :---------: | :------: | ----------- |
-| `key` |             | `string` | Entry's key |
-
-</details>
-
-<details>
-  <summary><b>Errors</b></summary>
-
-|                        Type                         | Reason                            |
-| :-------------------------------------------------: | --------------------------------- |
-| [`NotString`](#errorsoptionskeynotstringinvalidkey) | Argument `key` is not a string    |
-|    [`EmptyString`](#errorsoptionskeyemptystring)    | Argument `key` is an empty string |
-
-</details>
-
-<details>
-  <summary><b>Examples</b></summary>
-
-```js
-// { hi: "everyone" }
-exists("hi"); // true
-```
-
-```js
-// { hi: "everyone" }
-exists("something"); // false
-```
-
-</details>
-
-### `remove(key)`
-
-Remove an entry with a specific key from the local storage.
-
-<details>
-  <summary><b>Returns</b></summary>
-
-`boolean` - `true` if the entry exists while calling the function, `false` otherwise.
-
-</details>
-
-<details>
-  <summary><b>Arguments</b></summary>
-
-| Name  | Facultative |   Type   | Description |
-| :---: | :---------: | :------: | ----------- |
-| `key` |             | `string` | Entry's key |
-
-</details>
-
-<details>
-  <summary><b>Errors</b></summary>
-
-|                        Type                         | Reason                            |
-| :-------------------------------------------------: | --------------------------------- |
-| [`NotString`](#errorsoptionskeynotstringinvalidkey) | Argument `key` is not a string    |
-|    [`EmptyString`](#errorsoptionskeyemptystring)    | Argument `key` is an empty string |
-
-</details>
-
-<details>
-  <summary><b>Examples</b></summary>
-
-```js
-// { hi: "everyone" }
-remove("hi"); // true
-// {}
-```
-
-```js
-// { hi: "everyone" }
-remove("something"); // false
-// { hi: "everyone" }
-```
-
-</details>
-
-### `clear()`
-
-Remove all local storage's entries.
-
-<details>
-  <summary><b>Returns</b></summary>
-
-`boolean` - `true` if the local storage contains entries while calling the function, `false` otherwise.
-
-</details>
-
-<details>
-  <summary><b>Examples</b></summary>
-
-```js
-// {}
-clear(); // false
-// {}
-```
-
-```js
-// { hi: "everyone" }
-clear(); // true
-// {}
-```
-
-</details>
-
-### `errors.options.key.NotString(invalidKey)`
-
-Argument `key` is not a string.
-
-Inherits from `TypeError`.
-
-<details>
-  <summary><b>Arguments</b></summary>
-
-|     Name     |    Facultative     | Type  | Description      |
-| :----------: | :----------------: | :---: | ---------------- |
-| `invalidKey` | :white_check_mark: | `any` | Invalid used key |
-
-</details>
-
-<details>
-  <summary><b>Notes</b></summary>
-
--   Will display, if possible and if not strictly `undefined`, the invalid key. Otherwise, it will not be displayed.
-</details>
-
-### `errors.options.key.EmptyString()`
-
-Argument `key` is an empty string.
-
-Inherits from `RangeError`.
-
 ### `errors.entry.CannotParse(error, content)`
 
 The entry's content cannot be parsed from JSON.
@@ -343,6 +316,33 @@ Inherits from `TypeError`.
 
 -   `error` will not be displayed in the error message if it's not a `TypeError` instance.
 
+</details>
+
+### `errors.options.key.EmptyString()`
+
+Argument `key` is an empty string.
+
+Inherits from `RangeError`.
+
+### `errors.options.key.NotString(invalidKey)`
+
+Argument `key` is not a string.
+
+Inherits from `TypeError`.
+
+<details>
+  <summary><b>Arguments</b></summary>
+
+|     Name     |    Facultative     | Type  | Description      |
+| :----------: | :----------------: | :---: | ---------------- |
+| `invalidKey` | :white_check_mark: | `any` | Invalid used key |
+
+</details>
+
+<details>
+  <summary><b>Notes</b></summary>
+
+-   Will display, if possible and if not strictly `undefined`, the invalid key. Otherwise, it will not be displayed.
 </details>
 
 ## Contributing
