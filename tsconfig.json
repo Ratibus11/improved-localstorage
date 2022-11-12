@@ -3,13 +3,11 @@
         "target": "ES6",
         "module": "CommonJS",
 
-        "baseUrl": "src",
+        "baseUrl": ".",
         "outDir": "app",
 
         "declaration": true,
         "declarationMap": false,
-        "declarationDir": "types",
-        "removeComments": false,
 
         "noImplicitAny": true,
         "noImplicitOverride": true,
@@ -22,8 +20,11 @@
         "strictPropertyInitialization": true,
 
         "paths": {
-            "@main": ["main"],
-            "@src/*": ["*"]
+            "@main": ["src/main"],
+            "@src/*": ["src/*"],
+            "@tests/*": ["tests/API/*"],
+            "@testsArguments/*": ["tests/arguments/*"],
+            "@testsRoutines": ["tests/routines"]
         },
 
         "plugins": [
@@ -31,5 +32,5 @@
             { "transform": "typescript-transform-paths", "afterDeclarations": true }
         ]
     },
-    "include": ["src/**/*.ts"]
+    "include": ["src/**/*.ts", "tests/**/*.ts"]
 }

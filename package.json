@@ -2,7 +2,7 @@
     "name": "improved-localstorage",
     "displayName": "Improved Localstorage",
     "description": "NPM package for interactions with localstorage with JSON-like data.",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "keywords": [
         "localstorage",
         "json"
@@ -20,7 +20,7 @@
     "scripts": {
         "prepare": "ts-patch install -s",
         "build": "gulp build",
-        "test": "ts-mocha -r tsconfig-paths/register -p tsconfig.test.json tests/API/**/*.ts",
+        "test": "ts-mocha -r tsconfig-paths/register -p tsconfig.json tests/API/**/*.ts",
         "prepublishOnly": "npm i && npm run build && npm run test"
     },
     "devDependencies": {

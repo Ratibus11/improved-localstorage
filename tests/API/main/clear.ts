@@ -7,7 +7,7 @@ import { expect } from "chai";
 import * as routines from "@testsRoutines";
 
 // TESTED FEATURES
-import { clear } from "@src/main";
+import { clear } from "@main";
 
 describe("clear() - Remove all local storage's entries.", () => {
     before(routines.before);

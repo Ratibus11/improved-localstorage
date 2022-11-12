@@ -3,7 +3,7 @@
 import { expect } from "chai";
 
 // TESTED FEATURES
-import * as errors from "@src/errors";
+import { errors } from "@main";
 
 const shouldThrowTypeError = (
     functionToTest: (...args: any) => any,
