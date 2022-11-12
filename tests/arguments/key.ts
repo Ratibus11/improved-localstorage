@@ -5,7 +5,11 @@ import { expect } from "chai";
 // TESTED FEATURES
 import * as errors from "@src/errors";
 
-const shouldThrowTypeError = (functionToTest: (...args: any) => any, keyIndex: number, ...args: any[]) => {
+const shouldThrowTypeError = (
+    functionToTest: (...args: any) => any,
+    keyIndex: number,
+    ...args: any[]
+) => {
     describe("Should throw a `TypeError` if the type is not a string.", () => {
         [null, undefined, 1, false, new Date()].forEach((invalidKey) => {
             const splicedArgs = [...args];
@@ -20,7 +24,11 @@ const shouldThrowTypeError = (functionToTest: (...args: any) => any, keyIndex: n
     });
 };
 
-const shouldThrowRangeError = (functionToTest: (...args: any) => any, keyIndex: number, ...args: any[]) => {
+const shouldThrowRangeError = (
+    functionToTest: (...args: any) => any,
+    keyIndex: number,
+    ...args: any[]
+) => {
     it("Should throw a `RangeError` if the key is an empty string.", () => {
         const splicedArgs = [...args];
         splicedArgs.splice(keyIndex, 0, "");
@@ -30,7 +38,11 @@ const shouldThrowRangeError = (functionToTest: (...args: any) => any, keyIndex: 
         }).to.throw(errors.options.key.EmptyString);
     });
 };
-const shouldThrowError = (functionToTest: (...args: any) => any, keyIndex: number, ...args: any[]) => {
+const shouldThrowError = (
+    functionToTest: (...args: any) => any,
+    keyIndex: number,
+    ...args: any[]
+) => {
     const splicedArgs = [...args];
     splicedArgs.splice(keyIndex, 0, "entry");
 
