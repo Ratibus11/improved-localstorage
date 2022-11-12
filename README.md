@@ -357,7 +357,6 @@ See in LICENSE in the repo's root.
 ## Credits to dependancies
 
 -   [`chai`](https://www.npmjs.com/package/chai) - Assertions with `expect` _(tests)_
--   [`glob`](https://www.npmjs.com/package/glob) - Multi-files selection _(build)_
 -   [`gulp`](https://www.npmjs.com/package/gulp) - Tasks runner _(build)_
 -   [`gulp-minify`](https://www.npmjs.com/package/gulp-minify) - `.js` minifier for Gulp _(build)_
 -   [`gulp-rename`](https://www.npmjs.com/package/gulp-rename) - Files renamer for Gulp _(build)_
@@ -365,6 +364,8 @@ See in LICENSE in the repo's root.
 -   [`merge2`](https://www.npmjs.com/package/merge2) - Multiple streams adapter _(build)_
 -   [`node-localstorage`](https://www.npmjs.com/package/node-localstorage) - Local storage for Node.js _(tests)_
 -   [`ts-mocha`](https://www.npmjs.com/package/ts-mocha) - Mocha version for Typescript _(tests)_
+-   [`ts-patch`](https://www.npmjs.com/package/ts-patch) - Patch for Typescript aliases rewrite _(build)_
 -   [`tsconfig-paths`](https://www.npmjs.com/package/tsconfig-paths) - Loader for `tsconfig.json` aliases _(tests)_
+-   [`typescript-transform-paths`](https://www.npmjs.com/package/typescript-transform-paths) - Typescript plugin for aliases rewrite _(build)_
 
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>

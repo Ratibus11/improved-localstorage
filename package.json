@@ -2,7 +2,7 @@
     "name": "improved-localstorage",
     "displayName": "Improved Localstorage",
     "description": "NPM package for interactions with localstorage with JSON-like data.",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "keywords": [
         "localstorage",
         "json"
@@ -37,6 +37,7 @@
         "node-localstorage": "^2.2.1",
         "ts-mocha": "^10.0.0",
         "ts-patch": "^2.0.2",
+        "tsconfig-paths": "^4.1.0",
         "typescript-transform-paths": "^3.4.4"
     }
 }
