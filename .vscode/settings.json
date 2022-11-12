@@ -1,13 +1,13 @@
 {
-	"files.exclude": {
-		"**/.git": true,
-		"**/.DS_Store": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
 
-		"node_modules": true,
-		"package-lock.json": true,
+        "node_modules": true,
+        "package-lock.json": true,
 
-		"app": true,
-		"types": true,
-		"tests/localstorage": true
-	}
+        "app": true,
+        "types": true,
+        "tests/localstorage": true
+    }
 }
