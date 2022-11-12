@@ -15,11 +15,11 @@ const glob = require("glob");
  * @param {any} callback Callback when the task is done.
  */
 function clean(callback) {
-	["app", "types"].map((path) => {
-		if (fs.existsSync(path)) fs.rmSync(path, { recursive: true });
-	});
+    ["app", "types"].map((path) => {
+        if (fs.existsSync(path)) fs.rmSync(path, { recursive: true });
+    });
 
-	callback();
+    callback();
 }
 
 /**
@@ -27,14 +27,13 @@ function clean(callback) {
  * @returns {any} Task pipes
  */
 function build() {
-	const typescriptProject = gulp_typescript.createProject("tsconfig.json");
+    const typescriptProject = gulp_typescript.createProject("tsconfig.json");
+    const typescriptResult = gulp.src("src/**/*.ts").pipe(typescriptProject());
 
-	const typescriptResult = gulp.src("src/**/*.ts").pipe(typescriptProject());
-
-	return merge2([
-		typescriptResult.js.pipe(gulp.dest("app")),
-		typescriptResult.dts.pipe(gulp.dest("types")),
-	]);
+    return merge2([
+        typescriptResult.js.pipe(gulp.dest("app")),
+        typescriptResult.dts.pipe(gulp.dest("types")),
+    ]);
 }
 
 /**
@@ -42,24 +41,24 @@ function build() {
  * @returns Task pipes.
  */
 function minify() {
-	return gulp
-		.src("app/**/*.js")
-		.pipe(gulp_minify({ ext: { src: ".js", min: ".min.js" } }))
-		.pipe(gulp.dest("app"))
-		.on("end", () => {
-			gulp.src("app/**/*.min.js")
-				.pipe(
-					gulp_rename((path) => {
-						path.basename = path.basename.replace(/.min$/, "");
-					})
-				)
-				.pipe(gulp.dest("app"))
-				.on("end", () => {
-					glob.sync("app/**/*.min.js").forEach((file) => {
-						fs.rmSync(file);
-					});
-				});
-		});
+    return gulp
+        .src("app/**/*.js")
+        .pipe(gulp_minify({ ext: { src: ".js", min: ".min.js" } }))
+        .pipe(gulp.dest("app"))
+        .on("end", () => {
+            gulp.src("app/**/*.min.js")
+                .pipe(
+                    gulp_rename((path) => {
+                        path.basename = path.basename.replace(/.min$/, "");
+                    })
+                )
+                .pipe(gulp.dest("app"))
+                .on("end", () => {
+                    glob.sync("app/**/*.min.js").forEach((file) => {
+                        fs.rmSync(file);
+                    });
+                });
+        });
 }
 
 // Only delete the build folders
