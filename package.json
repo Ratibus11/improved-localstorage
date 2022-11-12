@@ -21,7 +21,7 @@
         "prepare": "ts-patch install -s",
         "build": "gulp build",
         "test": "ts-mocha -r tsconfig-paths/register -p tsconfig.test.json tests/API/**/*.ts",
-        "prepublishOnly": "npm run test && npm run build"
+        "prepublishOnly": "npm i && npm run build && npm run test"
     },
     "devDependencies": {
         "@types/chai": "^4.3.4",
