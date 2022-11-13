@@ -50,6 +50,16 @@ namespace options {
      */
     export namespace key {
         /**
+         * `key` option is an empty string.
+         */
+        export class EmptyString extends RangeError {
+            constructor() {
+                super(`Key must be an non-empty string.`);
+                this.name = "OptionsKeyEmpty";
+            }
+        }
+
+        /**
          * `key` option is not a string.
          */
         export class NotString extends TypeError {
@@ -70,16 +80,6 @@ namespace options {
                     super(`Key must be a string. A ${typeof invalidKey} was provided.`);
                 }
                 this.name = "OptionsKeyNotString";
-            }
-        }
-
-        /**
-         * `key` option is an empty string.
-         */
-        export class EmptyString extends RangeError {
-            constructor() {
-                super(`Key must be an non-empty string.`);
-                this.name = "OptionsKeyEmpty";
             }
         }
     }
