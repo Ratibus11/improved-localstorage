@@ -16,7 +16,9 @@ const glob = require("glob");
  */
 function clean(callback) {
     ["app", "types"].map((path) => {
-        if (fs.existsSync(path)) fs.rmSync(path, { recursive: true });
+        if (fs.existsSync(path)) {
+            fs.rmSync(path, { recursive: true });
+        }
     });
 
     callback();
