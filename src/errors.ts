@@ -69,7 +69,7 @@ namespace entry {
      */
     export class CannotStringify extends TypeError {
         /**
-         * @param {TypeError} error thrown by `JSON.stringify()`.
+         * @param {TypeError} error Thrown by `JSON.stringify()`.
          * @note `error` will not be displayed in the error message if it's not a `TypeError` instance.
          */
         constructor(error: TypeError) {
