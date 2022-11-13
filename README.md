@@ -358,7 +358,7 @@ Inherits from `TypeError`.
 -   Will display, if possible and if not strictly `undefined`, the invalid key. Otherwise, it will not be displayed.
 </details>
 
-## Contributing
+## Contribute
 
 Feel free to [open an issue](https://github.com/Ratibus11/improved-localstorage/issues/new) if you want to report bugs or discuss about suggestions!
 
@@ -367,7 +367,7 @@ Feel free to [open an issue](https://github.com/Ratibus11/improved-localstorage/
 This package is published under the [MIT](https://choosealicense.com/licenses/mit/) license.
 See in LICENSE in the repo's root.
 
-## Credits to dependancies
+## Credits to dependencies
 
 -   [`chai`](https://www.npmjs.com/package/chai) - Assertions with `expect` _(tests)_
 -   [`gulp`](https://www.npmjs.com/package/gulp) - Tasks runner _(build)_
