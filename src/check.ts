@@ -3,8 +3,8 @@ import * as errors from "@src/errors";
 /**
  * Check `key` option validity.
  * @param {string} key Key to test.
- * @throws `TypeError` if the key is not a string.
- * @throws `RangeError` if the key is an empty string.
+ * @throws `errors.options.key.NotString` if the key is not a string.
+ * @throws `errors.options.key.EmptyString` if the key is an empty string.
  */
 function key(key: string): void | never {
     if (typeof key !== "string") {
