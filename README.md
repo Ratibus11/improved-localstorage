@@ -47,7 +47,7 @@ Remove all local storage's entries.
 <details>
   <summary><b>Returns</b></summary>
 
-`boolean` - `true` if the local storage contains entries while calling the function, `false` otherwise.
+-   `boolean` - `true` if the local storage contains entries while calling the function, `false` otherwise.
 
 </details>
 
@@ -75,7 +75,7 @@ Check if an entry with a specific key exists.
 <details>
   <summary><b>Returns</b></summary>
 
-`boolean` - `true` if the entry with the provided key exists, `false` otherwise.
+-   `boolean` - `true` if the entry with the provided key exists, `false` otherwise.
 
 </details>
 
@@ -120,7 +120,7 @@ Get an entry from the local storage.
 <details>
   <summary><b>Returns</b></summary>
 
-`any` - JSON-parsed entry's content, or `null` if the entry doesn't exists.
+-   `any` - JSON-parsed entry's content, or `null` if the entry doesn't exists.
 
 </details>
 
@@ -185,7 +185,7 @@ Remove an entry with a specific key from the local storage.
 <details>
   <summary><b>Returns</b></summary>
 
-`boolean` - `true` if the entry exists while calling the function, `false` otherwise.
+-   `boolean` - `true` if the entry exists while calling the function, `false` otherwise.
 
 </details>
 
