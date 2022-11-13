@@ -1,46 +1,4 @@
 /**
- * Namespace for options errors.
- */
-namespace options {
-    /**
-     * Namespace for `key` option errors.
-     */
-    export namespace key {
-        /**
-         * `key` option is not a string.
-         */
-        export class NotString extends TypeError {
-            /**
-             * @param {any} invalidKey Invalid key.
-             * @note Will display, if possible and if not strictly `undefined`, the invalid key. Otherwise, it will not be displayed.
-             */
-            constructor(invalidKey: any) {
-                try {
-                    super(
-                        `Key ${
-                            invalidKey === undefined ? "" : `${invalidKey}`
-                        } must be a string. A ${typeof invalidKey} was provided.`
-                    );
-                } catch {
-                    super(`Key must be a string. A ${typeof invalidKey} was provided.`);
-                }
-                this.name = "OptionsKeyNotString";
-            }
-        }
-
-        /**
-         * `key` option is an empty string.
-         */
-        export class EmptyString extends RangeError {
-            constructor() {
-                super(`Key must be an non-empty string.`);
-                this.name = "OptionsKeyEmpty";
-            }
-        }
-    }
-}
-
-/**
  * Namespace for localstorage entries's errors.
  */
 namespace entry {
@@ -79,6 +37,50 @@ namespace entry {
                 }`
             );
             this.name = "EntryCannotStringify";
+        }
+    }
+}
+
+/**
+ * Namespace for options errors.
+ */
+namespace options {
+    /**
+     * Namespace for `key` option errors.
+     */
+    export namespace key {
+        /**
+         * `key` option is not a string.
+         */
+        export class NotString extends TypeError {
+            /**
+             * @param {any} invalidKey Invalid key.
+             * @note Will display, if possible and if not strictly `undefined`, the invalid key. Otherwise, it will not be displayed.
+             */
+            constructor(invalidKey: any) {
+                try {
+                    if (invalidKey === undefined) {
+                        super(
+                            `Key ${invalidKey} must be a string. A ${typeof invalidKey} was provided.`
+                        );
+                    } else {
+                        super(`Key must be a string. A ${typeof invalidKey} was provided.`);
+                    }
+                } catch {
+                    super(`Key must be a string. A ${typeof invalidKey} was provided.`);
+                }
+                this.name = "OptionsKeyNotString";
+            }
+        }
+
+        /**
+         * `key` option is an empty string.
+         */
+        export class EmptyString extends RangeError {
+            constructor() {
+                super(`Key must be an non-empty string.`);
+                this.name = "OptionsKeyEmpty";
+            }
         }
     }
 }

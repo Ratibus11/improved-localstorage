@@ -22,9 +22,9 @@ function clear(): boolean {
 /**
  * Check if an entry with a specific key exists.
  * @param {string} key Key to check it's existence.
- * @returns {boolean} `true` if the entry with this key exists, `false` otherwise.
- * @throws {errors.options.key.NotString} If `key` is is not a string.
- * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
+ * @returns {boolean} `true` if the entry with the provided key exists, `false` otherwise.
+ * @throws {errors.options.key.NotString} If `key` is not a string.
+ * @throws {errors.options.key.EmptyString} If `key` is an empty string.
  * @example
  * // { hi: "everyone" }
  * exists("hi"); // true
@@ -41,12 +41,12 @@ function exists(key: string): boolean | never {
  * Get an entry from the local storage.
  * @param {string} key Entry's key.
  * @param {object} options Getter's options:
- * - `destroy` - If strictly `true`, the entry is destroyed after being loaded (even if an error occurred).
- * - `destroyOnError` - If strictly `true`, the entry is destroyed only if an error occurred.
+ * - {boolean} `destroy` - If strictly `true`, the entry will be destroyed after being loaded (even if an error occurred).
+ * - {boolean} `destroyOnError` - If strictly `true`, the entry will be destroyed only if an error occurred.
  * @returns {any} JSON-parsed entry's content, or `null` if the entry doesn't exists.
- * @note Although `"undefined"` is not a valid JSON string, it will return `undefined`. See `set(key, newValue)` for more details.
- * @throws {errors.options.key.NotString} If `key` is is not a string.
- * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
+ * @note Although `"undefined"` is not a valid JSON string, it will anyway return `undefined`. See `set(key, newValue)` for more details.
+ * @throws {errors.options.key.NotString} If `key` is not a string.
+ * @throws {errors.options.key.EmptyString} If `key` is an empty string.
  * @throws {errors.options.entry.CannotParse} If the entry's content cannot be parsed from JSON.
  * @example
  * // { hi: "{\"everyone\":true}" }
@@ -103,8 +103,8 @@ function get(
  * Remove an entry with a specific key from the local storage.
  * @param {string} key Entry to remove's key.
  * @returns {boolean} `true` if the entry exists while calling the function, `false` otherwise.
- * @throws {errors.options.key.NotString} If `key` is is not a string.
- * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
+ * @throws {errors.options.key.NotString} If `key` is not a string.
+ * @throws {errors.options.key.EmptyString} If `key` is an empty string.
  * @example
  * // { hi: "everyone" }
  * remove("hi"); // true
@@ -126,8 +126,8 @@ function remove(key: string): boolean | never {
  * @param {string} key Entry's key.
  * @param {any} newValue Value to set in the entry.
  * @note Although `undefined` can be stringified to JSON but not parsed from it by JavaScript's `JSON` object, `undefined` can be setted and getted with `get()` and `set()`. See `get(key[, options])` for more details.
- * @throws {errors.options.key.NotString} If `key` is is not a string.
- * @throws {errors.options.key.EmptyString} If `key` is is an empty string.
+ * @throws {errors.options.key.NotString} If `key` is not a string.
+ * @throws {errors.options.key.EmptyString} If `key` is an empty string.
  * @throws {errors.options.entry.CannotStringify} If something went wrong while stringifying the value to JSON.
  * @example
  * // {}

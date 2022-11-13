@@ -1,5 +1,12 @@
 # improved-localstorage
 
+![](https://img.shields.io/npm/v/improved-localstorage?label=last%20release&style=flat-square)
+![](https://img.shields.io/github/release-date/Ratibus11/improved-localstorage?label=date&style=flat-square)
+
+![](https://img.shields.io/librariesio/dependents/npm/improved-localstorage?style=flat-square)
+
+![](https://img.shields.io/github/last-commit/Ratibus11/improved-localstorage?style=flat-square)
+
 A better way to interact and store data in a browser's localstorage.
 
 ## Table of content
@@ -47,13 +54,13 @@ Remove all local storage's entries.
 <details>
   <summary><b>Examples</b></summary>
 
-```js
+```ts
 // {}
 clear(); // false
 // {}
 ```
 
-```js
+```ts
 // { hi: "everyone" }
 clear(); // true
 // {}
@@ -68,16 +75,16 @@ Check if an entry with a specific key exists.
 <details>
   <summary><b>Returns</b></summary>
 
-`boolean` - `true` if the entry with this key exists, `false` otherwise.
+`boolean` - `true` if the entry with the provided key exists, `false` otherwise.
 
 </details>
 
 <details>
   <summary><b>Arguments</b></summary>
 
-| Name  | Facultative |   Type   | Description |
-| :---: | :---------: | :------: | ----------- |
-| `key` |             | `string` | Entry's key |
+| Name  | Facultative |   Type   | Description                  |
+| :---: | :---------: | :------: | ---------------------------- |
+| `key` |             | `string` | Key to check it's existence. |
 
 </details>
 
@@ -94,12 +101,12 @@ Check if an entry with a specific key exists.
 <details>
   <summary><b>Examples</b></summary>
 
-```js
+```ts
 // { hi: "everyone" }
 exists("hi"); // true
 ```
 
-```js
+```ts
 // { hi: "everyone" }
 exists("something"); // false
 ```
@@ -120,10 +127,10 @@ Get an entry from the local storage.
 <details>
   <summary><b>Arguments</b></summary>
 
-|   Name    |    Facultative     |   Type   | Description                                                                                                                                                                                                                 |
-| :-------: | :----------------: | :------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|   `key`   |                    | `string` | Entry's key                                                                                                                                                                                                                 |
-| `options` | :white_check_mark: | `object` | Getter's options:<br/>- `destroy` - If strictly `true`, the entry is destroyed after being loaded (even if an error occurred)<br/>- `destroyOnError` - If strictly `true`, the entry is destroyed only if an error occurred |
+|   Name    |    Facultative     |   Type   | Description                                                                                                                                                                                                        |
+| :-------: | :----------------: | :------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|   `key`   |                    | `string` | Entry's key                                                                                                                                                                                                        |
+| `options` | :white_check_mark: | `object` | Getter's options:<br/>- `destroy` - If strictly `true`, the entry will be destroyed after being loaded (even if an error occurred)<br/>- If strictly `true`, the entry will be destroyed only if an error occurred |
 
 </details>
 
@@ -132,8 +139,8 @@ Get an entry from the local storage.
 
 |                         Type                          | Reason                                         |
 | :---------------------------------------------------: | ---------------------------------------------- |
-|  [`NotString`](#errorsoptionskeynotstringinvalidkey)  | `key` is not a string                          |
-|     [`EmptyString`](#errorsoptionskeyemptystring)     | `key` is an empty string                       |
+|  [`NotString`](#errorsoptionskeynotstringinvalidkey)  | Argument `key` is not a string                 |
+|     [`EmptyString`](#errorsoptionskeyemptystring)     | Argument `key` is an empty string              |
 | [`CannotParse`](#errorsentrycannotparseerror-content) | The entry's content cannot be parsed from JSON |
 
 </details>
@@ -141,25 +148,25 @@ Get an entry from the local storage.
 <details>
   <summary><b>Examples</b></summary>
 
-```js
+```ts
 // { hi: "{\"everyone\":true}" }
 get("hi"); // { everyone: true }
 ```
 
-```js
+```ts
 // { hi: "\"everyone\"" }
 get("something"); // null
 ```
 
-```js
+```ts
 // { hi: "undefined" }
 get("hi", { destroy: true }); // undefined
 // {}
 ```
 
-```js
+```ts
 // { hi: "{anError:true}" }
-get("hi", { destroyOnError: true }); // Throws SyntaxError
+get("hi", { destroyOnError: true }); // Throws CannotParse
 // { }
 ```
 
@@ -168,7 +175,7 @@ get("hi", { destroyOnError: true }); // Throws SyntaxError
 <details>
   <summary><b>Notes</b></summary>
 
--   Although `"undefined"` is not a valid JSON string, it will return `undefined`. See [`set(key, newValue)`](#setkey-newvalue) for more details.
+-   Although `"undefined"` is not a valid JSON string, it will anyway return `undefined`. See [`set(key, newValue)`](#setkey-newvalue) for more details.
 </details>
 
 ### `remove(key)`
@@ -185,32 +192,32 @@ Remove an entry with a specific key from the local storage.
 <details>
   <summary><b>Arguments</b></summary>
 
-| Name  | Facultative |   Type   | Description |
-| :---: | :---------: | :------: | ----------- |
-| `key` |             | `string` | Entry's key |
+| Name  | Facultative |   Type   | Description           |
+| :---: | :---------: | :------: | --------------------- |
+| `key` |             | `string` | Entry to remove's key |
 
 </details>
 
 <details>
   <summary><b>Errors</b></summary>
 
-|                        Type                         | Reason                            |
-| :-------------------------------------------------: | --------------------------------- |
-| [`NotString`](#errorsoptionskeynotstringinvalidkey) | Argument `key` is not a string    |
-|    [`EmptyString`](#errorsoptionskeyemptystring)    | Argument `key` is an empty string |
+|                        Type                         | Reason                         |
+| :-------------------------------------------------: | ------------------------------ |
+| [`NotString`](#errorsoptionskeynotstringinvalidkey) | Argument `key` is not a string |
+|    [`EmptyString`](#errorsoptionskeyemptystring)    | Argument `key` is an empty     |
 
 </details>
 
 <details>
   <summary><b>Examples</b></summary>
 
-```js
+```ts
 // { hi: "everyone" }
 remove("hi"); // true
 // {}
 ```
 
-```js
+```ts
 // { hi: "everyone" }
 remove("something"); // false
 // { hi: "everyone" }
@@ -272,6 +279,12 @@ set("hi", undefined);
 
 </details>
 
+<details>
+  <summary><b>Notes</b></summary>
+
+-   Although `undefined` can be stringified to JSON but not parsed from it by JavaScript's `JSON` object, `undefined` can be setted and getted with `get()` and `set()`. See [`get(key[, options])`](#getkey-options) for more details.
+</details>
+
 ### `errors.entry.CannotParse(error, content)`
 
 The entry's content cannot be parsed from JSON.
@@ -281,10 +294,10 @@ Inherits from `SyntaxError`.
 <details>
   <summary><b>Arguments</b></summary>
 
-|   Name    | Facultative |     Type      | Description                    |
-| :-------: | :---------: | :-----------: | ------------------------------ |
-|  `error`  |             | `SyntaxError` | Error thrown by `JSON.parse()` |
-| `content` |             |   `string`    | Loaded content                 |
+|   Name    |    Facultative     |     Type      | Description                    |
+| :-------: | :----------------: | :-----------: | ------------------------------ |
+|  `error`  | :white_check_mark: | `SyntaxError` | Error thrown by `JSON.parse()` |
+| `content` | :white_check_mark: |   `string`    | Loaded content                 |
 
 </details>
 
@@ -305,9 +318,9 @@ Inherits from `TypeError`.
 <details>
   <summary><b>Arguments</b></summary>
 
-|  Name   | Facultative |    Type     | Description                        |
-| :-----: | :---------: | :---------: | ---------------------------------- |
-| `error` |             | `TypeError` | Error thrown by `JSON.stringify()` |
+|  Name   |    Facultative     |    Type     | Description                        |
+| :-----: | :----------------: | :---------: | ---------------------------------- |
+| `error` | :white_check_mark: | `TypeError` | Error thrown by `JSON.stringify()` |
 
 </details>
 
@@ -369,3 +382,5 @@ See in LICENSE in the repo's root.
 -   [`typescript-transform-paths`](https://www.npmjs.com/package/typescript-transform-paths) - Typescript plugin for aliases rewrite _(build)_
 
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>
+
+![](https://img.shields.io/github/stars/ratibus11/improved-localstorage?style=social)
