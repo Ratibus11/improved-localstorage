@@ -10,7 +10,7 @@ const shouldThrowTypeError = (
     keyIndex: number,
     ...args: any[]
 ) => {
-    describe("Should throw a `TypeError` if the type is not a string.", () => {
+    describe("Should throw a `NotString` if the type is not a string.", () => {
         [null, undefined, 1, false, new Date()].forEach((invalidKey) => {
             const splicedArgs = [...args];
             splicedArgs.splice(keyIndex, 0, invalidKey);
@@ -29,7 +29,7 @@ const shouldThrowRangeError = (
     keyIndex: number,
     ...args: any[]
 ) => {
-    it("Should throw a `RangeError` if the key is an empty string.", () => {
+    it("Should throw a `EmptyString` if the key is an empty string.", () => {
         const splicedArgs = [...args];
         splicedArgs.splice(keyIndex, 0, "");
 

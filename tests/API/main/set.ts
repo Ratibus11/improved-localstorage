@@ -50,7 +50,7 @@ describe("set(key, newValue) - Set a entry in the local storage.", () => {
         });
     });
 
-    describe("Should throw an `Error` if it cannot be parsed as JSON", () => {
+    describe("Should throw a `CannotStringify` if it cannot be parsed as JSON", () => {
         it("With cyclic object", () => {
             const cyclicObject = { inside: {} };
             cyclicObject.inside = cyclicObject;

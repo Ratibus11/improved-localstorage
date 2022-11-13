@@ -132,7 +132,7 @@ describe("get(key[, options]) - Get an entry from the local storage.", () => {
         });
     });
 
-    it("Should throw a `SyntaxError` if the content cannot be parsed from JSON.", () => {
+    it("Should throw a `CannotParse` if the content cannot be parsed from JSON.", () => {
         const key = "test";
         localStorage.setItem(key, "");
 
