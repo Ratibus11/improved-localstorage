@@ -11,7 +11,7 @@ namespace options {
          */
         export class NotString extends TypeError {
             /**
-             * @param invalidKey Invalid key.
+             * @param {any} invalidKey Invalid key.
              * @note Will display, if possible and if not strictly `undefined`, the invalid key. Otherwise, it will not be displayed.
              */
             constructor(invalidKey: any) {
@@ -49,8 +49,8 @@ namespace entry {
      */
     export class CannotParse extends SyntaxError {
         /**
-         * @param error Error thrown by `JSON.parse()`.
-         * @param content Loaded content.
+         * @param {SyntaxError} error Error thrown by `JSON.parse()`.
+         * @param {string} content Loaded content.
          * @note `error` will not be displayed in the error message if it's not a `SyntaxError` instance.
          * @note `content` will not be displayed in the error message if it's not a string.
          */
@@ -69,7 +69,7 @@ namespace entry {
      */
     export class CannotStringify extends TypeError {
         /**
-         * @param error Error thrown by `JSON.stringify()`.
+         * @param {TypeError} error thrown by `JSON.stringify()`.
          * @note `error` will not be displayed in the error message if it's not a `TypeError` instance.
          */
         constructor(error: TypeError) {
