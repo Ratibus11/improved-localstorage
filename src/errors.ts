@@ -18,7 +18,7 @@ namespace options {
                 try {
                     super(
                         `Key ${
-                            invalidKey === undefined ? "" : "${invalidKey}"
+                            invalidKey === undefined ? "" : `${invalidKey}`
                         } must be a string. A ${typeof invalidKey} was provided.`
                     );
                 } catch {
