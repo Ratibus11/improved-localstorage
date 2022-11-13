@@ -19,7 +19,7 @@ describe("set(key, newValue) - Set a entry in the local storage.", () => {
     after(routines.after);
 
     describe("key - Entry's key.", () => {
-        keyTests.shouldThrowError(set, 0);
+        keyTests.shouldNotThrowError(set, 0);
         keyTests.shouldThrowRangeError(set, 0);
         keyTests.shouldThrowTypeError(set, 0);
     });
@@ -50,7 +50,7 @@ describe("set(key, newValue) - Set a entry in the local storage.", () => {
         });
     });
 
-    describe("Should throw a `CannotStringify` if it cannot be parsed as JSON", () => {
+    describe("Should throw a `CannotStringify` if it cannot be parsed as JSON.", () => {
         it("With cyclic object", () => {
             const cyclicObject = { inside: {} };
             cyclicObject.inside = cyclicObject;

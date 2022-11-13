@@ -19,7 +19,7 @@ describe("get(key[, options]) - Get an entry from the local storage.", () => {
     after(routines.after);
 
     describe("key - Entry's key.", () => {
-        keyTests.shouldThrowError(get, 0);
+        keyTests.shouldNotThrowError(get, 0);
         keyTests.shouldThrowRangeError(get, 0);
         keyTests.shouldThrowTypeError(get, 0);
     });
@@ -39,7 +39,7 @@ describe("get(key[, options]) - Get an entry from the local storage.", () => {
                 });
             });
 
-            describe("Should not destroy the item if `options` is not correctly setted", () => {
+            describe("Should not destroy the item if `options` is not correctly setted.", () => {
                 const willBeFalse = ["true", 1, false, undefined, null];
 
                 willBeFalse.forEach((falseElement) => {

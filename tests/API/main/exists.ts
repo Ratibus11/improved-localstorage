@@ -19,7 +19,7 @@ describe("exists(key) - Check if an entry with a specific key exists.", () => {
     after(routines.after);
 
     describe("key - Entry's key.", () => {
-        keyTests.shouldThrowError(exists, 0);
+        keyTests.shouldNotThrowError(exists, 0);
         keyTests.shouldThrowRangeError(exists, 0);
         keyTests.shouldThrowTypeError(exists, 0);
     });

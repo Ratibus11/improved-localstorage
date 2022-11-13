@@ -38,7 +38,7 @@ const shouldThrowRangeError = (
         }).to.throw(errors.options.key.EmptyString);
     });
 };
-const shouldThrowError = (
+const shouldNotThrowError = (
     functionToTest: (...args: any) => any,
     keyIndex: number,
     ...args: any[]
@@ -53,4 +53,4 @@ const shouldThrowError = (
     });
 };
 
-export { shouldThrowError, shouldThrowTypeError, shouldThrowRangeError };
+export { shouldNotThrowError, shouldThrowTypeError, shouldThrowRangeError };

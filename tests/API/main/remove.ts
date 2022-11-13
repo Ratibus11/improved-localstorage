@@ -19,7 +19,7 @@ describe("remove(key) - Remove an entry with a specific key from the local stora
     after(routines.after);
 
     describe("key - Entry's key.", () => {
-        keyTests.shouldThrowError(remove, 0);
+        keyTests.shouldNotThrowError(remove, 0);
         keyTests.shouldThrowRangeError(remove, 0);
         keyTests.shouldThrowTypeError(remove, 0);
     });
