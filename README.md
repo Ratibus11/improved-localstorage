@@ -26,7 +26,7 @@ A better way to interact and store data in a browser's localstorage.
             -   `key`
                 -   [`EmptyString()`](#errorsoptionskeyemptystring)
                 -   [`NotString(invalidKey)`](#errorsoptionskeynotstringinvalidkey)
--   [Contributing](#contributing)
+-   [Contribute](#contribute)
 -   [License](#license)
 -   [Credits to dependancies](#credits-to-dependancies)
 
