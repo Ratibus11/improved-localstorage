@@ -4,10 +4,6 @@
         "module": "CommonJS",
 
         "baseUrl": ".",
-        "outDir": "app",
-
-        "declaration": true,
-        "declarationMap": false,
 
         "noImplicitAny": true,
         "noImplicitOverride": true,
@@ -15,22 +11,18 @@
         "noImplicitThis": true,
         "noImplicitUseStrict": true,
 
-        "strictNullChecks": true,
         "strictFunctionTypes": true,
-        "strictPropertyInitialization": true,
+        "strictNullChecks": true,
+
+        "declaration": true,
+        "declarationMap": false,
+
+        "resolveJsonModule": true,
 
         "paths": {
-            "@main": ["src/main"],
             "@src/*": ["src/*"],
-            "@tests/*": ["tests/API/*"],
-            "@testsArguments/*": ["tests/arguments/*"],
-            "@testsRoutines": ["tests/routines"]
-        },
-
-        "plugins": [
-            { "transform": "typescript-transform-paths" },
-            { "transform": "typescript-transform-paths", "afterDeclarations": true }
-        ]
+            "@main": ["src/main"]
+        }
     },
     "include": ["src/**/*.ts", "tests/**/*.ts"]
 }

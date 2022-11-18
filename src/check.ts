@@ -1,10 +1,10 @@
 import * as errors from "@src/errors";
 
 /**
- * Check `key` option validity.
- * @param {string} key Key to test.
- * @throws {errors.options.key.NotString} If the key is not a string.
- * @throws {errors.options.key.EmptyString} If the key is an empty string.
+ * Check provided key's validity
+ * @param key Key to check its validity.
+ * @throws {@link errors.options.key.NotString} if the provided key is not a string.
+ * @throws {@link errors.options.key.EmptyString} if the provided key is an empty string.
  */
 function key(key: any): void | never {
     if (typeof key !== "string") {

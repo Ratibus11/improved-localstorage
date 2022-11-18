@@ -5,6 +5,10 @@ package-lock.json
 # Build
 app
 types
+docs
+
+# Tests
+tests/.localstorage
 
 # System
 .DS_Store

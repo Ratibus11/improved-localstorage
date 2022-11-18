@@ -1,86 +1,70 @@
-/**
- * Namespace for localstorage entries's errors.
- */
-namespace entry {
-    /**
-     * The entry's content cannot be parsed from JSON.
-     */
-    export class CannotParse extends SyntaxError {
-        /**
-         * @param {SyntaxError} error Error thrown by `JSON.parse()`.
-         * @param {string} content Loaded content.
-         * @note `error` will not be displayed in the error message if it's not a `SyntaxError` instance.
-         * @note `content` will not be displayed in the error message if it's not a string.
-         */
-        constructor(error: SyntaxError, content: string) {
-            super(
-                `Something went wrong while parsing entry's content from JSON${
-                    error instanceof SyntaxError === false ? "" : `: ${error}`
-                }${typeof content !== "string" ? "" : `, in: ${content}`}.`
-            );
-            this.name = "EntryCannotParse";
+// Functions arguments'-related errors namespace
+namespace options {
+    // 'key' argument's-related errors namespace
+    export namespace key {
+        // 'key' argument is an empty string.
+        export class EmptyString extends RangeError {
+            constructor() {
+                super(`Provided key is an empty string. Must be a non-empty string.`);
+            }
         }
-    }
 
-    /**
-     * The provided value cannot be stringified to JSON.
-     */
-    export class CannotStringify extends TypeError {
-        /**
-         * @param {TypeError} error Thrown by `JSON.stringify()`.
-         * @note `error` will not be displayed in the error message if it's not a `TypeError` instance.
-         */
-        constructor(error: TypeError) {
-            super(
-                `Something went wrong while stringifying value to JSON${
-                    error instanceof TypeError === false ? "." : `: ${error}`
-                }`
-            );
-            this.name = "EntryCannotStringify";
+        // 'key' argument is not a string.
+        export class NotString extends TypeError {
+            /**
+             * @param invalidKey Invalid used key.
+             * @remarks Will display the key if possible.
+             */
+            constructor(invalidKey: any) {
+                try {
+                    super(
+                        `Provided key '${invalidKey}' is a '${typeof invalidKey}'. Must be a string.`
+                    );
+                } catch {
+                    super(`Provided key is a '${typeof invalidKey}'. Must be a string.`);
+                }
+            }
         }
     }
 }
 
-/**
- * Namespace for options errors.
- */
-namespace options {
-    /**
-     * Namespace for `key` option errors.
-     */
-    export namespace key {
+// Localstorage entries'-related errors namespace
+namespace entry {
+    // Localstorage's entry cannot be parsed as JSON.
+    export class CannotParse extends SyntaxError {
         /**
-         * `key` option is an empty string.
+         * @param error Error thrown by `JSON.parse()`.
+         * @throws [TypeError](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/TypeError) if `error` is not a `SyntaxError`.
          */
-        export class EmptyString extends RangeError {
-            constructor() {
-                super(`Key must be an non-empty string.`);
-                this.name = "OptionsKeyEmpty";
-            }
-        }
+        constructor(error: SyntaxError) {
+            const errorConstructor = error.constructor;
 
-        /**
-         * `key` option is not a string.
-         */
-        export class NotString extends TypeError {
-            /**
-             * @param {any} invalidKey Invalid key.
-             * @note Will display, if possible and if not strictly `undefined`, the invalid key. Otherwise, it will not be displayed.
-             */
-            constructor(invalidKey: any) {
-                try {
-                    if (invalidKey === undefined) {
-                        super(
-                            `Key ${invalidKey} must be a string. A ${typeof invalidKey} was provided.`
-                        );
-                    } else {
-                        super(`Key must be a string. A ${typeof invalidKey} was provided.`);
-                    }
-                } catch {
-                    super(`Key must be a string. A ${typeof invalidKey} was provided.`);
-                }
-                this.name = "OptionsKeyNotString";
+            if (errorConstructor !== SyntaxError) {
+                throw new TypeError(
+                    `Provided error is a '${errorConstructor.name}'. Must be a 'SyntaxError'.`
+                );
             }
+
+            super(`Cannot parse entry as JSON: ${error.message}`);
+        }
+    }
+
+    // Value cannot be stringified as JSON.
+    export class CannotStringify extends TypeError {
+        /**
+         * @param error Error thrown by `JSON.stringify()`.
+         * @throws [TypeError](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/TypeError) if `error` is not a `TypeError`.
+         */
+        constructor(error: TypeError) {
+            const errorConstructor = error.constructor;
+
+            if (errorConstructor !== TypeError) {
+                throw new TypeError(
+                    `Provided error is a '${errorConstructor.name}'. Must be an instance of 'TypeError'.`
+                );
+            }
+
+            super(`Cannot stringify value as JSON: ${error.message}`);
         }
     }
 }

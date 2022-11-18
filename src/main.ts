@@ -1,159 +1,149 @@
-import * as errors from "@src/errors";
 import * as check from "@src/check";
+import * as errors from "@src/errors";
 
 /**
- * Remove all local storage's entries.
- * @returns {boolean} `true` if the local storage contains entries while calling the function, `false` otherwise.
+ * Remove all local storage's content.
+ * @returns `true` if there were content in the local storage while calling the function, `false` otherwise.
+ * @example
+ * // { a: "\"hi\"", b: "\"everyone\"" }
+ * clear(); // true
+ * // {}
  * @example
  * // {}
- * clear() // false
- * // {}
- * @example
- * // { hi: "everyone" }
- * clear() // true
+ * clear(); // false
  * // {}
  */
 function clear(): boolean {
-    const hasContent = localStorage.length > 0;
+    const doContentExists = localStorage.length > 0;
     localStorage.clear();
-    return hasContent;
+    return doContentExists;
 }
 
 /**
- * Check if an entry with a specific key exists.
- * @param {string} key Key to check it's existence.
- * @returns {boolean} `true` if the entry with the provided key exists, `false` otherwise.
- * @throws {errors.options.key.NotString} If `key` is not a string.
- * @throws {errors.options.key.EmptyString} If `key` is an empty string.
+ * Check if a specific entry exists in the local storage.
+ * @param key Entry's key to check its existence.
+ * @returns `true` if an entry with the provided key exists in the local storage, `false` otherwise.
  * @example
- * // { hi: "everyone" }
- * exists("hi"); // true
+ * // { hi: "\"everyone\"" }
+ * exists("hi") // true
  * @example
- * // { hi: "everyone" }
- * exists("something"); // false
+ * // { hello: "\"everyone\"" }
+ * exists("hi") // false
+ * @
  */
 function exists(key: string): boolean | never {
     check.key(key);
+
     return localStorage.getItem(key) !== null;
 }
 
 /**
- * Get an entry from the local storage.
- * @param {string} key Entry's key.
- * @param {object} options Getter's options:
- * - {boolean} `destroy` - If strictly `true`, the entry will be destroyed after being loaded (even if an error occurred).
- * - {boolean} `destroyOnError` - If strictly `true`, the entry will be destroyed only if an error occurred.
- * @returns {any} JSON-parsed entry's content, or `null` if the entry doesn't exists.
- * @note Although `"undefined"` is not a valid JSON string, it will anyway return `undefined`. See `set(key, newValue)` for more details.
- * @throws {errors.options.key.NotString} If `key` is not a string.
- * @throws {errors.options.key.EmptyString} If `key` is an empty string.
- * @throws {errors.options.entry.CannotParse} If the entry's content cannot be parsed from JSON.
- * @example
- * // { hi: "{\"everyone\":true}" }
- * get("hi"); // { everyone: true }
+ * Getter's options.
+ */
+interface GetOptions {
+    /**
+     * If `true`, will remove the entry after being loaded, even if an error occurred.
+     */
+    destroy?: boolean;
+    /**
+     * If `true`, will remove the entry only if an error occurred.
+     */
+    destroyOnError?: boolean;
+}
+
+/**
+ * Get an entry's value from the local storage.
+ * @param key Entry to get its value's key.
+ * @param options Getter's options.
+ * @returns Entry's parsed content, or `null` if it doesn't exists.
+ * @remarks
+ * As `null` stored in the local storage and may be returned by {@link get} if the entry doesn't exists, I don't recommand to use {@link get} to check an entry's existence. Instead, use `exists`.
+ * Altought `undefined` can be stringify as JSON but not be parsed from it, {@link get} support this value. Check {@link get}'s examples and {@link set} for more details.
  * @example
  * // { hi: "\"everyone\"" }
- * get("something"); // null
+ * get("hi"); // "everyone"
  * @example
- * // { hi: "undefined" }
- * get("hi", { destroy: true }); // undefined
+ * // { hi: "{\"everyone\":true}" }
+ * get("hi", { destroy: true }); // { everyone: true }
  * // {}
  * @example
- * // { hi: "{anError:true}" }
- * get("hi", { destroyOnError: true }); // Throws SyntaxError
- * // { }
+ * // { hello: "\"everyone\"" }
+ * get("hi") // null
+ * @throws {@link errors.entry.CannotParse} if the localstorage's entry cannot be parsed as JSON.
  */
-function get(
-    key: string,
-    options?: {
-        destroy?: boolean;
-        destroyOnError?: boolean;
-    }
-): any | never {
-    check.key(key);
-
+function get(key: string, options?: GetOptions): any | null | never {
     options = {
         destroy: options?.destroy === true,
         destroyOnError: options?.destroyOnError === true,
     };
 
-    const entryContent = localStorage.getItem(key);
+    check.key(key);
+
+    const localStorageContent = localStorage.getItem(key);
+
+    if (localStorageContent === null) {
+        return null;
+    } else if (localStorageContent === "undefined") {
+        return undefined;
+    }
+
+    const [error, parsedLocalStorageContent]: [undefined, any] | [SyntaxError, undefined] = (() => {
+        try {
+            return [undefined, JSON.parse(localStorageContent)];
+        } catch (error) {
+            if (options.destroyOnError) {
+                remove(key);
+            }
+            return [error as SyntaxError, undefined];
+        }
+    })();
+
     if (options.destroy) {
         remove(key);
     }
 
-    switch (entryContent) {
-        case null:
-            return null;
-        case "undefined":
-            return undefined;
+    if (error) {
+        throw new errors.entry.CannotParse(error);
     }
 
-    try {
-        return JSON.parse(entryContent);
-    } catch (error) {
-        if (options.destroyOnError) {
-            remove(key);
-        }
-        throw new errors.entry.CannotParse(error as SyntaxError, entryContent);
-    }
+    return parsedLocalStorageContent;
 }
 
 /**
- * Remove an entry with a specific key from the local storage.
- * @param {string} key Entry to remove's key.
- * @returns {boolean} `true` if the entry exists while calling the function, `false` otherwise.
- * @throws {errors.options.key.NotString} If `key` is not a string.
- * @throws {errors.options.key.EmptyString} If `key` is an empty string.
- * @example
- * // { hi: "everyone" }
- * remove("hi"); // true
- * // {}
- * @example
- * // { hi: "everyone" }
- * remove("something"); // false
- * // { hi: "everyone" }
+ * Remove a specific entry from the local storage.
+ * @param key Entry to remove's key.
+ * @returns `true` if an entry with the provided key exists while calling the function, `false` otherwise.
  */
 function remove(key: string): boolean | never {
     check.key(key);
-    const entryExists = exists(key);
+
+    const doEntryExists = exists(key);
     localStorage.removeItem(key);
-    return entryExists;
+    return doEntryExists;
 }
 
 /**
- * Set a entry in the local storage.
- * @param {string} key Entry's key.
- * @param {any} newValue Value to set in the entry.
- * @note Although `undefined` can be stringified to JSON but not parsed from it by JavaScript's `JSON` object, `undefined` can be setted and getted with `get()` and `set()`. See `get(key[, options])` for more details.
- * @throws {errors.options.key.NotString} If `key` is not a string.
- * @throws {errors.options.key.EmptyString} If `key` is an empty string.
- * @throws {errors.options.entry.CannotStringify} If something went wrong while stringifying the value to JSON.
+ * Set a value in the local storage.
+ * @param key Entry to set its value's key.
+ * @param value Value to set in the entry.
  * @example
  * // {}
  * set("hi", "everyone");
  * // { hi: "\"everyone\"" }
  * @example
- * // { hi: "\"nobody\"" }
- * set("hi", { everyone: true });
- * // { hi: "{\"everyone\":true}" }
- * @example
- * // {}
- * set("hi", null);
- * // { hi: "null" }
- * @example
- * // {}
- * set("hi", undefined);
- * // { hi: "undefined" }
+ * // { hi: "\"everyone\"" }
+ * set("hi", {everyone: false});
+ * // { hi: "{\"everyone\":false}"}
+ * @throws {errors.entry.CannotParse} if the value cannot be stringified as JSON.
  */
-function set(key: string, newValue: any): void | never {
+function set(key: string, value: any): void | never {
     check.key(key);
 
-    const [error, result]: [TypeError, undefined] | [undefined, string] = (() => {
+    const [error, stringifiedValue]: [undefined, string] | [TypeError, undefined] = (() => {
         try {
-            return [undefined, JSON.stringify(newValue)];
+            return [undefined, JSON.stringify(value)];
         } catch (error) {
-            return [error, undefined];
+            return [error as TypeError, undefined];
         }
     })();
 
@@ -161,7 +151,7 @@ function set(key: string, newValue: any): void | never {
         throw new errors.entry.CannotStringify(error);
     }
 
-    localStorage.setItem(key, result);
+    localStorage.setItem(key, stringifiedValue);
 }
 
-export { get, set, exists, remove, clear, errors };
+export { clear, exists, get, set, remove, errors };
