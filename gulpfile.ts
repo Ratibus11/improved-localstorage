@@ -8,7 +8,6 @@ import * as gulpUglify from "gulp-uglify";
 import * as fs from "fs";
 import * as merge2 from "merge2";
 import * as path from "path";
-
 import * as browserify from "browserify";
 import * as source from "vinyl-source-stream";
 import * as buffer from "vinyl-buffer";
