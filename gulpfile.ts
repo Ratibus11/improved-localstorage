@@ -12,7 +12,7 @@ import * as browserify from "browserify";
 import * as vinylSourceStream from "vinyl-source-stream";
 import * as vinylBuffer from "vinyl-buffer";
 
-const cwd = path.resolve();
+const cwd = __dirname;
 const paths = {
     clean: ["build"],
     typescript: {
@@ -27,8 +27,8 @@ const paths = {
     build: {
         types: path.resolve("build/types"),
         app: {
-            path: cwd,
-            name: "build/app.js",
+            path: path.resolve("build"),
+            name: "app.js",
         },
     },
 };
