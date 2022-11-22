@@ -12,7 +12,7 @@ import * as browserify from "browserify";
 import * as vinylSourceStream from "vinyl-source-stream";
 import * as vinylBuffer from "vinyl-buffer";
 
-const cwd = process.cwd();
+const cwd = __dirname;
 const paths = {
     clean: ["build"],
     typescript: {
@@ -39,7 +39,7 @@ const paths = {
  */
 function clean(done: gulp.TaskFunctionCallback) {
     paths.clean.forEach((folder) => {
-        const folderPath = path.resolve(process.cwd(), folder);
+        const folderPath = path.resolve(__dirname, folder);
 
         if (fs.existsSync(folderPath)) {
             fs.rmSync(folderPath, { recursive: true });
