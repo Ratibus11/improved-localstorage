@@ -12,5 +12,6 @@
 # Project
 src
 tsconfig.json
-gulpfile.js
+gulpfile.ts
 tests
+jest.config.ts

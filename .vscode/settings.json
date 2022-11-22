@@ -6,8 +6,6 @@
         "node_modules": true,
         "package-lock.json": true,
 
-        "app": true,
-        "types": true,
-        "docs": false
+        "build": false
     }
 }

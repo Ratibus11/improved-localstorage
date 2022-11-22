@@ -3,7 +3,8 @@
         "target": "ES6",
         "module": "CommonJS",
 
-        "baseUrl": ".",
+        "baseUrl": "src",
+        "rootDir": ".",
 
         "noImplicitAny": true,
         "noImplicitOverride": true,
@@ -20,9 +21,14 @@
         "resolveJsonModule": true,
 
         "paths": {
-            "@src/*": ["src/*"],
-            "@main": ["src/main"]
-        }
+            "@src/*": ["*"],
+            "@main": ["main"]
+        },
+
+        "plugins": [
+            { "transform": "typescript-transform-paths" },
+            { "transform": "typescript-transform-paths", "afterDeclarations": true }
+        ]
     },
-    "include": ["src/**/*.ts", "tests/**/*.ts"]
+    "include": ["src/**/*.ts", "src/**/*.ts"]
 }

@@ -3,9 +3,7 @@ node_modules
 package-lock.json
 
 # Build
-app
-types
-docs
+build
 
 # Tests
 tests/.localstorage
