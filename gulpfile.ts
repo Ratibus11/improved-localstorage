@@ -12,20 +12,20 @@ import * as browserify from "browserify";
 import * as vinylSourceStream from "vinyl-source-stream";
 import * as vinylBuffer from "vinyl-buffer";
 
-const cwd = __dirname;
+const cwd = path.resolve();
 const paths = {
     clean: ["build"],
     typescript: {
-        tsconfig: path.resolve(cwd, "tsconfig.json"),
-        entry: path.resolve(cwd, "src/main.ts"),
-        glob: path.resolve(cwd, "src/**/*.ts"),
+        tsconfig: path.resolve("tsconfig.json"),
+        entry: path.resolve("src/main.ts"),
+        glob: path.resolve("src/**/*.ts"),
     },
     transpiled: {
-        entry: path.resolve(cwd, "build/build/main.js"),
-        app: path.resolve(cwd, "build/build"),
+        entry: path.resolve("build/build/main.js"),
+        app: path.resolve("build/build"),
     },
     build: {
-        types: path.resolve(cwd, "build/types"),
+        types: path.resolve("build/types"),
         app: {
             path: cwd,
             name: "build/app.js",
