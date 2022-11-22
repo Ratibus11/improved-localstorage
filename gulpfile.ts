@@ -9,8 +9,8 @@ import * as fs from "fs";
 import * as merge2 from "merge2";
 import * as path from "path";
 import * as browserify from "browserify";
-import * as source from "vinyl-source-stream";
-import * as buffer from "vinyl-buffer";
+import * as vinylSourceStream from "vinyl-source-stream";
+import * as vinylBuffer from "vinyl-buffer";
 
 const cwd = process.cwd();
 const paths = {
@@ -74,8 +74,8 @@ function minify(done: gulp.TaskFunctionCallback) {
         debug: true,
     })
         .bundle()
-        .pipe(source(paths.build.app.name))
-        .pipe(buffer())
+        .pipe(vinylSourceStream(paths.build.app.name))
+        .pipe(vinylBuffer())
         .pipe(gulpUglify())
         .pipe(gulp.dest(paths.build.app.path))
         .on("end", () => {
