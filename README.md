@@ -9,10 +9,6 @@
 
 A better way to interact and store data in a browser's localstorage.
 
-## Usage
-
-All documentation is automatically generated
-
 ## Contribute
 
 Feel free to [open an issue](https://github.com/Ratibus11/improved-localstorage/issues/new) if you want to report bugs or discuss about suggestions!
