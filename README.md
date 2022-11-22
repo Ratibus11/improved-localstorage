@@ -38,6 +38,7 @@ See in LICENSE in the repo's root.
 -   [merge2](https://npmjs.com/package/merge2) - Streams mergin _(build)_
 -   [node-localstorage](https://npmjs.com/package/node-localstorage) - [localstorage](https://developer.mozilla.org/fr/docs/Web/API/Window/localStorage) emulator on Node.js _(test)_
 -   [ts-jest](https://npmjs.com/package/ts-jest) - Typescript support for Jest _(test)_
+-   [ts-node](https://npmjs.com/package/ts-node) - Typescript engine for Node.js _(build)_
 -   [ts-patch](https://npmjs.com/package/ts-patch) - Typescript patch for aliases rewrite _(build)_
 -   [typescript-transform-paths](https://npmjs.com/package/typescript-transform-paths) - Typescript plugin for aliases rewrite _(build)_
 -   [vinyl-buffer](https://npmjs.com/package/vinyl-buffer) - Convert gulp's vinyl to buffer _(build)_
