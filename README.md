@@ -1,7 +1,7 @@
-# improved-localstorage
+# :bookmark_tabs: improved-localstorage
 
 ![](https://img.shields.io/npm/v/improved-localstorage?label=last%20release&style=flat-square)
-![](https://img.shields.io/github/release-date/Ratibus11/improved-localstorage?label=date&style=flat-square)
+![](https://img.shields.io/github/release-date/Ratibus11/improved-localstorage?label=from&style=flat-square)
 
 ![](https://img.shields.io/librariesio/dependents/npm/improved-localstorage?style=flat-square)
 
@@ -9,28 +9,39 @@
 
 A better way to interact and store data in a browser's localstorage.
 
-## Contribute
+## :keyboard: Usage
+
+> _SINCE v4_
+
+Module's documentation is available on the [Github repo's wiki](https://github.com/Ratibus11/improved-localstorage/wiki).
+
+> _BEFORE v4_
+
+Module's documentation is available on each release's `README.md` on [Github](https://github.com/Ratibus11/improved-localstorage) or [NPM](https://www.npmjs.com/package/improved-localstorage).
+
+## :busts_in_silhouette: Contribute
 
 Feel free to [open an issue](https://github.com/Ratibus11/improved-localstorage/issues/new) if you want to report bugs or discuss about suggestions!
 
-## License
+## :bookmark: License
 
 This package is published under the [MIT](https://choosealicense.com/licenses/mit/) license.
 See in LICENSE in the repo's root.
 
-## Credits to dependencies
+## :raising_hand: Credits to dependencies
 
--   [`chai`](https://www.npmjs.com/package/chai) - Assertions with `expect` _(tests)_
--   [`gulp`](https://www.npmjs.com/package/gulp) - Tasks runner _(build)_
--   [`gulp-minify`](https://www.npmjs.com/package/gulp-minify) - `.js` minifier for Gulp _(build)_
--   [`gulp-rename`](https://www.npmjs.com/package/gulp-rename) - Files renamer for Gulp _(build)_
--   [`gulp-typescript`](https://www.npmjs.com/package/gulp-typescript) - Typescript transpiler for Gulp _(build)_
--   [`merge2`](https://www.npmjs.com/package/merge2) - Multiple streams adapter _(build)_
--   [`node-localstorage`](https://www.npmjs.com/package/node-localstorage) - Local storage for Node.js _(tests)_
--   [`ts-mocha`](https://www.npmjs.com/package/ts-mocha) - Mocha version for Typescript _(tests)_
--   [`ts-patch`](https://www.npmjs.com/package/ts-patch) - Patch for Typescript aliases rewrite _(build)_
--   [`tsconfig-paths`](https://www.npmjs.com/package/tsconfig-paths) - Loader for `tsconfig.json` aliases _(tests)_
--   [`typescript-transform-paths`](https://www.npmjs.com/package/typescript-transform-paths) - Typescript plugin for aliases rewrite _(build)_
+-   [browserify](https://npmjs.com/package/browserify) - JS compilation to CommonJS modules _(build)_
+-   [gulp](https://npmjs.com/package/gulp) - Tasks runner
+-   [gulp-typescript](https://npmjs.com/package/gulp-typescript) - Gulp plugin for Typescript transpilation _(build/test)_
+-   [gulp-uglify](https://npmjs.com/package/gulp-uglify) - Gulp plugin for minifying javascript files _(build)_
+-   [jest](https://npmjs.com/package/jest) - Tests frameworks _(test)_
+-   [merge2](https://npmjs.com/package/merge2) - Streams mergin _(build)_
+-   [node-localstorage](https://npmjs.com/package/node-localstorage) - [localstorage](https://developer.mozilla.org/fr/docs/Web/API/Window/localStorage) emulator on Node.js _(test)_
+-   [ts-jest](https://npmjs.com/package/ts-jest) - Typescript support for Jest _(test)_
+-   [ts-patch](https://npmjs.com/package/ts-patch) - Typescript patch for aliases rewrite _(build)_
+-   [typescript-transform-paths](https://npmjs.com/package/typescript-transform-paths) - Typescript plugin for aliases rewrite _(build)_
+-   [vinyl-buffer](https://npmjs.com/package/vinyl-buffer) - Convert gulp's vinyl to buffer _(build)_
+-   [vinyl-source-stream](https://npmjs.com/package/vinyl-source-stream) - Interoperability for text streams _(build)_
 
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>
 
