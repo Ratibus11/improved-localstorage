@@ -33,6 +33,10 @@ const paths = {
     },
 };
 
+/**
+ * Delete build files and folders.
+ * @param done Callback function
+ */
 function clean(done: gulp.TaskFunctionCallback) {
     paths.clean.forEach((folder) => {
         const folderPath = path.resolve(process.cwd(), folder);
@@ -45,6 +49,11 @@ function clean(done: gulp.TaskFunctionCallback) {
     done();
 }
 
+/**
+ * Load TS config et perform transpilation/declaration.
+ * @param done Callback function.
+ * @returns Transpiled pipes.
+ */
 function transpile(done: gulp.TaskFunctionCallback) {
     const typescriptProject = gulpTypescript.createProject(paths.typescript.tsconfig);
     const typescriptResult = gulp.src(paths.typescript.glob).pipe(typescriptProject());
@@ -55,8 +64,12 @@ function transpile(done: gulp.TaskFunctionCallback) {
     ]);
 }
 
+/**
+ * Minify transpiled JS into one file and delete the original transpiled files.
+ * @param done Callback function.
+ */
 function minify(done: gulp.TaskFunctionCallback) {
-    return browserify({
+    browserify({
         entries: paths.transpiled.entry,
         debug: true,
     })
@@ -67,9 +80,14 @@ function minify(done: gulp.TaskFunctionCallback) {
         .pipe(gulp.dest(paths.build.app.path))
         .on("end", () => {
             fs.rmSync(paths.transpiled.app, { recursive: true });
+            done();
         });
 }
 
+/**
+ * Generate app's documentation.
+ * @param done Callback function.
+ */
 function documentate(done: gulp.TaskFunctionCallback) {
     done();
 }
