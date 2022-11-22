@@ -8,7 +8,7 @@ import * as path from "path";
 const jestConfig: JestConfigWithTsJest = {
     rootDir: __dirname,
     preset: "ts-jest",
-    roots: [path.resolve("tests/api")],
+    roots: ["tests/api"],
     resetMocks: true,
     modulePaths: [compilerOptions.baseUrl],
     moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
