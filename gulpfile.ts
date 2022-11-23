@@ -113,145 +113,136 @@ function minify(done: gulp.TaskFunctionCallback) {
 function documentate(done: gulp.TaskFunctionCallback) {
     const appDisplayName = `${packageData.name} - ${packageData.version}`;
 
-    gulp.src(paths.typescript.entry)
-        .pipe(
-            gulpTypedoc({
-                out: paths.documentation.versionned,
-                version: true,
-                excludePrivate: true,
-                excludeProtected: true,
-                hideGenerator: true,
-                gitRevision: "",
-                name: appDisplayName,
-            })
-        )
-        .on("end", () => {
-            const watcher = chokidar.watch(paths.documentation.versionned, { depth: 1 });
+    const watcher = chokidar.watch(paths.documentation.versionned, { depth: 1 });
 
-            watcher.on("add", () => {
-                watcher.close();
+    gulp.src(paths.typescript.entry).pipe(
+        gulpTypedoc({
+            out: paths.documentation.versionned,
+            version: true,
+            excludePrivate: true,
+            excludeProtected: true,
+            hideGenerator: true,
+            gitRevision: "",
+            name: appDisplayName,
+        })
+    );
 
-                glob.sync("**/*.md", {
-                    absolute: true,
-                    cwd: paths.documentation.versionned,
-                }).forEach((markdownFilePath) => {
-                    // Load each markdown file and rewrite relative links to Github-like links.
-                    var markdownFileContent = fsExtra.readFileSync(markdownFilePath).toString();
+    watcher.on("add", () => {
+        watcher.close();
 
-                    markdownFileContent.match(/\[.+?\]\(.+?\)/g)?.forEach((markdownLink) => {
-                        const linkName = markdownLink.match(/\[.*?\]/)![0].slice(1, -1);
-                        const relativePath = markdownLink.match(/\(.*?\)/)![0].slice(1, -1);
+        glob.sync("**/*.md", {
+            absolute: true,
+            cwd: paths.documentation.versionned,
+        }).forEach((markdownFilePath) => {
+            // Load each markdown file and rewrite relative links to Github-like links.
+            var markdownFileContent = fsExtra.readFileSync(markdownFilePath).toString();
 
-                        const newLinkName = (() => {
-                            switch (linkName) {
-                                case appDisplayName:
-                                    return packageData.name;
-                                case "Exports":
-                                    return packageData.version;
-                                default:
-                                    return linkName;
-                            }
-                        })();
+            markdownFileContent.match(/\[.+?\]\(.+?\)/g)?.forEach((markdownLink) => {
+                const linkName = markdownLink.match(/\[.*?\]/)![0].slice(1, -1);
+                const relativePath = markdownLink.match(/\(.*?\)/)![0].slice(1, -1);
 
-                        const hasAnchor = relativePath.lastIndexOf("#") !== -1;
+                const newLinkName = (() => {
+                    switch (linkName) {
+                        case appDisplayName:
+                            return packageData.name;
+                        case "Exports":
+                            return packageData.version;
+                        default:
+                            return linkName;
+                    }
+                })();
 
-                        const absolutePath = path.resolve(
-                            path.dirname(markdownFilePath),
-                            relativePath.slice(
-                                0,
-                                hasAnchor ? relativePath.lastIndexOf("#") : undefined
-                            )
-                        );
-                        const anchor = hasAnchor
-                            ? relativePath.slice(relativePath.lastIndexOf("#"))
-                            : "";
+                const hasAnchor = relativePath.lastIndexOf("#") !== -1;
 
-                        if (fsExtra.existsSync(absolutePath)) {
-                            const newRelativePath = `${path
-                                .relative(paths.documentation.main, absolutePath)
-                                .split("/")
-                                .filter((element, index) => {
-                                    return index !== 1;
-                                })
-                                .join("-")}`;
+                const absolutePath = path.resolve(
+                    path.dirname(markdownFilePath),
+                    relativePath.slice(0, hasAnchor ? relativePath.lastIndexOf("#") : undefined)
+                );
+                const anchor = hasAnchor ? relativePath.slice(relativePath.lastIndexOf("#")) : "";
 
-                            const newPath = ((): string => {
-                                switch (
-                                    path.relative(paths.documentation.versionned, absolutePath)
-                                ) {
-                                    case "README.md":
-                                        return "Home.md";
-                                    case "modules.md":
-                                        return `${packageData.version}.md`;
-                                    default:
-                                        return `${newRelativePath}`;
-                                }
-                            })();
+                if (fsExtra.existsSync(absolutePath)) {
+                    const newRelativePath = `${path
+                        .relative(paths.documentation.main, absolutePath)
+                        .split("/")
+                        .filter((element, index) => {
+                            return index !== 1;
+                        })
+                        .join("-")}`;
 
-                            const newMarkdownLink = markdownLink
-                                .replace(relativePath, `${newPath}${anchor}`)
-                                .replace(linkName, newLinkName);
-
-                            markdownFileContent = markdownFileContent.replace(
-                                markdownLink,
-                                newMarkdownLink
-                            );
-                        }
-
-                        fsExtra.writeFileSync(markdownFilePath, markdownFileContent);
-                    });
-                });
-
-                // Copy each files as his new name.
-                glob.sync("**/*.md", {
-                    cwd: paths.documentation.versionned,
-                    absolute: true,
-                }).forEach((markdownFileRelativePath) => {
-                    const newMarkdownFileName = ((): string => {
-                        const temporaryMarkDownFileName = path
-                            .relative(paths.documentation.versionned, markdownFileRelativePath)
-                            .replaceAll("/", "-");
-                        switch (temporaryMarkDownFileName) {
+                    const newPath = ((): string => {
+                        switch (path.relative(paths.documentation.versionned, absolutePath)) {
                             case "README.md":
-                                return "README.md";
+                                return "Home.md";
                             case "modules.md":
                                 return `${packageData.version}.md`;
                             default:
-                                return `${packageData.version}-${temporaryMarkDownFileName
-                                    .split("-")
-                                    .slice(1)
-                                    .join("-")}`;
+                                return `${newRelativePath}`;
                         }
                     })();
-                    const newMarkdownFilePath = path.resolve(
-                        paths.documentation.versionned,
-                        newMarkdownFileName
+
+                    const newMarkdownLink = markdownLink
+                        .replace(relativePath, `${newPath}${anchor}`)
+                        .replace(linkName, newLinkName);
+
+                    markdownFileContent = markdownFileContent.replace(
+                        markdownLink,
+                        newMarkdownLink
                     );
+                }
 
-                    if (markdownFileRelativePath !== newMarkdownFilePath) {
-                        fsExtra.copyFileSync(markdownFileRelativePath, newMarkdownFilePath);
-                    }
-                });
-
-                // Clean old files
-                glob.sync("./*", {
-                    absolute: true,
-                    cwd: paths.documentation.versionned,
-                    dot: true,
-                }).forEach((docFile) => {
-                    if (
-                        path.extname(docFile) !== ".md" ||
-                        paths.documentation.forceDelete.includes(
-                            path.relative(paths.documentation.versionned, docFile)
-                        )
-                    ) {
-                        fsExtra.rmSync(docFile, { recursive: true });
-                    }
-                });
-
-                done();
+                fsExtra.writeFileSync(markdownFilePath, markdownFileContent);
             });
         });
+
+        // Copy each files as his new name.
+        glob.sync("**/*.md", {
+            cwd: paths.documentation.versionned,
+            absolute: true,
+        }).forEach((markdownFileRelativePath) => {
+            const newMarkdownFileName = ((): string => {
+                const temporaryMarkDownFileName = path
+                    .relative(paths.documentation.versionned, markdownFileRelativePath)
+                    .replaceAll("/", "-");
+                switch (temporaryMarkDownFileName) {
+                    case "README.md":
+                        return "README.md";
+                    case "modules.md":
+                        return `${packageData.version}.md`;
+                    default:
+                        return `${packageData.version}-${temporaryMarkDownFileName
+                            .split("-")
+                            .slice(1)
+                            .join("-")}`;
+                }
+            })();
+            const newMarkdownFilePath = path.resolve(
+                paths.documentation.versionned,
+                newMarkdownFileName
+            );
+
+            if (markdownFileRelativePath !== newMarkdownFilePath) {
+                fsExtra.copyFileSync(markdownFileRelativePath, newMarkdownFilePath);
+            }
+        });
+
+        // Clean old files
+        glob.sync("./*", {
+            absolute: true,
+            cwd: paths.documentation.versionned,
+            dot: true,
+        }).forEach((docFile) => {
+            if (
+                path.extname(docFile) !== ".md" ||
+                paths.documentation.forceDelete.includes(
+                    path.relative(paths.documentation.versionned, docFile)
+                )
+            ) {
+                fsExtra.rmSync(docFile, { recursive: true });
+            }
+        });
+
+        done();
+    });
 }
 
 /**
