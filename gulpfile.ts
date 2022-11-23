@@ -1,11 +1,11 @@
 import * as gulp from "gulp";
 
-// Gulp modules
+// GULP MODULES
 import * as gulpTypescript from "gulp-typescript";
 import * as gulpUglify from "gulp-uglify";
 import * as gulpTypedoc from "gulp-typedoc";
 
-// Utils
+// UTILS
 import * as fsExtra from "fs-extra";
 import * as merge2 from "merge2";
 import * as path from "path";
@@ -15,9 +15,11 @@ import * as vinylBuffer from "vinyl-buffer";
 import * as chokidar from "chokidar";
 import * as glob from "glob";
 
+// VARIABLES
 const cwd = __dirname;
+const packageVersion = require("./package.json").version;
 const paths = {
-    clean: ["docs", "build"],
+    clean: [`docs/${packageVersion}`, "build"],
     typescript: {
         tsconfig: path.resolve("tsconfig.json"),
         entry: path.resolve("src/main.ts"),
@@ -36,11 +38,8 @@ const paths = {
     },
     documentation: {
         main: path.resolve("docs"),
-        version: {
-            path: path.resolve("docs", process.env.npm_package_version!),
-            glob: path.resolve("docs", process.env.npm_package_version!, "**/*.*"),
-            clean: { include: ["**/*"], exclude: ["**/[!README]*.md"] },
-        },
+        versionned: path.resolve("docs", packageVersion),
+        forceDelete: ["README.md", "modules.md", `${packageVersion}-README.md`],
     },
 };
 
@@ -96,106 +95,125 @@ function minify(done: gulp.TaskFunctionCallback) {
 }
 
 /**
- * Generate app's documentation.
+ * Create documentation.
+ * Will create a `docs/x` folder where `x` is the package's version (defined in `package.json`) with TypeDoc.
+ * All documentation files' link will be rewrited from `version/path/to/the/file.md` to `version/version-path-to-the-file.md` to match with Github Wiki's structure.
+ * Then, it will delete all unused files (pre-compiled or unused files (.nojekyll, folders, README.md)).
+ * @remarks All links to root `README.md` will be rewrited to `Home.md`, repo's Github Wiki main page.
  * @param done Callback function.
  */
 function documentate(done: gulp.TaskFunctionCallback) {
-    // Delete old non-markdown file (and README.md)
-    ["**/*"].forEach((docGlob) => {
-        glob.sync(docGlob, {
-            cwd: paths.documentation.version.path,
-            ignore: ["**/[!README]*.md"],
-            dot: true,
-            absolute: true,
-        }).forEach((filePath) => {
-            if (fsExtra.lstatSync(filePath).isFile()) {
-                fsExtra.rmSync(filePath);
-            }
-        });
-    });
-
-    // Rewrite all markdowns' links
-    glob.sync(paths.documentation.version.glob, {
-        cwd: paths.documentation.version.path,
-        absolute: true,
-    }).forEach((filePath) => {
-        const versionnedName = path.relative(paths.documentation.main, filePath);
-        const newFileName = path.resolve(
-            paths.documentation.version.path,
-            versionnedName.replaceAll("/", "-")
-        );
-
-        var content = fsExtra.readFileSync(filePath).toString();
-
-        content.match(/\[.+?\]\(.+?\)/g)?.forEach((markdownLink) => {
-            const linkPath = markdownLink.match(/\(.*?\)/)![0].slice(1, -1);
-
-            const absolutePath = path.resolve(path.dirname(filePath), linkPath);
-
-            const anchorPosition = absolutePath.lastIndexOf("#");
-            const absoluePathWithoutAnchor = absolutePath.slice(
-                0,
-                anchorPosition === -1 ? undefined : anchorPosition
-            );
-
-            if (fsExtra.existsSync(absoluePathWithoutAnchor)) {
-                const newLinkPath = path
-                    .relative(paths.documentation.main, absolutePath)
-                    .replaceAll("/", "-");
-                const newMarkdownLink = markdownLink.replace(linkPath, newLinkPath);
-
-                content = content.replace(markdownLink, newMarkdownLink);
-            } else if (
-                path.relative(absoluePathWithoutAnchor, paths.documentation.version.path) == ".." &&
-                path.basename(absoluePathWithoutAnchor) === "README.md"
-            ) {
-                const newMarkdownLink = markdownLink.replace(linkPath, "Home.md");
-                content = content.replace(markdownLink, newMarkdownLink);
-            }
-        });
-
-        const newFilePath = path.resolve(
-            paths.documentation.version.path,
-            path.relative(paths.documentation.main, filePath).replaceAll("/", "-")
-        );
-        fsExtra.writeFileSync(newFilePath, content);
-        fsExtra.rmSync(filePath);
-    });
-
-    // Delete all non-markdown files ()
-    glob.sync("**/*", { absolute: true, cwd: paths.documentation.version.path }).forEach(
-        (filePath) => {
-            if (fsExtra.lstatSync(filePath).isDirectory()) {
-                fsExtra.rmSync(filePath, { recursive: true });
-            }
-        }
-    );
-
-    done();
-
-    /*return gulp
-        .src(paths.typescript.glob)
-        .pipe(gulpTypedoc({ out: paths.documentation.out, version: true }))
+    gulp.src(paths.typescript.entry)
+        .pipe(
+            gulpTypedoc({
+                out: paths.documentation.versionned,
+                version: true,
+                excludePrivate: true,
+                excludeProtected: true,
+                hideGenerator: true,
+                gitRevision: "",
+            })
+        )
         .on("end", () => {
-            const watcher = chokidar.watch(paths.documentation.out, { depth: 1 });
+            const watcher = chokidar.watch(paths.documentation.versionned, { depth: 1 });
 
             watcher.on("add", () => {
                 watcher.close();
 
-                // FUNCTION
+                glob.sync("**/*.md", {
+                    absolute: true,
+                    cwd: paths.documentation.versionned,
+                }).forEach((markdownFilePath) => {
+                    // Load each markdown file and rewrite relative links to Github-like links.
+                    var markdownFileContent = fsExtra.readFileSync(markdownFilePath).toString();
+
+                    markdownFileContent.match(/\[.+?\]\(.+?\)/g)?.forEach((markdownLink) => {
+                        const relativePath = markdownLink.match(/\(.*?\)/)![0].slice(1, -1);
+
+                        const hasAnchor = relativePath.lastIndexOf("#") !== -1;
+
+                        const absolutePath = path.resolve(
+                            path.dirname(markdownFilePath),
+                            relativePath.slice(
+                                0,
+                                hasAnchor ? relativePath.lastIndexOf("#") : undefined
+                            )
+                        );
+                        const anchor = hasAnchor
+                            ? relativePath.slice(relativePath.lastIndexOf("#"))
+                            : "";
+
+                        if (fsExtra.existsSync(absolutePath)) {
+                            const newRelativePath = `${path
+                                .relative(paths.documentation.main, absolutePath)
+                                .replaceAll("/", "-")}${anchor}`;
+
+                            const newMarkdownLink = markdownLink.replace(
+                                relativePath,
+                                path.relative(paths.documentation.versionned, absolutePath) ===
+                                    "README.md"
+                                    ? "Home.md"
+                                    : newRelativePath
+                            );
+
+                            markdownFileContent = markdownFileContent.replace(
+                                markdownLink,
+                                newMarkdownLink
+                            );
+
+                            fsExtra.writeFileSync(markdownFilePath, markdownFileContent);
+                        }
+                    });
+
+                    // Copy each files as his new name.
+                    const markdownFileRelativePath = path.relative(
+                        paths.documentation.main,
+                        markdownFilePath
+                    );
+                    const newMarkdownFileName = markdownFileRelativePath.replaceAll("/", "-");
+                    const newMarkdownFilePath = path.resolve(
+                        paths.documentation.versionned,
+                        newMarkdownFileName
+                    );
+
+                    fsExtra.copySync(markdownFilePath, newMarkdownFilePath);
+                });
+
+                // Clean old files
+                glob.sync("./*", {
+                    absolute: true,
+                    cwd: paths.documentation.versionned,
+                    dot: true,
+                }).forEach((docFile) => {
+                    if (
+                        path.extname(docFile) !== ".md" ||
+                        paths.documentation.forceDelete.includes(
+                            path.relative(paths.documentation.versionned, docFile)
+                        )
+                    ) {
+                        fsExtra.rmSync(docFile, { recursive: true });
+                    }
+                });
+
+                done();
             });
-        });*/
+        });
+}
+
+/**
+ * Called automatically after a successed `npm publish`, will push the generated documentation to the repo's Github Wiki.
+ * @throw [Error](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Error) if any file prefixed by the package's version (`major.minor.patch-...`) exists.
+ * To publish, remove all version's documentation, then launch this task manually.
+ * @param done Callback function.
+ */
+function publishDocumentation(done: gulp.TaskFunctionCallback) {
+    done();
 }
 
 gulp.task("clean", gulp.series(clean));
 
 gulp.task("build", gulp.series(clean, transpile, minify));
 
-gulp.task("documentate", gulp.series(copy, documentate));
+gulp.task("documentate", gulp.series(clean, documentate));
 
-function copy(done: gulp.TaskFunctionCallback) {
-    fsExtra.rmSync("docs", { recursive: true });
-    fsExtra.copySync("docs-save", "docs");
-
-    done();
-}
+gulp.task("publishDocumentation", gulp.series(publishDocumentation));
