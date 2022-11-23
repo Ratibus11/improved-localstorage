@@ -29,7 +29,6 @@ function clear(): boolean {
  * @example
  * // { hello: "\"everyone\"" }
  * exists("hi") // false
- * @
  */
 function exists(key: string): boolean | never {
     check.key(key);
