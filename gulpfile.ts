@@ -153,8 +153,6 @@ function documentate(done: gulp.TaskFunctionCallback) {
                             }
                         })();
 
-                        console.log(linkName, relativePath, newLinkName);
-
                         const hasAnchor = relativePath.lastIndexOf("#") !== -1;
 
                         const absolutePath = path.resolve(
