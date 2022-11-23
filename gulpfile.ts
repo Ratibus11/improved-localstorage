@@ -16,8 +16,8 @@ import * as chokidar from "chokidar";
 import * as glob from "glob";
 
 // VARIABLES
-const cwd = __dirname;
-const packageVersion = require("./package.json").version;
+const packageVersion: string = require("./package.json").version;
+const gitRepo: string = `${require("./package.json")?.repository?.url}.wiki.git`;
 const paths = {
     clean: [`docs/${packageVersion}`, "build"],
     typescript: {
@@ -40,6 +40,9 @@ const paths = {
         main: path.resolve("docs"),
         versionned: path.resolve("docs", packageVersion),
         forceDelete: ["README.md", "modules.md", `${packageVersion}-README.md`],
+        wiki: {
+            path: path.resolve("docs/github-wiki"),
+        },
     },
 };
 
@@ -146,37 +149,66 @@ function documentate(done: gulp.TaskFunctionCallback) {
                         if (fsExtra.existsSync(absolutePath)) {
                             const newRelativePath = `${path
                                 .relative(paths.documentation.main, absolutePath)
-                                .replaceAll("/", "-")}${anchor}`;
+                                .split("/")
+                                .filter((element, index) => {
+                                    return index !== 1;
+                                })
+                                .join("-")}${anchor}`;
 
-                            const newMarkdownLink = markdownLink.replace(
-                                relativePath,
-                                path.relative(paths.documentation.versionned, absolutePath) ===
-                                    "README.md"
-                                    ? "Home.md"
-                                    : newRelativePath
-                            );
+                            const newPath = ((): string => {
+                                switch (
+                                    path.relative(paths.documentation.versionned, absolutePath)
+                                ) {
+                                    case "README.md":
+                                        return "Home.md";
+                                    case "modules.md":
+                                        return `${packageVersion}.md`;
+                                    default:
+                                        return newRelativePath;
+                                }
+                            })();
+
+                            const newMarkdownLink = markdownLink.replace(relativePath, newPath);
 
                             markdownFileContent = markdownFileContent.replace(
                                 markdownLink,
                                 newMarkdownLink
                             );
-
-                            fsExtra.writeFileSync(markdownFilePath, markdownFileContent);
                         }
-                    });
 
-                    // Copy each files as his new name.
-                    const markdownFileRelativePath = path.relative(
-                        paths.documentation.main,
-                        markdownFilePath
-                    );
-                    const newMarkdownFileName = markdownFileRelativePath.replaceAll("/", "-");
+                        fsExtra.writeFileSync(markdownFilePath, markdownFileContent);
+                    });
+                });
+
+                // Copy each files as his new name.
+                glob.sync("**/*.md", {
+                    cwd: paths.documentation.versionned,
+                    absolute: true,
+                }).forEach((markdownFileRelativePath) => {
+                    const newMarkdownFileName = ((): string => {
+                        const temporaryMarkDownFileName = path
+                            .relative(paths.documentation.versionned, markdownFileRelativePath)
+                            .replaceAll("/", "-");
+                        switch (temporaryMarkDownFileName) {
+                            case "README.md":
+                                return "README.md";
+                            case "modules.md":
+                                return `${packageVersion}.md`;
+                            default:
+                                return `${packageVersion}-${temporaryMarkDownFileName
+                                    .split("-")
+                                    .slice(1)
+                                    .join("-")}`;
+                        }
+                    })();
                     const newMarkdownFilePath = path.resolve(
                         paths.documentation.versionned,
                         newMarkdownFileName
                     );
 
-                    fsExtra.copySync(markdownFilePath, newMarkdownFilePath);
+                    if (markdownFileRelativePath !== newMarkdownFilePath) {
+                        fsExtra.copySync(markdownFileRelativePath, newMarkdownFilePath);
+                    }
                 });
 
                 // Clean old files
@@ -207,13 +239,18 @@ function documentate(done: gulp.TaskFunctionCallback) {
  * @param done Callback function.
  */
 function publishDocumentation(done: gulp.TaskFunctionCallback) {
+    // VIDER DOSSIER
+    // CLONER
+    // VERIFIER CONTENU
+    // COMMIT
+    // PUSH
     done();
 }
 
-gulp.task("clean", gulp.series(clean));
+gulp.task("clean", clean);
 
-gulp.task("build", gulp.series(clean, transpile, minify));
+gulp.task("build", gulp.series("clean", transpile, minify));
 
-gulp.task("documentate", gulp.series(clean, documentate));
+gulp.task("documentate", gulp.series("clean", documentate));
 
-gulp.task("publishDocumentation", gulp.series(publishDocumentation));
+gulp.task("publishDocumentation", gulp.series("documentate", publishDocumentation));
