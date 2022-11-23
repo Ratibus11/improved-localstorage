@@ -26,7 +26,7 @@
         "build": "gulp build",
         "doc": "gulp documentate",
         "test": "jest --runInBand",
-        "postpublish": "gulp publishDocumentation"
+        "prepublishOnly": "gulp build"
     },
     "devDependencies": {
         "@types/browserify": "^12.0.37",
