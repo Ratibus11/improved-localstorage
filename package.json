@@ -45,6 +45,7 @@
         "gulp-typedoc": "^3.0.2",
         "jest": "^29.3.1",
         "node-localstorage": "^2.2.1",
+        "simple-git": "^3.15.0",
         "ts-jest": "^29.0.3",
         "ts-node": "^10.9.1",
         "typedoc-plugin-markdown": "^3.13.6"

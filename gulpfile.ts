@@ -14,12 +14,17 @@ import * as vinylSourceStream from "vinyl-source-stream";
 import * as vinylBuffer from "vinyl-buffer";
 import * as chokidar from "chokidar";
 import * as glob from "glob";
+import * as simpleGit from "simple-git";
 
 // VARIABLES
-const packageVersion: string = require("./package.json").version;
-const gitRepo: string = `${require("./package.json")?.repository?.url}.wiki.git`;
+const packageJson = require("./package.json");
+const packageData = {
+    version: packageJson.version!,
+    name: packageJson.name!,
+    gitRepo: packageJson.repository?.url!,
+};
 const paths = {
-    clean: [`docs/${packageVersion}`, "build"],
+    clean: [`docs/${packageData.version}`, "docs/github-wiki", "build"],
     typescript: {
         tsconfig: path.resolve("tsconfig.json"),
         entry: path.resolve("src/main.ts"),
@@ -38,8 +43,8 @@ const paths = {
     },
     documentation: {
         main: path.resolve("docs"),
-        versionned: path.resolve("docs", packageVersion),
-        forceDelete: ["README.md", "modules.md", `${packageVersion}-README.md`],
+        versionned: path.resolve("docs", packageData.version),
+        forceDelete: ["README.md", "modules.md", `${packageData.version}-README.md`],
         wiki: {
             path: path.resolve("docs/github-wiki"),
         },
@@ -106,6 +111,8 @@ function minify(done: gulp.TaskFunctionCallback) {
  * @param done Callback function.
  */
 function documentate(done: gulp.TaskFunctionCallback) {
+    const appDisplayName = `${packageData.name} - ${packageData.version}`;
+
     gulp.src(paths.typescript.entry)
         .pipe(
             gulpTypedoc({
@@ -115,6 +122,7 @@ function documentate(done: gulp.TaskFunctionCallback) {
                 excludeProtected: true,
                 hideGenerator: true,
                 gitRevision: "",
+                name: appDisplayName,
             })
         )
         .on("end", () => {
@@ -131,7 +139,21 @@ function documentate(done: gulp.TaskFunctionCallback) {
                     var markdownFileContent = fsExtra.readFileSync(markdownFilePath).toString();
 
                     markdownFileContent.match(/\[.+?\]\(.+?\)/g)?.forEach((markdownLink) => {
+                        const linkName = markdownLink.match(/\[.*?\]/)![0].slice(1, -1);
                         const relativePath = markdownLink.match(/\(.*?\)/)![0].slice(1, -1);
+
+                        const newLinkName = (() => {
+                            switch (linkName) {
+                                case appDisplayName:
+                                    return packageData.name;
+                                case "Exports":
+                                    return packageData.version;
+                                default:
+                                    return linkName;
+                            }
+                        })();
+
+                        console.log(linkName, relativePath, newLinkName);
 
                         const hasAnchor = relativePath.lastIndexOf("#") !== -1;
 
@@ -153,7 +175,7 @@ function documentate(done: gulp.TaskFunctionCallback) {
                                 .filter((element, index) => {
                                     return index !== 1;
                                 })
-                                .join("-")}${anchor}`;
+                                .join("-")}`;
 
                             const newPath = ((): string => {
                                 switch (
@@ -162,13 +184,15 @@ function documentate(done: gulp.TaskFunctionCallback) {
                                     case "README.md":
                                         return "Home.md";
                                     case "modules.md":
-                                        return `${packageVersion}.md`;
+                                        return `${packageData.version}.md`;
                                     default:
-                                        return newRelativePath;
+                                        return `${newRelativePath}`;
                                 }
                             })();
 
-                            const newMarkdownLink = markdownLink.replace(relativePath, newPath);
+                            const newMarkdownLink = markdownLink
+                                .replace(relativePath, `${newPath}${anchor}`)
+                                .replace(linkName, newLinkName);
 
                             markdownFileContent = markdownFileContent.replace(
                                 markdownLink,
@@ -193,9 +217,9 @@ function documentate(done: gulp.TaskFunctionCallback) {
                             case "README.md":
                                 return "README.md";
                             case "modules.md":
-                                return `${packageVersion}.md`;
+                                return `${packageData.version}.md`;
                             default:
-                                return `${packageVersion}-${temporaryMarkDownFileName
+                                return `${packageData.version}-${temporaryMarkDownFileName
                                     .split("-")
                                     .slice(1)
                                     .join("-")}`;
@@ -207,7 +231,7 @@ function documentate(done: gulp.TaskFunctionCallback) {
                     );
 
                     if (markdownFileRelativePath !== newMarkdownFilePath) {
-                        fsExtra.copySync(markdownFileRelativePath, newMarkdownFilePath);
+                        fsExtra.copyFileSync(markdownFileRelativePath, newMarkdownFilePath);
                     }
                 });
 
@@ -239,12 +263,49 @@ function documentate(done: gulp.TaskFunctionCallback) {
  * @param done Callback function.
  */
 function publishDocumentation(done: gulp.TaskFunctionCallback) {
-    // VIDER DOSSIER
-    // CLONER
-    // VERIFIER CONTENU
-    // COMMIT
-    // PUSH
-    done();
+    if (fsExtra.existsSync(paths.documentation.wiki.path)) {
+        fsExtra.rmSync(paths.documentation.wiki.path, { recursive: true });
+    }
+
+    fsExtra.mkdirSync(paths.documentation.wiki.path);
+
+    const git = simpleGit.simpleGit(paths.documentation.wiki.path);
+
+    git.clone(packageData.gitRepo, ".", undefined, () => {
+        if (
+            fsExtra.readdirSync(paths.documentation.wiki.path).filter((wikiFile) => {
+                return wikiFile.startsWith(packageData.version);
+            }).length !== 0
+        ) {
+            throw new Error(
+                `Documentation for version ${packageData.version} is already on the repo's wiki. To bypass it, please remove first all '${packageData.version}-x.md' files, then run 'gulp publishDocumentation'.`
+            );
+        }
+
+        const filesToCommit = glob.sync(`${packageData.version}*.md`, {
+            cwd: paths.documentation.versionned,
+        });
+
+        filesToCommit.forEach((fileToCommit) => {
+            fsExtra.copyFileSync(
+                path.resolve(paths.documentation.versionned, fileToCommit),
+                path.resolve(paths.documentation.wiki.path, fileToCommit)
+            );
+        });
+
+        git.add(filesToCommit, () => {
+            git.commit(
+                `[GULP] Automatically generated documentation for version ${packageData.version}.`,
+                () => {
+                    git.addTag(`v${packageData.version}`, () => {
+                        git.push(() => {
+                            done();
+                        });
+                    });
+                }
+            );
+        });
+    });
 }
 
 gulp.task("clean", clean);
