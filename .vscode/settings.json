@@ -6,7 +6,8 @@
         "node_modules": true,
         "package-lock.json": true,
 
-        "build": false,
+        "build": true,
+        "docs": false,
         "tests/.localstorage": true
     }
 }

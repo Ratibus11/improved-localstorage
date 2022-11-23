@@ -28,7 +28,9 @@
         "plugins": [
             { "transform": "typescript-transform-paths" },
             { "transform": "typescript-transform-paths", "afterDeclarations": true }
-        ]
+        ],
+
+        "lib": ["es2021", "dom"]
     },
     "include": ["src/**/*.ts", "tests/**/*.ts"]
 }
