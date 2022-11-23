@@ -43,5 +43,5 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 16
-            - run: npm i
+            - run: npm i --omit=dev
             - run: gulp publishDocumentation
