@@ -44,4 +44,5 @@ jobs:
               with:
                   node-version: 16
             - run: npm i --omit=dev
+            - run: rm tests
             - run: gulp publishDocumentation
