@@ -7,7 +7,7 @@
         "package-lock.json": true,
 
         "build": true,
-        "docs": false,
+        "docs": true,
         "tests/.localstorage": true
     }
 }
