@@ -114,6 +114,23 @@ function documentate(done: gulp.TaskFunctionCallback) {
     const appDisplayName = `${packageData.name} - ${packageData.version}`;
 
     const watcher = chokidar.watch(paths.documentation.versionned, { depth: 1 });
+    console.log(`Watch ${paths.documentation.versionned}`);
+
+    gulp.src(paths.typescript.entry)
+        .pipe(
+            gulpTypedoc({
+                out: paths.documentation.versionned,
+                version: true,
+                excludePrivate: true,
+                excludeProtected: true,
+                hideGenerator: true,
+                gitRevision: "",
+                name: appDisplayName,
+            })
+        )
+        .on("end", () => {
+            console.log(`Typedoc generation ended on ${paths.documentation.versionned}`);
+        });
 
     watcher.on("add", () => {
         console.log("Typedoc generated.");
@@ -233,22 +250,6 @@ function documentate(done: gulp.TaskFunctionCallback) {
 
         done();
     });
-
-    gulp.src(paths.typescript.entry)
-        .pipe(
-            gulpTypedoc({
-                out: paths.documentation.versionned,
-                version: true,
-                excludePrivate: true,
-                excludeProtected: true,
-                hideGenerator: true,
-                gitRevision: "",
-                name: appDisplayName,
-            })
-        )
-        .on("end", () => {
-            console.log("Typedoc generation ended.");
-        });
 }
 
 /**
