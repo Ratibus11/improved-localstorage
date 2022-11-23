@@ -7,17 +7,17 @@
 
 ![](https://img.shields.io/github/last-commit/Ratibus11/improved-localstorage?style=flat-square)
 
-A better way to interact and store data in a browser's localstorage.
+_A better way to interact and store data in a browser's localstorage._
 
 ## :keyboard: Usage
 
 > _SINCE v4_
 
-Module's documentation is available on the [Github repo's wiki](https://github.com/Ratibus11/improved-localstorage/wiki).
+Package's documentation is available on the [Github repo's wiki](https://github.com/Ratibus11/improved-localstorage/wiki).
 
 > _BEFORE v4_
 
-Module's documentation is available on each release's `README.md` on [Github](https://github.com/Ratibus11/improved-localstorage) or [NPM](https://www.npmjs.com/package/improved-localstorage).
+Package's documentation is available on each release's `README.md` on [Github](https://github.com/Ratibus11/improved-localstorage) or [NPM](https://www.npmjs.com/package/improved-localstorage).
 
 ## :busts_in_silhouette: Contribute
 
@@ -30,19 +30,19 @@ See in LICENSE in the repo's root.
 
 ## :raising_hand: Credits to dependencies
 
--   [browserify](https://npmjs.com/package/browserify) - JS compilation to CommonJS modules _(build)_
+-   [browserify](https://npmjs.com/package/browserify) - JS compilation to CommonJS modules
 -   [gulp](https://npmjs.com/package/gulp) - Tasks runner
--   [gulp-typescript](https://npmjs.com/package/gulp-typescript) - Gulp plugin for Typescript transpilation _(build/test)_
--   [gulp-uglify](https://npmjs.com/package/gulp-uglify) - Gulp plugin for minifying javascript files _(build)_
--   [jest](https://npmjs.com/package/jest) - Tests frameworks _(test)_
--   [merge2](https://npmjs.com/package/merge2) - Streams mergin _(build)_
--   [node-localstorage](https://npmjs.com/package/node-localstorage) - [localstorage](https://developer.mozilla.org/fr/docs/Web/API/Window/localStorage) emulator on Node.js _(test)_
--   [ts-jest](https://npmjs.com/package/ts-jest) - Typescript support for Jest _(test)_
--   [ts-node](https://npmjs.com/package/ts-node) - Typescript engine for Node.js _(build)_
--   [ts-patch](https://npmjs.com/package/ts-patch) - Typescript patch for aliases rewrite _(build)_
--   [typescript-transform-paths](https://npmjs.com/package/typescript-transform-paths) - Typescript plugin for aliases rewrite _(build)_
--   [vinyl-buffer](https://npmjs.com/package/vinyl-buffer) - Convert gulp's vinyl to buffer _(build)_
--   [vinyl-source-stream](https://npmjs.com/package/vinyl-source-stream) - Interoperability for text streams _(build)_
+-   [gulp-typescript](https://npmjs.com/package/gulp-typescript) - Gulp plugin for Typescript transpilation
+-   [gulp-uglify](https://npmjs.com/package/gulp-uglify) - Gulp plugin for minifying javascript files
+-   [jest](https://npmjs.com/package/jest) - Tests frameworks
+-   [merge2](https://npmjs.com/package/merge2) - Streams mergin
+-   [node-localstorage](https://npmjs.com/package/node-localstorage) - [localstorage](https://developer.mozilla.org/fr/docs/Web/API/Window/localStorage) emulator on Node.js
+-   [ts-jest](https://npmjs.com/package/ts-jest) - Typescript support for Jest
+-   [ts-node](https://npmjs.com/package/ts-node) - Typescript engine for Node.js
+-   [ts-patch](https://npmjs.com/package/ts-patch) - Typescript patch for aliases rewrite
+-   [typescript-transform-paths](https://npmjs.com/package/typescript-transform-paths) - Typescript plugin for aliases rewrite
+-   [vinyl-buffer](https://npmjs.com/package/vinyl-buffer) - Convert gulp's vinyl to buffer
+-   [vinyl-source-stream](https://npmjs.com/package/vinyl-source-stream) - Interoperability for text streams
 
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>
 
