@@ -12,11 +12,12 @@ import * as path from "path";
 import * as browserify from "browserify";
 import * as vinylSourceStream from "vinyl-source-stream";
 import * as vinylBuffer from "vinyl-buffer";
-import * as chokidar from "chokidar";
+// import * as chokidar from "chokidar"; Unexpected behaviour on Github Actions: chokidar isn't triggering documentation's creation.
 import * as glob from "glob";
 import * as simpleGit from "simple-git";
 
 // VARIABLES
+const documentationDetectionTries = 10;
 const packageJson = require("./package.json");
 const packageData = {
     version: packageJson.version!,
@@ -113,12 +114,6 @@ function minify(done: gulp.TaskFunctionCallback) {
 function documentate(done: gulp.TaskFunctionCallback) {
     const appDisplayName = `${packageData.name} - ${packageData.version}`;
 
-    const watcher = chokidar.watch(paths.documentation.versionned, {
-        depth: 1,
-        usePolling: true,
-        atomic: true,
-    });
-
     gulp.src(paths.typescript.entry).pipe(
         gulpTypedoc({
             out: paths.documentation.versionned,
@@ -131,9 +126,28 @@ function documentate(done: gulp.TaskFunctionCallback) {
         })
     );
 
-    watcher.on("add", () => {
-        watcher.close();
+    var currentTries;
+    const interval = setInterval(() => {
+        if (currentTries < documentationDetectionTries) {
+            currentTries++;
+            console.info(
+                `Try ${currentTries}/${documentationDetectionTries} to detect documentation folder...`
+            );
+        } else if (currentTries === documentationDetectionTries) {
+            clearInterval(interval);
+            throw Error("Unable to detect documentation folder.");
+        }
 
+        if (fsExtra.existsSync(paths.documentation.versionned)) {
+            clearInterval(interval);
+            console.info(
+                `Documentation folder for version ${packageData.version} detected. Processing...`
+            );
+            documentationCreated();
+        }
+    }, 1000);
+
+    const documentationCreated = () => {
         glob.sync("**/*.md", {
             absolute: true,
             cwd: paths.documentation.versionned,
@@ -246,7 +260,7 @@ function documentate(done: gulp.TaskFunctionCallback) {
         });
 
         done();
-    });
+    };
 }
 
 /**
