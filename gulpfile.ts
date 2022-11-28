@@ -126,7 +126,7 @@ function documentate(done: gulp.TaskFunctionCallback) {
         })
     );
 
-    var currentTries;
+    var currentTries = 0;
     const interval = setInterval(() => {
         if (currentTries < documentationDetectionTries) {
             currentTries++;
