@@ -10,6 +10,7 @@ const jestConfig: JestConfigWithTsJest = {
     preset: "ts-jest",
     roots: [path.resolve("tests/api")],
     resetMocks: true,
+    resetModules: true,
     modulePaths: [compilerOptions.baseUrl],
     moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
     setupFiles: [path.resolve("tests/setup.ts")],
