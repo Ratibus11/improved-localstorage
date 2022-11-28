@@ -278,7 +278,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
 
     const git = simpleGit.simpleGit(paths.documentation.wiki.path);
 
-    git.clone(packageData.gitRepo, ".", undefined, () => {
+    git.clone(`${packageData.gitRepo}.wiki`, ".", undefined, () => {
         if (
             fsExtra.readdirSync(paths.documentation.wiki.path).filter((wikiFile) => {
                 return wikiFile.startsWith(packageData.version);
