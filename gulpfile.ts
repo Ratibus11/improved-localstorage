@@ -343,7 +343,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
 
             console.info(author);
             if (author.name === "") {
-                author.name = "Gulp 'publishDocumentation' task";
+                author.name = "[GULP] 'publishDocumentation' task";
                 author.email = "";
             }
 
@@ -357,7 +357,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                         .then(() => {
                             git.addTag(`v${packageData.version}`)
                                 .then(() => {
-                                    /*git.push()
+                                    git.push()
                                         .then(() => {
                                             done();
                                         })
@@ -365,7 +365,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                                             throw new Error(
                                                 `Something went wrong while pushing documentation to the remote: ${error}`
                                             );
-                                        });*/
+                                        });
                                 })
                                 .catch((error) => {
                                     throw new Error(
