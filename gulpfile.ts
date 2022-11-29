@@ -15,14 +15,15 @@ import * as vinylBuffer from "vinyl-buffer";
 // import * as chokidar from "chokidar"; Unexpected behaviour on Github Actions: chokidar isn't triggering documentation's creation.
 import * as glob from "glob";
 import * as simpleGit from "simple-git";
+import * as XMLHttpRequest from "xmlhttprequest-ts";
 
 // VARIABLES
+const gitRepoUrl = "https://github.com/ratibus11/improved-localstorage.git";
 const documentationDetectionTries = 10;
 const packageJson = require("./package.json");
 const packageData = {
     version: packageJson.version!,
     name: packageJson.name!,
-    gitRepo: packageJson.repository?.url!,
 };
 const paths = {
     clean: [`docs/${packageData.version}`, "docs/github-wiki", "build"],
@@ -46,9 +47,7 @@ const paths = {
         main: path.resolve("docs"),
         versionned: path.resolve("docs", packageData.version),
         forceDelete: ["README.md", "modules.md", `${packageData.version}-README.md`],
-        wiki: {
-            path: path.resolve("docs/github-wiki"),
-        },
+        wiki: path.resolve("docs/github-wiki"),
     },
 };
 
@@ -270,17 +269,38 @@ function documentate(done: gulp.TaskFunctionCallback) {
  * @param done Callback function.
  */
 function publishDocumentation(done: gulp.TaskFunctionCallback) {
-    if (fsExtra.existsSync(paths.documentation.wiki.path)) {
-        fsExtra.rmSync(paths.documentation.wiki.path, { recursive: true });
+    if (fsExtra.existsSync(paths.documentation.wiki)) {
+        fsExtra.rmSync(paths.documentation.wiki, { recursive: true });
     }
 
-    fsExtra.mkdirSync(paths.documentation.wiki.path);
+    if (typeof gitRepoUrl !== "string") {
+        throw new Error("Repository URL must be a string.");
+    } else if (!gitRepoUrl.endsWith(".git")) {
+        throw new Error("Repository URL must finish by '.git'.");
+    } else if (new URL(gitRepoUrl).host !== "github.com") {
+        throw Error(
+            "This functionnality is made for Github. The repository's host must be 'github.com'."
+        );
+    }
 
-    const git = simpleGit.simpleGit(paths.documentation.wiki.path);
+    const gitRepoWiki = new URL(gitRepoUrl);
+    gitRepoWiki.href = gitRepoWiki.href.replace(/\.git$/, ".wiki.git");
 
-    git.clone(`${packageData.gitRepo}.wiki`, ".", undefined, () => {
+    fsExtra.mkdirSync(paths.documentation.wiki);
+
+    const testUrl = new XMLHttpRequest.XMLHttpRequest();
+    testUrl.open("GET", gitRepoWiki.toString(), false);
+    testUrl.send(null);
+    if (!testUrl.getAllResponseHeaders()) {
+        throw new Error(
+            `Generated wiki repo seems invalid: Cannot get headers from '${gitRepoWiki.toString()}'`
+        );
+    }
+
+    const git = simpleGit.simpleGit(paths.documentation.wiki);
+    git.clone(gitRepoWiki.toString(), ".", undefined, () => {
         if (
-            fsExtra.readdirSync(paths.documentation.wiki.path).filter((wikiFile) => {
+            fsExtra.readdirSync(paths.documentation.wiki).filter((wikiFile) => {
                 return wikiFile.startsWith(packageData.version);
             }).length !== 0
         ) {
@@ -296,7 +316,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
         filesToCommit.forEach((fileToCommit) => {
             fsExtra.copyFileSync(
                 path.resolve(paths.documentation.versionned, fileToCommit),
-                path.resolve(paths.documentation.wiki.path, fileToCommit)
+                path.resolve(paths.documentation.wiki, fileToCommit)
             );
         });
 
@@ -321,4 +341,4 @@ gulp.task("build", gulp.series("clean", transpile, minify));
 
 gulp.task("documentate", gulp.series("clean", documentate));
 
-gulp.task("publishDocumentation", gulp.series("documentate", publishDocumentation));
+gulp.task("publishDocumentation", gulp.series(publishDocumentation));
