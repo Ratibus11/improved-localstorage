@@ -16,6 +16,7 @@ import * as vinylBuffer from "vinyl-buffer";
 import * as glob from "glob";
 import * as simpleGit from "simple-git";
 import * as XMLHttpRequest from "xmlhttprequest-ts";
+import * as ChildProcess from "child_process";
 
 // VARIABLES
 const gitRepoUrl = "https://github.com/ratibus11/improved-localstorage.git";
@@ -288,6 +289,11 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
 
     fsExtra.mkdirSync(paths.documentation.wiki);
 
+    if (process.env.GITHUB_TOKEN) {
+        gitRepoWiki.username = gitRepoWiki.pathname.split("/")[1];
+        gitRepoWiki.password = process.env.GITHUB_TOKEN;
+    }
+
     const testUrl = new XMLHttpRequest.XMLHttpRequest();
     testUrl.open("GET", gitRepoWiki.toString(), false);
     testUrl.send(null);
@@ -321,8 +327,18 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                 );
             });
 
-            git.addConfig("user.name", "Gulp 'publishDocumentation' task")
-                .addConfig("user.email", "")
+            const author = {
+                name: ChildProcess.execSync("git config user.name").toString(),
+                email: ChildProcess.execSync("git config user.email").toString(),
+            };
+            console.log(author);
+            if (author.name == null) {
+                author.name = "Gulp 'publishDocumentation' task";
+                author.email = "";
+            }
+
+            git.addConfig("user.name", author.name)
+                .addConfig("user.email", author.email)
                 .add(filesToCommit)
                 .then(() => {
                     git.commit(
@@ -331,7 +347,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                         .then(() => {
                             git.addTag(`v${packageData.version}`)
                                 .then(() => {
-                                    git.push()
+                                    /*git.push()
                                         .then(() => {
                                             done();
                                         })
@@ -339,7 +355,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                                             throw new Error(
                                                 `Something went wrong while pushing documentation to the remote: ${error}`
                                             );
-                                        });
+                                        });*/
                                 })
                                 .catch((error) => {
                                     throw new Error(
