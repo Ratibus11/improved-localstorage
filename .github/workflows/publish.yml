@@ -41,5 +41,5 @@ jobs:
               with:
                   node-version: 16
             - run: npm i --omit=dev
-            - run: rm tests
-            - run: gulp publishDocumentation
+            - run: rm -rf tests
+            - run: ./node_modules/.bin/cross-env GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} gulp publishDocumentation
