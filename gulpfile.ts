@@ -331,7 +331,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                 name: ChildProcess.execSync("git config user.name").toString(),
                 email: ChildProcess.execSync("git config user.email").toString(),
             };
-            console.log(author);
+            console.info(author);
             if (author.name == null) {
                 author.name = "Gulp 'publishDocumentation' task";
                 author.email = "";
