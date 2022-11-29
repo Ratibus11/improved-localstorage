@@ -327,12 +327,22 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                 );
             });
 
-            const author = {
-                name: ChildProcess.execSync("git config user.name").toString(),
-                email: ChildProcess.execSync("git config user.email").toString(),
-            };
+            const author = (() => {
+                try {
+                    return {
+                        name: ChildProcess.execSync("git config user.name").toString(),
+                        email: ChildProcess.execSync("git config user.email").toString(),
+                    };
+                } catch {
+                    return {
+                        name: "",
+                        email: "",
+                    };
+                }
+            })();
+
             console.info(author);
-            if (author.name == null) {
+            if (author.name === "") {
                 author.name = "Gulp 'publishDocumentation' task";
                 author.email = "";
             }
