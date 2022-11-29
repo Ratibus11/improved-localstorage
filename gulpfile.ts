@@ -298,41 +298,68 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
     }
 
     const git = simpleGit.simpleGit(paths.documentation.wiki);
-    git.clone(gitRepoWiki.toString(), ".", undefined, () => {
-        if (
-            fsExtra.readdirSync(paths.documentation.wiki).filter((wikiFile) => {
-                return wikiFile.startsWith(packageData.version);
-            }).length !== 0
-        ) {
-            throw new Error(
-                `Documentation for version ${packageData.version} is already on the repo's wiki. To bypass it, please remove first all '${packageData.version}-x.md' files, then run 'gulp publishDocumentation'.`
-            );
-        }
+    git.clone(gitRepoWiki.toString(), ".", undefined)
+        .then(() => {
+            if (
+                fsExtra.readdirSync(paths.documentation.wiki).filter((wikiFile) => {
+                    return wikiFile.startsWith(packageData.version);
+                }).length !== 0
+            ) {
+                throw new Error(
+                    `Documentation for version ${packageData.version} is already on the repo's wiki. To bypass it, please remove first all '${packageData.version}-x.md' files, then run 'gulp publishDocumentation'.`
+                );
+            }
 
-        const filesToCommit = glob.sync(`${packageData.version}*.md`, {
-            cwd: paths.documentation.versionned,
-        });
+            const filesToCommit = glob.sync(`${packageData.version}*.md`, {
+                cwd: paths.documentation.versionned,
+            });
 
-        filesToCommit.forEach((fileToCommit) => {
-            fsExtra.copyFileSync(
-                path.resolve(paths.documentation.versionned, fileToCommit),
-                path.resolve(paths.documentation.wiki, fileToCommit)
-            );
-        });
+            filesToCommit.forEach((fileToCommit) => {
+                fsExtra.copyFileSync(
+                    path.resolve(paths.documentation.versionned, fileToCommit),
+                    path.resolve(paths.documentation.wiki, fileToCommit)
+                );
+            });
 
-        git.add(filesToCommit, () => {
-            git.commit(
-                `[GULP] Automatically generated documentation for version ${packageData.version}.`,
-                () => {
-                    git.addTag(`v${packageData.version}`, () => {
-                        git.push(() => {
-                            done();
+            git.add(filesToCommit)
+                .then(() => {
+                    git.commit(
+                        `[GULP] Automatically generated documentation for version ${packageData.version}.`
+                    )
+                        .then(() => {
+                            git.addTag(`v${packageData.version}`)
+                                .then(() => {
+                                    git.push()
+                                        .then(() => {
+                                            done();
+                                        })
+                                        .catch((error) => {
+                                            throw new Error(
+                                                `Something went wrong while pushing documentation to the remote: ${error}`
+                                            );
+                                        });
+                                })
+                                .catch((error) => {
+                                    throw new Error(
+                                        `Something went wrong while adding v${packageData.version} tag to documentation: ${error}`
+                                    );
+                                });
+                        })
+                        .catch((error) => {
+                            throw new Error(
+                                `Something went wrong while commiting v${packageData.version} documentation: ${error}`
+                            );
                         });
-                    });
-                }
-            );
+                })
+                .catch((error) => {
+                    throw new Error(
+                        `Something went wrong while adding v${packageData.version} documentation to stage: ${error}`
+                    );
+                });
+        })
+        .catch((error) => {
+            throw new Error(`Something went wrong while cloning the wiki repository: ${error}`);
         });
-    });
 }
 
 gulp.task("clean", clean);
