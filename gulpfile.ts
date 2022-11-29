@@ -110,7 +110,7 @@ function minify(done: gulp.TaskFunctionCallback) {
  * @remarks All links to root `README.md` will be rewrited to `Home.md`, repo's Github Wiki main page.
  * @param done Callback function.
  */
-function documentate(done: gulp.TaskFunctionCallback) {
+function generateDocumentation(done: gulp.TaskFunctionCallback) {
     const appDisplayName = `${packageData.name} - ${packageData.version}`;
 
     gulp.src(paths.typescript.entry).pipe(
@@ -189,11 +189,11 @@ function documentate(done: gulp.TaskFunctionCallback) {
                     const newPath = ((): string => {
                         switch (path.relative(paths.documentation.versionned, absolutePath)) {
                             case "README.md":
-                                return "Home.md";
+                                return "Home";
                             case "modules.md":
-                                return `${packageData.version}.md`;
+                                return `${packageData.version}`;
                             default:
-                                return `${newRelativePath}`;
+                                return newRelativePath.slice(0, -3);
                         }
                     })();
 
@@ -339,6 +339,6 @@ gulp.task("clean", clean);
 
 gulp.task("build", gulp.series("clean", transpile, minify));
 
-gulp.task("documentate", gulp.series("clean", documentate));
+gulp.task("documentate", gulp.series("clean", generateDocumentation));
 
-gulp.task("publishDocumentation", gulp.series(publishDocumentation));
+gulp.task("publishDocumentation", gulp.series("documentate"));
