@@ -321,7 +321,9 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                 );
             });
 
-            git.add(filesToCommit)
+            git.addConfig("user.name", "Gulp 'publishDocumentation' task")
+                .addConfig("user.email", "")
+                .add(filesToCommit)
                 .then(() => {
                     git.commit(
                         `[GULP] Automatically generated documentation for version ${packageData.version}.`
