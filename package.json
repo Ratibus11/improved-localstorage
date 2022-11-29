@@ -21,7 +21,7 @@
     "scripts": {
         "prepare": "ts-patch install -s",
         "build": "gulp build",
-        "doc": "gulp documentate",
+        "doc": "gulp document",
         "test": "jest --runInBand",
         "prepublishOnly": "gulp build"
     },

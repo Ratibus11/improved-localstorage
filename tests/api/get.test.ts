@@ -130,7 +130,7 @@ describe("get() - Get an entry's value from the local storage", () => {
         ["0", 0],
         ["false", false],
         [`{\"hi\":\"everyone\"}`, { hi: "everyone" }],
-    ])("%p should retrive %p from the localstorage", (original: string, expected: any) => {
+    ])("%p should retrieve %p from the localstorage", (original: string, expected: any) => {
         // GIVEN
         const key = "a";
         localStorage.setItem(key, original);
