@@ -57,7 +57,7 @@ interface GetOptions {
  * @returns Entry's parsed content, or `null` if it doesn't exists.
  * @remarks
  * As `null` can be stored in the local storage and may be returned by {@link get} if the entry doesn't exists, I don't recommand to use {@link get} to check an entry's existence. Instead, use `exists`.
- * @remarks
+ *
  * Altought `undefined` can be stringify as JSON but not be parsed from it, {@link get} support this value. Check {@link get}'s examples and {@link set} for more details.
  * @example
  * // { hi: "\"everyone\"" }
