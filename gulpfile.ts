@@ -12,7 +12,7 @@ import * as path from "path";
 import * as browserify from "browserify";
 import * as vinylSourceStream from "vinyl-source-stream";
 import * as vinylBuffer from "vinyl-buffer";
-// import * as chokidar from "chokidar"; Unexpected behaviour on Github Actions: chokidar isn't triggering documentation's creation.
+// import * as chokidar from "chokidar"; Unexpected behavior on Github Actions: chokidar isn't triggering documentation's creation.
 import * as glob from "glob";
 import * as simpleGit from "simple-git";
 import * as XMLHttpRequest from "xmlhttprequest-ts";
@@ -46,7 +46,7 @@ const paths = {
     },
     documentation: {
         main: path.resolve("docs"),
-        versionned: path.resolve("docs", packageData.version),
+        versioned: path.resolve("docs", packageData.version),
         forceDelete: ["README.md", "modules.md", `${packageData.version}-README.md`],
         wiki: path.resolve("docs/.github-wiki"),
     },
@@ -106,9 +106,9 @@ function minify(done: gulp.TaskFunctionCallback) {
 /**
  * Create documentation.
  * Will create a `docs/x` folder where `x` is the package's version (defined in `package.json`) with TypeDoc.
- * All documentation files' link will be rewrited from `version/path/to/the/file.md` to `version/version-path-to-the-file.md` to match with Github Wiki's structure.
+ * All documentation files' link will be rewritten from `version/path/to/the/file.md` to `version/version-path-to-the-file.md` to match with Github Wiki's structure.
  * Then, it will delete all unused files (pre-compiled or unused files (.nojekyll, folders, README.md)).
- * @remarks All links to root `README.md` will be rewrited to `Home.md`, repo's Github Wiki main page.
+ * @remarks All links to root `README.md` will be rewritten to `Home.md`, repo's Github Wiki main page.
  * @param done Callback function.
  */
 function generateDocumentation(done: gulp.TaskFunctionCallback) {
@@ -116,7 +116,7 @@ function generateDocumentation(done: gulp.TaskFunctionCallback) {
 
     gulp.src(paths.typescript.entry).pipe(
         gulpTypedoc({
-            out: paths.documentation.versionned,
+            out: paths.documentation.versioned,
             version: true,
             excludePrivate: true,
             excludeProtected: true,
@@ -138,7 +138,7 @@ function generateDocumentation(done: gulp.TaskFunctionCallback) {
             throw Error("Unable to detect documentation folder.");
         }
 
-        if (fsExtra.existsSync(paths.documentation.versionned)) {
+        if (fsExtra.existsSync(paths.documentation.versioned)) {
             clearInterval(interval);
             console.info(
                 `Documentation folder for version ${packageData.version} detected. Processing...`
@@ -150,7 +150,7 @@ function generateDocumentation(done: gulp.TaskFunctionCallback) {
     const documentationCreated = () => {
         glob.sync("**/*.md", {
             absolute: true,
-            cwd: paths.documentation.versionned,
+            cwd: paths.documentation.versioned,
         }).forEach((markdownFilePath) => {
             // Load each markdown file and rewrite relative links to Github-like links.
             var markdownFileContent = fsExtra.readFileSync(markdownFilePath).toString();
@@ -188,7 +188,7 @@ function generateDocumentation(done: gulp.TaskFunctionCallback) {
                         .join("-")}`;
 
                     const newPath = ((): string => {
-                        switch (path.relative(paths.documentation.versionned, absolutePath)) {
+                        switch (path.relative(paths.documentation.versioned, absolutePath)) {
                             case "README.md":
                                 return "Home";
                             case "modules.md":
@@ -214,12 +214,12 @@ function generateDocumentation(done: gulp.TaskFunctionCallback) {
 
         // Copy each files as his new name.
         glob.sync("**/*.md", {
-            cwd: paths.documentation.versionned,
+            cwd: paths.documentation.versioned,
             absolute: true,
         }).forEach((markdownFileRelativePath) => {
             const newMarkdownFileName = ((): string => {
                 const temporaryMarkDownFileName = path
-                    .relative(paths.documentation.versionned, markdownFileRelativePath)
+                    .relative(paths.documentation.versioned, markdownFileRelativePath)
                     .replaceAll("/", "-");
                 switch (temporaryMarkDownFileName) {
                     case "README.md":
@@ -234,7 +234,7 @@ function generateDocumentation(done: gulp.TaskFunctionCallback) {
                 }
             })();
             const newMarkdownFilePath = path.resolve(
-                paths.documentation.versionned,
+                paths.documentation.versioned,
                 newMarkdownFileName
             );
 
@@ -246,13 +246,13 @@ function generateDocumentation(done: gulp.TaskFunctionCallback) {
         // Clean old files
         glob.sync("./*", {
             absolute: true,
-            cwd: paths.documentation.versionned,
+            cwd: paths.documentation.versioned,
             dot: true,
         }).forEach((docFile) => {
             if (
                 path.extname(docFile) !== ".md" ||
                 paths.documentation.forceDelete.includes(
-                    path.relative(paths.documentation.versionned, docFile)
+                    path.relative(paths.documentation.versioned, docFile)
                 )
             ) {
                 fsExtra.rmSync(docFile, { recursive: true });
@@ -264,7 +264,7 @@ function generateDocumentation(done: gulp.TaskFunctionCallback) {
 }
 
 /**
- * Called automatically after a successed `npm publish`, will push the generated documentation to the repo's Github Wiki.
+ * Called automatically after a succeeded `npm publish`, will push the generated documentation to the repo's Github Wiki.
  * @throw [Error](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Error) if any file prefixed by the package's version (`major.minor.patch-...`) exists.
  * To publish, remove all version's documentation, then launch this task manually.
  * @param done Callback function.
@@ -280,7 +280,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
         throw new Error("Repository URL must finish by '.git'.");
     } else if (new URL(gitRepoUrl).host !== "github.com") {
         throw Error(
-            "This functionnality is made for Github. The repository's host must be 'github.com'."
+            "This functionality is made for Github. The repository's host must be 'github.com'."
         );
     }
 
@@ -317,12 +317,12 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
             }
 
             const filesToCommit = glob.sync(`${packageData.version}*.md`, {
-                cwd: paths.documentation.versionned,
+                cwd: paths.documentation.versioned,
             });
 
             filesToCommit.forEach((fileToCommit) => {
                 fsExtra.copyFileSync(
-                    path.resolve(paths.documentation.versionned, fileToCommit),
+                    path.resolve(paths.documentation.versioned, fileToCommit),
                     path.resolve(paths.documentation.wiki, fileToCommit)
                 );
             });
@@ -377,7 +377,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                         })
                         .catch((error) => {
                             throw new Error(
-                                `Something went wrong while commiting v${packageData.version} documentation: ${error}`
+                                `Something went wrong while committing v${packageData.version} documentation: ${error}`
                             );
                         });
                 })
@@ -396,6 +396,6 @@ gulp.task("clean", clean);
 
 gulp.task("build", gulp.series("clean", transpile, minify));
 
-gulp.task("documentate", gulp.series("clean", generateDocumentation));
+gulp.task("document", gulp.series("clean", generateDocumentation));
 
-gulp.task("publishDocumentation", gulp.series("documentate", publishDocumentation));
+gulp.task("publishDocumentation", gulp.series("document", publishDocumentation));

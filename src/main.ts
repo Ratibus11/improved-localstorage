@@ -56,9 +56,9 @@ interface GetOptions {
  * @param options Getter's options.
  * @returns Entry's parsed content, or `null` if it doesn't exists.
  * @remarks
- * As `null` can be stored in the local storage and may be returned by {@link get} if the entry doesn't exists, I don't recommand to use {@link get} to check an entry's existence. Instead, use `exists`.
+ * As `null` can be stored in the local storage and may be returned by {@link get} if the entry doesn't exists, I don't recommend to use {@link get} to check an entry's existence. Instead, use `exists`.
  *
- * Altought `undefined` can be stringify as JSON but not be parsed from it, {@link get} support this value. Check {@link get}'s examples and {@link set} for more details.
+ * Although `undefined` can be stringify as JSON but not be parsed from it, {@link get} support this value. Check {@link get}'s examples and {@link set} for more details.
  * @example
  * // { hi: "\"everyone\"" }
  * get("hi"); // "everyone"
