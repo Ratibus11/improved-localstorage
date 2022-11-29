@@ -290,8 +290,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
     fsExtra.mkdirSync(paths.documentation.wiki);
 
     if (process.env.GITHUB_TOKEN) {
-        gitRepoWiki.username = gitRepoWiki.pathname.split("/")[1];
-        gitRepoWiki.password = process.env.GITHUB_TOKEN;
+        gitRepoWiki.username = process.env.GITHUB_TOKEN;
     }
 
     const testUrl = new XMLHttpRequest.XMLHttpRequest();
@@ -341,7 +340,6 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                 }
             })();
 
-            console.info(author);
             if (author.name === "") {
                 author.name = "[GULP] 'publishDocumentation' task";
                 author.email = "";
