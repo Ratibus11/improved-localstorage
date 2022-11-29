@@ -341,4 +341,4 @@ gulp.task("build", gulp.series("clean", transpile, minify));
 
 gulp.task("documentate", gulp.series("clean", generateDocumentation));
 
-gulp.task("publishDocumentation", gulp.series("documentate"));
+gulp.task("publishDocumentation", gulp.series("documentate", publishDocumentation));
