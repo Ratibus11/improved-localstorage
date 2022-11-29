@@ -48,7 +48,7 @@ const paths = {
         main: path.resolve("docs"),
         versionned: path.resolve("docs", packageData.version),
         forceDelete: ["README.md", "modules.md", `${packageData.version}-README.md`],
-        wiki: path.resolve("docs/github-wiki"),
+        wiki: path.resolve("docs/.github-wiki"),
     },
 };
 
@@ -358,6 +358,9 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
                                 .then(() => {
                                     git.push()
                                         .then(() => {
+                                            fsExtra.rmSync(paths.documentation.wiki, {
+                                                recursive: true,
+                                            });
                                             done();
                                         })
                                         .catch((error) => {
