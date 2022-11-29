@@ -299,7 +299,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
     testUrl.send(null);
     if (!testUrl.getAllResponseHeaders()) {
         throw new Error(
-            `Generated wiki repo seems invalid: Cannot get headers from '${gitRepoWiki.toString()}'`
+            `Generated wiki repo seems invalid: Cannot get headers from '${gitRepoWiki.toString()}'. Is the wiki service enabled on your repo?`
         );
     }
 
@@ -342,7 +342,7 @@ function publishDocumentation(done: gulp.TaskFunctionCallback) {
             })();
 
             if (author.name === "") {
-                author.name = "[GULP] 'publishDocumentation' task";
+                author.name = "[TASK] Gulp - Documentation publication";
                 author.email = "";
             }
 
