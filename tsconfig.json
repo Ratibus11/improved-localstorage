@@ -32,5 +32,5 @@
 
         "lib": ["es2021", "dom"]
     },
-    "include": ["src/**/*.ts", "tests/**/*.ts"]
+    "include": ["**/*.ts"]
 }
