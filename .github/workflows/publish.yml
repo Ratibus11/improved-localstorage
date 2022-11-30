@@ -49,7 +49,7 @@ jobs:
             - run: npm i --omit=dev
             - run: npm publish
               env:
-                  NODE_AUTH_TOKEN: ${{ secrets.GHP_TOKEN }}
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     publish_doc:
         name: Publish documentation
