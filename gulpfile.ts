@@ -113,12 +113,12 @@ function clean(done: gulp.TaskFunctionCallback): void {
     if (process.env.DELETE_TS_OUTSIDE_SRC) {
         console.warn("Deleting all .ts files outside the src folder.");
 
-        glob.sync("!(src)/**/*.ts", { absolute: true })
-            .filter((path) => {
-                return !path.endsWith(".d.ts");
+        glob.sync("**/*.ts", { cwd: __dirname })
+            .filter((fileToFilter) => {
+                return !fileToFilter.endsWith(".d.ts") && !fileToFilter.startsWith("src");
             })
-            .forEach((path) => {
-                fsExtra.rmSync(path);
+            .forEach((fileToDelete) => {
+                fsExtra.rmSync(path.resolve(__dirname, fileToDelete));
             });
     }
 
