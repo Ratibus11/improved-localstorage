@@ -21,8 +21,8 @@ jobs:
             - run: npm i
             - run: npm run test
 
-    publish_npm:
-        name: Publish on NPM
+    publish:
+        name: Publish
         needs: test
         runs-on: ubuntu-latest
         steps:
