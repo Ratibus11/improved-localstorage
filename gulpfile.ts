@@ -19,6 +19,19 @@ import * as packageJson from "./package.json";
 import * as simpleGit from "simple-git";
 import * as ChildProcess from "child_process";
 
+// ===== TASKS
+
+gulp.task("clean", clean);
+
+gulp.task("build", gulp.series("clean", transpile, minify));
+
+gulp.task("document", gulp.series("clean", generateRawDocumentation, transformDocumentation));
+
+gulp.task(
+    "publishDocumentation",
+    gulp.series("document", cloneRepo, copyDocumentation, publishNewDocumentation)
+);
+
 // ===== VARIABLES
 
 /**
@@ -80,19 +93,6 @@ const foldersToClean = [
 ].map((folderToClean) => {
     return path.resolve(folderToClean);
 });
-
-// ===== TASKS
-
-gulp.task("clean", clean);
-
-gulp.task("build", gulp.series("clean", transpile, minify));
-
-gulp.task("document", gulp.series("clean", generateRawDocumentation, transformDocumentation));
-
-gulp.task(
-    "publishDocumentation",
-    gulp.series("document", cloneRepo, copyDocumentation, publishNewDocumentation)
-);
 
 // ===== TASKS FUNCTIONS
 
