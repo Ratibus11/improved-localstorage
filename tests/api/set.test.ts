@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 
-// TESTED FEATURE
+// ===== TESTED FEATURE
 import { set, errors } from "@main";
 
 describe("set() - Set a value in the local storage", () => {
@@ -17,29 +17,29 @@ describe("set() - Set a value in the local storage", () => {
             test.each([undefined, null, 0, false])(
                 "It should throw a 'errors.options.key.NotString' if the key is %p.",
                 async (invalidKey: any) => {
-                    // GIVEN
+                    // ===== GIVEN
                     // invalidKey
 
-                    // WHEN
+                    // ===== WHEN
                     const functionThatShouldThrowNotString = () => {
                         set(invalidKey, null);
                     };
 
-                    // THEN
+                    // ===== THEN
                     expect(functionThatShouldThrowNotString).toThrow(errors.options.key.NotString);
                 }
             );
 
             test("It should throw a 'errors.options.key.EmptyString' if the key is an empty string", () => {
-                // GIVEN
+                // ===== GIVEN
                 const invalidKey: any = "";
 
-                // WHEN
+                // ===== WHEN
                 const functionThatShouldThrowEmptyString = () => {
                     set(invalidKey, null);
                 };
 
-                // THEN
+                // ===== THEN
                 expect(functionThatShouldThrowEmptyString).toThrow(errors.options.key.EmptyString);
             });
         });
@@ -53,13 +53,13 @@ describe("set() - Set a value in the local storage", () => {
         [{ hi: "everyone" }, '{"hi":"everyone"}'],
         [Symbol(""), "undefined"],
     ])("%p should set %p in the localstorage", async (original: any, expected: string) => {
-        // GIVEN
+        // ===== GIVEN
         const key = "a";
 
-        // WHEN
+        // ===== WHEN
         set(key, original);
 
-        // THEN
+        // ===== THEN
         expect(localStorage.getItem(key)).toStrictEqual(expected);
     });
 
@@ -71,15 +71,15 @@ describe("set() - Set a value in the local storage", () => {
         })(),
         BigInt(1),
     ])("%p should throw a 'errors.entry.CannotStringify'", async (invalidValue: any) => {
-        // GIVEN
+        // ===== GIVEN
         const key = "a";
 
-        // WHEN
+        // ===== WHEN
         const functionThatShouldThrowCannotStringify = () => {
             set(key, invalidValue);
         };
 
-        // THEN
+        // ===== THEN
         expect(functionThatShouldThrowCannotStringify).toThrow(errors.entry.CannotStringify);
     });
 });

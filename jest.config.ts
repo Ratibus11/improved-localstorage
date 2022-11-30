@@ -1,8 +1,8 @@
-// JEST
+// ===== JEST
 import { compilerOptions } from "./tsconfig.json";
 import { pathsToModuleNameMapper, JestConfigWithTsJest } from "ts-jest";
 
-// UTILS
+// ===== UTILS
 import * as path from "path";
 
 const jestConfig: JestConfigWithTsJest = {

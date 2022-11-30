@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 
-// TESTED FEATURE
+// ===== TESTED FEATURE
 import { clear } from "@main";
 
 describe("clear()", () => {
@@ -13,26 +13,26 @@ describe("clear()", () => {
     });
 
     test("It should empty the local storage", () => {
-        // GIVEN
+        // ===== GIVEN
         localStorage.setItem("a", "");
         localStorage.setItem("b", "");
 
-        // WHEN
+        // ===== WHEN
         clear();
 
-        // THEN
+        // ===== THEN
         expect(localStorage.length).toStrictEqual(0);
     });
 
     test("It should return 'true' if there were at least one element in the local storage while calling the function", () => {
-        // GIVEN
+        // ===== GIVEN
         localStorage.setItem("a", "");
         localStorage.setItem("b", "");
 
-        // WHEN
+        // ===== WHEN
         const wereElementsInLocalStorage = clear();
 
-        // THEN
+        // ===== THEN
         expect(wereElementsInLocalStorage).toBeTruthy;
     });
 });

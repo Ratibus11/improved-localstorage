@@ -1,17 +1,17 @@
 import { describe, expect, test } from "@jest/globals";
 
-// TESTED FEATURE
+// ===== TESTED FEATURE
 import { errors } from "@main";
 
 describe("errors.options.key.EmptyString", () => {
     test("Should have the right class name", () => {
-        // GIVEN
+        // ===== GIVEN
         const error = new errors.options.key.EmptyString();
 
-        // WHEN
+        // ===== WHEN
         const classConstructor = error.constructor;
 
-        // THEN
+        // ===== THEN
         expect(classConstructor).toStrictEqual(errors.options.key.EmptyString);
     });
 });

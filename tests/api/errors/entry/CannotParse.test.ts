@@ -1,32 +1,32 @@
 import { describe, expect, test } from "@jest/globals";
 
-// TESTED FEATURE
+// ===== TESTED FEATURE
 import { errors } from "@main";
 
 describe("errors.entry.CannotParse", () => {
     test("Should have the right class name", () => {
-        // GIVEN
+        // ===== GIVEN
         const error = new errors.entry.CannotParse(new SyntaxError());
 
-        // WHEN
+        // ===== WHEN
         const classConstructor = error.constructor;
 
-        // THEN
+        // ===== THEN
         expect(classConstructor).toStrictEqual(errors.entry.CannotParse);
     });
 
     test.each([undefined, null, 0, false, new Date(), new TypeError(), new Error()])(
         "%p should throw a 'TypeError'",
         (invalidError: any) => {
-            // GIVEN
+            // ===== GIVEN
             // invalidError
 
-            // WHEN
+            // ===== WHEN
             const functionThatShouldThrowTypeError = () => {
                 const error = new errors.entry.CannotParse(invalidError);
             };
 
-            // THEN
+            // ===== THEN
             expect(functionThatShouldThrowTypeError).toThrow(TypeError);
         }
     );

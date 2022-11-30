@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 
-// TESTED FEATURE
+// ===== TESTED FEATURE
 import { remove, errors } from "@main";
 
 describe("remove() - Remove a specific entry from the local storage", () => {
@@ -17,80 +17,80 @@ describe("remove() - Remove a specific entry from the local storage", () => {
             test.each([undefined, null, 0, false])(
                 "It should throw a 'errors.options.key.NotString' if the key is %p.",
                 async (invalidKey: any) => {
-                    // GIVEN
+                    // ===== GIVEN
                     // invalidKey
 
-                    // WHEN
+                    // ===== WHEN
                     const functionThatShouldThrowNotString = () => {
                         remove(invalidKey);
                     };
 
-                    // THEN
+                    // ===== THEN
                     expect(functionThatShouldThrowNotString).toThrow(errors.options.key.NotString);
                 }
             );
 
             test("It should throw a 'errors.options.key.EmptyString' if the key is an empty string", () => {
-                // GIVEN
+                // ===== GIVEN
                 const invalidKey: any = "";
 
-                // WHEN
+                // ===== WHEN
                 const functionThatShouldThrowEmptyString = () => {
                     remove(invalidKey);
                 };
 
-                // THEN
+                // ===== THEN
                 expect(functionThatShouldThrowEmptyString).toThrow(errors.options.key.EmptyString);
             });
         });
     });
 
     test("It should remove the element from the local storage", () => {
-        // GIVEN
+        // ===== GIVEN
         const key = "a";
         localStorage.setItem(key, "");
 
-        // WHEN
+        // ===== WHEN
         remove(key);
 
-        // THEN
+        // ===== THEN
         expect(localStorage.getItem(key)).toBeNull;
     });
 
     test("It shouldn't remove the element if the key is not the same as the entry", () => {
-        // GIVEN
+        // ===== GIVEN
         const entryKey = "a";
         const removeKey = "b";
         expect(entryKey).not.toStrictEqual(removeKey);
         localStorage.setItem(entryKey, "");
 
-        // WHEN
+        // ===== WHEN
         remove(removeKey);
 
-        // THEN
+        // ===== THEN
         expect(localStorage.getItem(entryKey)).not.toBeNull;
     });
 
     test("It should return true if the entry exists while calling the function", () => {
-        // GIVEN
+        // ===== GIVEN
         const key = "a";
         localStorage.setItem(key, "");
 
-        // WHEN
+        // ===== WHEN
         const wasRemoved = remove(key);
 
-        // THEN
+        // ===== THEN
         expect(wasRemoved).toBeTruthy;
     });
 
     test("It should return false if the entry doesn't exists while calling the function", () => {
-        // GIVEN
+        // ===== GIVEN
         const key = "a";
 
-        // WHEN
+        // ===== WHEN
         const wasRemoved = remove(key);
 
-        // THEN
+        // ===== THEN
         expect(wasRemoved).toBeFalsy;
     });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 
-// TESTED FEATURE
+// ===== TESTED FEATURE
 import { get, errors } from "@main";
 
 describe("get() - Get an entry's value from the local storage", () => {
@@ -17,29 +17,29 @@ describe("get() - Get an entry's value from the local storage", () => {
             test.each([undefined, null, 0, false])(
                 "It should throw a 'errors.options.key.NotString' if the key is %p.",
                 async (invalidKey: any) => {
-                    // GIVEN
+                    // ===== GIVEN
                     // invalidKey
 
-                    // WHEN
+                    // ===== WHEN
                     const functionThatShouldThrowNotString = () => {
                         get(invalidKey);
                     };
 
-                    // THEN
+                    // ===== THEN
                     expect(functionThatShouldThrowNotString).toThrow(errors.options.key.NotString);
                 }
             );
 
             test("It should throw a 'errors.options.key.EmptyString' if the key is an empty string", () => {
-                // GIVEN
+                // ===== GIVEN
                 const invalidKey: any = "";
 
-                // WHEN
+                // ===== WHEN
                 const functionThatShouldThrowEmptyString = () => {
                     get(invalidKey);
                 };
 
-                // THEN
+                // ===== THEN
                 expect(functionThatShouldThrowEmptyString).toThrow(errors.options.key.EmptyString);
             });
         });
@@ -48,14 +48,14 @@ describe("get() - Get an entry's value from the local storage", () => {
             test.each([undefined, null, new Date(), 0, false])(
                 "%p not make the entry be delete",
                 (invalidOptionArgument: any) => {
-                    // GIVEN
+                    // ===== GIVEN
                     const key = "a";
                     localStorage.setItem(key, "0");
 
-                    // WHEN
+                    // ===== WHEN
                     get(key, invalidOptionArgument);
 
-                    // THEN
+                    // ===== THEN
                     expect(localStorage.getItem(key)).not.toBeNull;
                 }
             );
@@ -64,27 +64,27 @@ describe("get() - Get an entry's value from the local storage", () => {
                 test.each([undefined, null, new Date(), 0, false, {}])(
                     "%p should not make the entry be deleted",
                     (nonTrueDestroyOptionArgument: any) => {
-                        // GIVEN
+                        // ===== GIVEN
                         const key = "a";
                         localStorage.setItem(key, "0");
 
-                        // WHEN
+                        // ===== WHEN
                         get(key, { destroy: nonTrueDestroyOptionArgument });
 
-                        // THEN
+                        // ===== THEN
                         expect(localStorage.getItem(key)).not.toBeNull;
                     }
                 );
 
                 test("true should make the entry be deleted", () => {
-                    // GIVEN
+                    // ===== GIVEN
                     const key = "a";
                     localStorage.setItem(key, "0");
 
-                    // WHEN
+                    // ===== WHEN
                     get(key, { destroy: true });
 
-                    // THEN
+                    // ===== THEN
                     expect(localStorage.getItem(key)).toBeNull;
                 });
             });
@@ -93,31 +93,31 @@ describe("get() - Get an entry's value from the local storage", () => {
                 test.each([undefined, null, new Date(), 0, false])(
                     "%p should not make the entry be deleted if an error occurred",
                     (nonTrueDestroyOptionArgument: any) => {
-                        // GIVEN
+                        // ===== GIVEN
                         const key = "a";
                         localStorage.setItem(key, "0");
 
-                        // WHEN
+                        // ===== WHEN
                         try {
                             get(key, { destroyOnError: nonTrueDestroyOptionArgument });
                         } catch {}
 
-                        // THEN
+                        // ===== THEN
                         expect(localStorage.getItem(key)).not.toBeNull;
                     }
                 );
 
                 test("true should make the entry be deleted if an error occurred", () => {
-                    // GIVEN
+                    // ===== GIVEN
                     const key = "a";
                     localStorage.setItem(key, "0");
 
-                    // WHEN
+                    // ===== WHEN
                     try {
                         get(key, { destroyOnError: true });
                     } catch {}
 
-                    // THEN
+                    // ===== THEN
                     expect(localStorage.getItem(key)).toBeNull;
                 });
             });
@@ -131,30 +131,30 @@ describe("get() - Get an entry's value from the local storage", () => {
         ["false", false],
         [`{\"hi\":\"everyone\"}`, { hi: "everyone" }],
     ])("%p should retrieve %p from the localstorage", (original: string, expected: any) => {
-        // GIVEN
+        // ===== GIVEN
         const key = "a";
         localStorage.setItem(key, original);
 
-        // WHEN
+        // ===== WHEN
         const loadedValue = get(key);
 
-        // THEN
+        // ===== THEN
         expect(loadedValue).toStrictEqual(expected);
     });
 
     test.each(["", "{hi:error}"])(
         "%p should throw a 'errors.entry.CannotParse'",
         (invalidValue: string) => {
-            // GIVEN
+            // ===== GIVEN
             const key = "a";
             localStorage.setItem(key, invalidValue);
 
-            // WHEN
+            // ===== WHEN
             const functionThatShouldThrowCannotParse = () => {
                 get(key);
             };
 
-            // THEN
+            // ===== THEN
             expect(functionThatShouldThrowCannotParse).toThrow(errors.entry.CannotParse);
         }
     );

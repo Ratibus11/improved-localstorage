@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 
-// TESTED FEATURES
+// ===== TESTED FEATURES
 import { exists, errors } from "@main";
 
 describe("exists()", () => {
@@ -17,54 +17,54 @@ describe("exists()", () => {
             test.each([undefined, null, 0, false])(
                 "It should throw a 'errors.options.key.NotString' if the key is %p.",
                 async (invalidKey: any) => {
-                    // GIVEN
+                    // ===== GIVEN
                     // invalidKey
 
-                    // WHEN
+                    // ===== WHEN
                     const functionThatShouldThrowNotString = () => {
                         exists(invalidKey);
                     };
 
-                    // THEN
+                    // ===== THEN
                     expect(functionThatShouldThrowNotString).toThrow(errors.options.key.NotString);
                 }
             );
 
             test("It should throw a 'errors.options.key.EmptyString' if the key is an empty string", () => {
-                // GIVEN
+                // ===== GIVEN
                 const invalidKey: any = "";
 
-                // WHEN
+                // ===== WHEN
                 const functionThatShouldThrowEmptyString = () => {
                     exists(invalidKey);
                 };
 
-                // THEN
+                // ===== THEN
                 expect(functionThatShouldThrowEmptyString).toThrow(errors.options.key.EmptyString);
             });
         });
     });
 
     test("It should return true if an entry with the provided key exists", () => {
-        // GIVEN
+        // ===== GIVEN
         const key = "a";
         localStorage.setItem(key, "");
 
-        // WHEN
+        // ===== WHEN
         const doEntryExists = exists(key);
 
-        // THEN
+        // ===== THEN
         expect(doEntryExists).toBeTruthy;
     });
 
     test("It should return false if an entry with the provided key doesn't exists", () => {
-        // GIVEN
+        // ===== GIVEN
         const key = "a";
 
-        // WHEN
+        // ===== WHEN
         const doEntryExists = exists(key);
 
-        // THEN
+        // ===== THEN
         expect(doEntryExists).toBeFalsy;
     });
 });
