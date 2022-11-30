@@ -202,6 +202,11 @@ function transformDocumentation(done: gulp.TaskFunctionCallback): void {
     done();
 }
 
+/**
+ * Check the provided repo URL's validity.
+ * @param done Callback function
+ * @remarks Repo's URL must be a Github link, finishing by .git. The URL must point the Git repo, not the wiki.
+ */
 function cloneRepo(done: gulp.TaskFunctionCallback): void {
     const repoUrl = new URL(remoteRepoUrl);
 
@@ -230,6 +235,11 @@ function cloneRepo(done: gulp.TaskFunctionCallback): void {
         });
 }
 
+/**
+ * Copy the documentation for the current version into the repo.
+ * @param done Callback function.
+ * @remarks For safety purpose, the copy cannot be done if any file already exists for the current version (No a.b.c files must exists if the current version is a.b.c).
+ */
 function copyDocumentation(done: gulp.TaskFunctionCallback): void {
     if (
         glob.sync("**", { cwd: paths.documentation.wiki }).filter((wikiFile) => {
@@ -253,6 +263,11 @@ function copyDocumentation(done: gulp.TaskFunctionCallback): void {
     done();
 }
 
+/**
+ * Set commit's author, commit the new documentation, then push it.
+ * @param done Callback function.
+ * @remarks If set, the author will be the one defined in the git config, else, it will be a "ghost committer".
+ */
 function publishNewDocumentation(done: gulp.TaskFunctionCallback): void {
     const author = (() => {
         try {
