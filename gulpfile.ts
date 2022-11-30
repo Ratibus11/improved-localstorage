@@ -21,7 +21,13 @@ import * as ChildProcess from "child_process";
 
 // ===== VARIABLES
 
+/**
+ * Project's repo to publish documentation. Must be a Github repo and finish be `.git`.
+ */
 const remoteRepoUrl = "https://github.com/Ratibus11/improved-localstorage.git";
+/**
+ * Project metadata.
+ */
 const packageData = {
     version: packageJson.version!,
     name: {
@@ -32,7 +38,13 @@ const packageData = {
         },
     },
 };
+/**
+ * Maximum tries to detect TypeDoc-generated documentation. A try is triggered every 1 second.
+ */
 const documentationDetectionTries = 10;
+/**
+ * Project's paths.
+ */
 const paths = {
     tsconfig: path.resolve("tsconfig.json"),
     source: {
@@ -57,6 +69,9 @@ const paths = {
         wiki: path.resolve("docs/.github-wiki"),
     },
 };
+/**
+ * List of folders to delete before tasks' launch.
+ */
 const foldersToClean = [
     paths.build.js.path,
     paths.documentation.versioned,
