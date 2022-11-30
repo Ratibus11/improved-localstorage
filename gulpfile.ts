@@ -107,6 +107,21 @@ function clean(done: gulp.TaskFunctionCallback): void {
         }
     });
 
+    // THIS WILL DELETE ALL `.ts` FILES OUTSIDE `src` FOLDER.
+    // PROCEED WITH CAUTION.
+    // SET `process.env.DELETE_TS_OUTSIDE_SRC` ONLY IF YOU'RE SURE YOU CAN GET BACK FILES OR THIS REPO COPY WILL BE DELETE.
+    if (process.env.DELETE_TS_OUTSIDE_SRC) {
+        console.warn("Deleting all .ts files outside the src folder.");
+
+        glob.sync("!(src)/**/*.ts", { absolute: true })
+            .filter((path) => {
+                return !path.endsWith(".d.ts");
+            })
+            .forEach((path) => {
+                fsExtra.rmSync(path);
+            });
+    }
+
     done();
 }
 
