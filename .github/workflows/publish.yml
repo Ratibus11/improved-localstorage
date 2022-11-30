@@ -46,5 +46,4 @@ jobs:
               with:
                   node-version: 16
             - run: npm i --omit=dev
-            - run: rm -rf tests
             - run: ./node_modules/.bin/cross-env DELETE_TS_OUTSIDE_SRC=1 GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} gulp publishDocumentation
