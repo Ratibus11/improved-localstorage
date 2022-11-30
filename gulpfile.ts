@@ -318,11 +318,13 @@ function publishNewDocumentation(done: gulp.TaskFunctionCallback): void {
 
     const git = simpleGit.simpleGit(paths.documentation.wiki);
 
-    git.add(
-        glob.sync(`${packageData.version}*.md`, {
-            cwd: paths.documentation.versioned,
-        })
-    )
+    git.addConfig("user.name", author.name)
+        .addConfig("user.email", author.email)
+        .add(
+            glob.sync(`${packageData.version}*.md`, {
+                cwd: paths.documentation.versioned,
+            })
+        )
         .then(() => {
             git.commit(
                 `[GULP] Automatically generated documentation for version ${packageData.version}.`
