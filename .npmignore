@@ -16,3 +16,6 @@ gulpfile.ts
 tests
 jest.config.ts
 docs
+
+# TMP build
+build/tmp
