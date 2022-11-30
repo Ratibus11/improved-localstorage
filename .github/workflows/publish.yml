@@ -34,11 +34,11 @@ jobs:
             - run: npm i --omit=dev
             - run: npm publish
               env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
     publish_doc:
         name: Publish documentation
-        needs: [publish_npm, publish_github]
+        needs: publish
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
