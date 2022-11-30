@@ -520,14 +520,14 @@ class DocumentationFileLink {
             case "modules.md":
                 return packageData.version;
             default:
-                return `${packageData.version}/${this.__link
+                return `${packageData.version}-${this.__link
                     .replace(/^\.\.\//g, "")
-                    .replace(/\.md$/g, "")}`
+                    .replace(/\.md$/g, "")
                     .split("/")
-                    .filter((_, index) => {
-                        return index !== 1;
+                    .filter((_, index, array) => {
+                        return array.length < 2 || (array.length >= 2 && index !== 0);
                     })
-                    .join("-");
+                    .join("-")}`;
         }
     }
 
