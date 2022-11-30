@@ -1,67 +1,94 @@
 import * as gulp from "gulp";
 
-// GULP MODULES
+// ===== GULP PLUGINS
+
 import * as gulpTypescript from "gulp-typescript";
 import * as gulpUglify from "gulp-uglify";
 import * as gulpTypedoc from "gulp-typedoc";
 
-// UTILS
+// ===== UTILS
+
 import * as fsExtra from "fs-extra";
-import * as merge2 from "merge2";
 import * as path from "path";
+import * as merge2 from "merge2";
 import * as browserify from "browserify";
 import * as vinylSourceStream from "vinyl-source-stream";
 import * as vinylBuffer from "vinyl-buffer";
-// import * as chokidar from "chokidar"; Unexpected behavior on Github Actions: chokidar isn't triggering documentation's creation.
 import * as glob from "glob";
+import * as packageJson from "./package.json";
 import * as simpleGit from "simple-git";
-import * as XMLHttpRequest from "xmlhttprequest-ts";
 import * as ChildProcess from "child_process";
 
-// VARIABLES
-const gitRepoUrl = "https://github.com/ratibus11/improved-localstorage.git";
-const documentationDetectionTries = 10;
-const packageJson = require("./package.json");
+// ===== VARIABLES
+
+const remoteRepoUrl = "https://github.com/Ratibus11/improved-localstorage.git";
 const packageData = {
     version: packageJson.version!,
-    name: packageJson.name!,
-};
-const paths = {
-    clean: [`docs/${packageData.version}`, "docs/github-wiki", "build"],
-    typescript: {
-        tsconfig: path.resolve("tsconfig.json"),
-        entry: path.resolve("src/main.ts"),
-        glob: path.resolve("src/**/*.ts"),
-    },
-    transpiled: {
-        entry: path.resolve("build/build/main.js"),
-        app: path.resolve("build/build"),
-    },
-    build: {
-        types: path.resolve("build/types"),
-        app: {
-            path: path.resolve("build"),
-            name: "app.js",
+    name: {
+        package: packageJson.name,
+        display: {
+            name: packageJson.displayName,
+            versioned: `${packageJson.displayName} - ${packageJson.version!}`,
         },
     },
+};
+const documentationDetectionTries = 10;
+const paths = {
+    tsconfig: path.resolve("tsconfig.json"),
+    source: {
+        glob: path.resolve("src/**/*.ts"),
+        entry: path.resolve("src/main.ts"),
+    },
+    transpiled: {
+        folder: path.resolve("build/tmp"),
+        entry: path.resolve("build/tmp/main.js"),
+    },
+    build: {
+        js: {
+            path: path.resolve("app"),
+            name: "app.js",
+        },
+        dts: path.resolve("app/types"),
+    },
     documentation: {
-        main: path.resolve("docs"),
+        typedocGeneration: path.resolve("docs/.tmp"),
+        root: path.resolve("docs"),
         versioned: path.resolve("docs", packageData.version),
-        forceDelete: ["README.md", "modules.md", `${packageData.version}-README.md`],
         wiki: path.resolve("docs/.github-wiki"),
     },
 };
+const foldersToClean = [
+    paths.build.js.path,
+    paths.documentation.versioned,
+    paths.documentation.wiki,
+    paths.documentation.typedocGeneration,
+].map((folderToClean) => {
+    return path.resolve(folderToClean);
+});
+
+// ===== TASKS
+
+gulp.task("clean", clean);
+
+gulp.task("build", gulp.series("clean", transpile, minify));
+
+gulp.task("document", gulp.series("clean", generateRawDocumentation, transformDocumentation));
+
+gulp.task(
+    "publishDocumentation",
+    gulp.series("document", cloneRepo, copyDocumentation, publishNewDocumentation)
+);
+
+// ===== TASKS FUNCTIONS
 
 /**
- * Delete build files and folders.
+ * Delete all build folders (app and documentation).
  * @param done Callback function
  */
-function clean(done: gulp.TaskFunctionCallback) {
-    paths.clean.forEach((folder) => {
-        const folderPath = path.resolve(__dirname, folder);
-
-        if (fsExtra.existsSync(folderPath)) {
-            fsExtra.rmSync(folderPath, { recursive: true });
+function clean(done: gulp.TaskFunctionCallback): void {
+    foldersToClean.forEach((folderToClean) => {
+        if (fsExtra.existsSync(folderToClean)) {
+            fsExtra.rmSync(folderToClean, { recursive: true });
         }
     });
 
@@ -69,333 +96,412 @@ function clean(done: gulp.TaskFunctionCallback) {
 }
 
 /**
- * Load TS config et perform transpilation/declaration.
+ * Transpile TypeScript project to declarations (`.d.ts` in `app/types`) and JavaScript (`.js` in `app/tmp`) files.
+ * @remarks At this point, JS files are only transpiled and not bundled/minified.
  * @param done Callback function.
- * @returns Transpiled pipes.
  */
-function transpile(done: gulp.TaskFunctionCallback) {
-    const typescriptProject = gulpTypescript.createProject(paths.typescript.tsconfig);
-    const typescriptResult = gulp.src(paths.typescript.glob).pipe(typescriptProject());
+function transpile(done: gulp.TaskFunctionCallback): void {
+    const typescriptProject = gulpTypescript.createProject(paths.tsconfig);
+    const typescriptResult = gulp.src(paths.source.glob).pipe(typescriptProject());
 
-    return merge2([
-        typescriptResult.js.pipe(gulp.dest(paths.transpiled.app)),
-        typescriptResult.dts.pipe(gulp.dest(paths.build.types)),
-    ]);
+    merge2([
+        typescriptResult.js.pipe(gulp.dest(paths.transpiled.folder)),
+        typescriptResult.dts.pipe(gulp.dest(paths.build.dts)),
+    ]).on("end", () => {
+        done();
+    });
 }
 
 /**
- * Minify transpiled JS into one file and delete the original transpiled files.
+ * Load transpiled JS files (`app/tmp`) an minify them in a single file (`app/app.js`).
  * @param done Callback function.
  */
-function minify(done: gulp.TaskFunctionCallback) {
+function minify(done: gulp.TaskFunctionCallback): void {
     browserify({
         entries: paths.transpiled.entry,
         debug: true,
     })
         .bundle()
-        .pipe(vinylSourceStream(paths.build.app.name))
+        .pipe(vinylSourceStream(paths.build.js.name))
         .pipe(vinylBuffer())
         .pipe(gulpUglify())
-        .pipe(gulp.dest(paths.build.app.path))
+        .pipe(gulp.dest(paths.build.js.path))
         .on("end", () => {
-            fsExtra.rmSync(paths.transpiled.app, { recursive: true });
+            fsExtra.rmSync(paths.transpiled.folder, { recursive: true });
             done();
         });
 }
 
 /**
- * Create documentation.
- * Will create a `docs/x` folder where `x` is the package's version (defined in `package.json`) with TypeDoc.
- * All documentation files' link will be rewritten from `version/path/to/the/file.md` to `version/version-path-to-the-file.md` to match with Github Wiki's structure.
- * Then, it will delete all unused files (pre-compiled or unused files (.nojekyll, folders, README.md)).
- * @remarks All links to root `README.md` will be rewritten to `Home.md`, repo's Github Wiki main page.
- * @param done Callback function.
+ * Generate documentation with TypeDoc (in `docs/tmp`).
+ * @param done
  */
-function generateDocumentation(done: gulp.TaskFunctionCallback) {
-    const appDisplayName = `${packageData.name} - ${packageData.version}`;
+function generateRawDocumentation(done: gulp.TaskFunctionCallback): void {
+    gulp.src(path.resolve(paths.source.entry))
+        .pipe(
+            gulpTypedoc({
+                out: paths.documentation.typedocGeneration,
+                version: true,
+                excludePrivate: true,
+                excludeProtected: true,
+                hideGenerator: true,
+                gitRevision: "",
+                name: packageData.name.display.versioned,
+            })
+        )
+        .on("end", () => {
+            var tries = 0;
 
-    gulp.src(paths.typescript.entry).pipe(
-        gulpTypedoc({
-            out: paths.documentation.versioned,
-            version: true,
-            excludePrivate: true,
-            excludeProtected: true,
-            hideGenerator: true,
-            gitRevision: "",
-            name: appDisplayName,
-        })
-    );
+            const interval = setInterval(() => {
+                tries++;
 
-    var currentTries = 0;
-    const interval = setInterval(() => {
-        if (currentTries < documentationDetectionTries) {
-            currentTries++;
-            console.info(
-                `Try ${currentTries}/${documentationDetectionTries} to detect documentation folder...`
-            );
-        } else if (currentTries === documentationDetectionTries) {
-            clearInterval(interval);
-            throw Error("Unable to detect documentation folder.");
-        }
-
-        if (fsExtra.existsSync(paths.documentation.versioned)) {
-            clearInterval(interval);
-            console.info(
-                `Documentation folder for version ${packageData.version} detected. Processing...`
-            );
-            documentationCreated();
-        }
-    }, 1000);
-
-    const documentationCreated = () => {
-        glob.sync("**/*.md", {
-            absolute: true,
-            cwd: paths.documentation.versioned,
-        }).forEach((markdownFilePath) => {
-            // Load each markdown file and rewrite relative links to Github-like links.
-            var markdownFileContent = fsExtra.readFileSync(markdownFilePath).toString();
-
-            markdownFileContent.match(/\[.+?\]\(.+?\)/g)?.forEach((markdownLink) => {
-                const linkName = markdownLink.match(/\[.*?\]/)![0].slice(1, -1);
-                const relativePath = markdownLink.match(/\(.*?\)/)![0].slice(1, -1);
-
-                const newLinkName = (() => {
-                    switch (linkName) {
-                        case appDisplayName:
-                            return packageData.name;
-                        case "Exports":
-                            return packageData.version;
-                        default:
-                            return linkName;
-                    }
-                })();
-
-                const hasAnchor = relativePath.lastIndexOf("#") !== -1;
-
-                const absolutePath = path.resolve(
-                    path.dirname(markdownFilePath),
-                    relativePath.slice(0, hasAnchor ? relativePath.lastIndexOf("#") : undefined)
-                );
-                const anchor = hasAnchor ? relativePath.slice(relativePath.lastIndexOf("#")) : "";
-
-                if (fsExtra.existsSync(absolutePath)) {
-                    const newRelativePath = `${path
-                        .relative(paths.documentation.main, absolutePath)
-                        .split("/")
-                        .filter((element, index) => {
-                            return index !== 1;
-                        })
-                        .join("-")}`;
-
-                    const newPath = ((): string => {
-                        switch (path.relative(paths.documentation.versioned, absolutePath)) {
-                            case "README.md":
-                                return "Home";
-                            case "modules.md":
-                                return `${packageData.version}`;
-                            default:
-                                return newRelativePath.slice(0, -3);
-                        }
-                    })();
-
-                    const newMarkdownLink = markdownLink
-                        .replace(relativePath, `${newPath}${anchor}`)
-                        .replace(linkName, newLinkName);
-
-                    markdownFileContent = markdownFileContent.replace(
-                        markdownLink,
-                        newMarkdownLink
+                if (tries < documentationDetectionTries) {
+                    console.info(
+                        `Try ${tries}/${documentationDetectionTries} to detect documentation folder...`
                     );
+                } else if (tries === documentationDetectionTries) {
+                    clearInterval(interval);
+                    throw Error("Unable to detect documentation folder.");
                 }
 
-                fsExtra.writeFileSync(markdownFilePath, markdownFileContent);
-            });
-        });
+                if (fsExtra.existsSync(paths.documentation.typedocGeneration)) {
+                    console.info(
+                        `Documentation folder for version ${packageData.version} detected.`
+                    );
+                    clearInterval(interval);
 
-        // Copy each files as his new name.
-        glob.sync("**/*.md", {
-            cwd: paths.documentation.versioned,
-            absolute: true,
-        }).forEach((markdownFileRelativePath) => {
-            const newMarkdownFileName = ((): string => {
-                const temporaryMarkDownFileName = path
-                    .relative(paths.documentation.versioned, markdownFileRelativePath)
-                    .replaceAll("/", "-");
-                switch (temporaryMarkDownFileName) {
-                    case "README.md":
-                        return "README.md";
-                    case "modules.md":
-                        return `${packageData.version}.md`;
-                    default:
-                        return `${packageData.version}-${temporaryMarkDownFileName
-                            .split("-")
-                            .slice(1)
-                            .join("-")}`;
+                    done();
                 }
-            })();
-            const newMarkdownFilePath = path.resolve(
-                paths.documentation.versioned,
-                newMarkdownFileName
-            );
-
-            if (markdownFileRelativePath !== newMarkdownFilePath) {
-                fsExtra.copyFileSync(markdownFileRelativePath, newMarkdownFilePath);
-            }
+            }, 1000);
         });
-
-        // Clean old files
-        glob.sync("./*", {
-            absolute: true,
-            cwd: paths.documentation.versioned,
-            dot: true,
-        }).forEach((docFile) => {
-            if (
-                path.extname(docFile) !== ".md" ||
-                paths.documentation.forceDelete.includes(
-                    path.relative(paths.documentation.versioned, docFile)
-                )
-            ) {
-                fsExtra.rmSync(docFile, { recursive: true });
-            }
-        });
-
-        done();
-    };
 }
 
 /**
- * Called automatically after a succeeded `npm publish`, will push the generated documentation to the repo's Github Wiki.
- * @throw [Error](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Error) if any file prefixed by the package's version (`major.minor.patch-...`) exists.
- * To publish, remove all version's documentation, then launch this task manually.
+ * Load all generated documentation (all `*.ts` in `docs/tmp/**`) and convert them into Github Wiki-like files.
  * @param done Callback function.
  */
-function publishDocumentation(done: gulp.TaskFunctionCallback) {
-    if (fsExtra.existsSync(paths.documentation.wiki)) {
-        fsExtra.rmSync(paths.documentation.wiki, { recursive: true });
-    }
+function transformDocumentation(done: gulp.TaskFunctionCallback): void {
+    fsExtra.mkdirSync(paths.documentation.versioned);
 
-    if (typeof gitRepoUrl !== "string") {
-        throw new Error("Repository URL must be a string.");
-    } else if (!gitRepoUrl.endsWith(".git")) {
+    glob.sync("**/*.md", {
+        absolute: true,
+        cwd: paths.documentation.typedocGeneration,
+    })
+        .filter((documentationFilePath) => {
+            return path.basename(documentationFilePath) !== "README.md";
+        })
+        .forEach((documentationFilePath) => {
+            const documentationFile = new DocumentationFile(documentationFilePath);
+
+            documentationFile.rewriteMarkdownLinks();
+            documentationFile.saveInVersionedDocumentationFolder();
+        });
+
+    fsExtra.rmSync(paths.documentation.typedocGeneration, { recursive: true });
+
+    done();
+}
+
+function cloneRepo(done: gulp.TaskFunctionCallback): void {
+    const repoUrl = new URL(remoteRepoUrl);
+
+    if (!repoUrl.pathname.endsWith(".git")) {
         throw new Error("Repository URL must finish by '.git'.");
-    } else if (new URL(gitRepoUrl).host !== "github.com") {
-        throw Error(
-            "This functionality is made for Github. The repository's host must be 'github.com'."
-        );
+    } else if (repoUrl.host !== "github.com") {
+        throw Error("Wiki documentation is only available for Github.");
     }
 
-    const gitRepoWiki = new URL(gitRepoUrl);
-    gitRepoWiki.href = gitRepoWiki.href.replace(/\.git$/, ".wiki.git");
+    repoUrl.href = repoUrl.href.replace(/\.git$/, ".wiki.git");
+
+    if (process.env.GITHUB_TOKEN) {
+        repoUrl.username = repoUrl.pathname.split("/")[1];
+        repoUrl.password = process.env.GITHUB_TOKEN;
+    }
 
     fsExtra.mkdirSync(paths.documentation.wiki);
 
-    if (process.env.GITHUB_TOKEN) {
-        gitRepoWiki.username = gitRepoWiki.pathname.split("/")[1];
-        gitRepoWiki.password = process.env.GITHUB_TOKEN;
-    }
+    const git = simpleGit.simpleGit(paths.documentation.wiki);
+    git.clone(repoUrl.toString(), ".")
+        .then(() => {
+            done();
+        })
+        .catch((error) => {
+            throw new Error(`Something went wrong while cloning the repo: ${error}`);
+        });
+}
 
-    const testUrl = new XMLHttpRequest.XMLHttpRequest();
-    testUrl.open("GET", gitRepoWiki.toString(), false);
-    testUrl.send(null);
-    if (!testUrl.getAllResponseHeaders()) {
+function copyDocumentation(done: gulp.TaskFunctionCallback): void {
+    if (
+        glob.sync("**", { cwd: paths.documentation.wiki }).filter((wikiFile) => {
+            return wikiFile.startsWith(packageData.version);
+        }).length !== 0
+    ) {
         throw new Error(
-            `Generated wiki repo seems invalid: Cannot get headers from '${gitRepoWiki.toString()}'. Is the wiki service enabled on your repo?`
+            `Documentation for version ${packageData.version} is already on the repo's wiki. To bypass it, please remove first all '${packageData.version}-x.md' files, then run 'gulp publishDocumentation'.`
         );
     }
 
+    glob.sync("**", { cwd: paths.documentation.versioned, absolute: true }).forEach(
+        (fileToCopy) => {
+            fsExtra.copyFileSync(
+                fileToCopy,
+                path.resolve(paths.documentation.wiki, path.basename(fileToCopy))
+            );
+        }
+    );
+
+    done();
+}
+
+function publishNewDocumentation(done: gulp.TaskFunctionCallback): void {
+    const author = (() => {
+        try {
+            return {
+                name: ChildProcess.execSync("git config user.name").toString(),
+                email: ChildProcess.execSync("git config user.email").toString(),
+            };
+        } catch {
+            return {
+                name: "",
+                email: "",
+            };
+        }
+    })();
+
+    if (author.name === "") {
+        author.name = "[TASK] Gulp - Documentation publication";
+        author.email = "";
+    }
+
     const git = simpleGit.simpleGit(paths.documentation.wiki);
-    git.clone(gitRepoWiki.toString(), ".", undefined)
+
+    git.add(
+        glob.sync(`${packageData.version}*.md`, {
+            cwd: paths.documentation.versioned,
+        })
+    )
         .then(() => {
-            if (
-                fsExtra.readdirSync(paths.documentation.wiki).filter((wikiFile) => {
-                    return wikiFile.startsWith(packageData.version);
-                }).length !== 0
-            ) {
-                throw new Error(
-                    `Documentation for version ${packageData.version} is already on the repo's wiki. To bypass it, please remove first all '${packageData.version}-x.md' files, then run 'gulp publishDocumentation'.`
-                );
-            }
-
-            const filesToCommit = glob.sync(`${packageData.version}*.md`, {
-                cwd: paths.documentation.versioned,
-            });
-
-            filesToCommit.forEach((fileToCommit) => {
-                fsExtra.copyFileSync(
-                    path.resolve(paths.documentation.versioned, fileToCommit),
-                    path.resolve(paths.documentation.wiki, fileToCommit)
-                );
-            });
-
-            const author = (() => {
-                try {
-                    return {
-                        name: ChildProcess.execSync("git config user.name").toString(),
-                        email: ChildProcess.execSync("git config user.email").toString(),
-                    };
-                } catch {
-                    return {
-                        name: "",
-                        email: "",
-                    };
-                }
-            })();
-
-            if (author.name === "") {
-                author.name = "[TASK] Gulp - Documentation publication";
-                author.email = "";
-            }
-
-            git.addConfig("user.name", author.name)
-                .addConfig("user.email", author.email)
-                .add(filesToCommit)
+            git.commit(
+                `[GULP] Automatically generated documentation for version ${packageData.version}.`
+            )
                 .then(() => {
-                    git.commit(
-                        `[GULP] Automatically generated documentation for version ${packageData.version}.`
-                    )
-                        .then(() => {
-                            git.addTag(`v${packageData.version}`)
-                                .then(() => {
-                                    git.push()
-                                        .then(() => {
-                                            fsExtra.rmSync(paths.documentation.wiki, {
-                                                recursive: true,
-                                            });
-                                            done();
-                                        })
-                                        .catch((error) => {
-                                            throw new Error(
-                                                `Something went wrong while pushing documentation to the remote: ${error}`
-                                            );
-                                        });
-                                })
-                                .catch((error) => {
-                                    throw new Error(
-                                        `Something went wrong while adding v${packageData.version} tag to documentation: ${error}`
-                                    );
-                                });
-                        })
+                    git.push()
+                        .then(() => {})
                         .catch((error) => {
                             throw new Error(
-                                `Something went wrong while committing v${packageData.version} documentation: ${error}`
+                                `Something went wrong while pushing the documentation: ${error}`
                             );
                         });
                 })
                 .catch((error) => {
                     throw new Error(
-                        `Something went wrong while adding v${packageData.version} documentation to stage: ${error}`
+                        `Something went wrong while committing new documentation: ${error}`
                     );
                 });
         })
         .catch((error) => {
-            throw new Error(`Something went wrong while cloning the wiki repository: ${error}`);
+            throw new Error(`Something went wrong while adding files to the commit: ${error}`);
         });
+
+    done();
 }
 
-gulp.task("clean", clean);
+// ===== DEPENDENCIES
 
-gulp.task("build", gulp.series("clean", transpile, minify));
+/**
+ * A markdown file generated by Typedoc.
+ */
+class DocumentationFile {
+    /**
+     * Original file's path.
+     */
+    private readonly __typeDocFilePath: string;
+    /**
+     * All markdown links (`[...](...#...)`) in the file.
+     */
+    private readonly __markdownLinks: DocumentationFileLink[];
+    /**
+     * File's content.
+     */
+    private __content: string;
 
-gulp.task("document", gulp.series("clean", generateDocumentation));
+    /**
+     * From the file's path, load its content and its markdown links.
+     * @param typeDocFilePath
+     */
+    constructor(typeDocFilePath: string) {
+        if (!fsExtra.existsSync(typeDocFilePath)) {
+            throw Error(`${typeDocFilePath} does not exists.`);
+        }
 
-gulp.task("publishDocumentation", gulp.series("document", publishDocumentation));
+        this.__typeDocFilePath = typeDocFilePath;
+        this.__content = fsExtra.readFileSync(this.__typeDocFilePath).toString();
+
+        this.__markdownLinks = this.__getMarkdownLinks();
+    }
+
+    /**
+     * Get all markdown links that are not web links (`[...](http...)`).
+     * @returns All non-web markdown links.
+     */
+    private __getMarkdownLinks(): DocumentationFileLink[] {
+        return (
+            this.__content
+                .match(/\[.+?\]\(.+?\)/g)
+                ?.map((markdownLink) => {
+                    return new DocumentationFileLink(markdownLink);
+                })
+                .filter((documentationFileLink) => {
+                    return !documentationFileLink.isHttp;
+                }) || []
+        );
+    }
+
+    /**
+     * Replace all markdown links with their new label and link.
+     */
+    public rewriteMarkdownLinks(): void {
+        this.__markdownLinks.forEach((markdownLink) => {
+            this.__content = this.__content.replace(
+                markdownLink.originalMarkdownLink,
+                markdownLink.newMarkdownLink
+            );
+        });
+    }
+
+    /**
+     * Get TypeDoc file's path equivalent as Github Wiki file
+     * @example
+     * // "path/to/my/docs/tmp/classes/errors.aCustomError.md"
+     * this.__newDocumentationFilePath // "path/to/my/docs/packageVersion/packageVersion-errors.aCustomError.md"
+     * @remarks If the file's basename is `"modules.md"`, the basename will be replaced by `"packageVersion.md"`
+     */
+    private get __newDocumentationFilePath(): string {
+        const fileName = path.relative(
+            paths.documentation.typedocGeneration,
+            this.__typeDocFilePath
+        );
+
+        switch (fileName) {
+            case "modules.md":
+                return path.resolve(paths.documentation.versioned, `${packageData.version}.md`);
+            default:
+                const newFileName = `${packageData.version}/${fileName}`
+                    .split("/")
+                    .filter((_, index) => {
+                        return index !== 1;
+                    })
+                    .join("-");
+
+                return path.resolve(paths.documentation.versioned, newFileName);
+        }
+    }
+
+    /**
+     * Save file's content into it Github wiki's path.
+     */
+    public saveInVersionedDocumentationFolder(): void {
+        fsExtra.writeFileSync(this.__newDocumentationFilePath, this.__content);
+    }
+}
+
+/**
+ * A markdown link (`[...](...#...)`).
+ */
+class DocumentationFileLink {
+    /**
+     * Markdown link's label (`"[myLabel](...)"`)
+     */
+    private __label: string;
+    /**
+     * Markdown link's link (`"[...](myLink#...")`)
+     */
+    private __link: string;
+    /**
+     * Markdown link's anchor (`"[...](...#myAnchor")`)
+     */
+    private __anchor: string | undefined;
+
+    /**
+     * Extract markdown link's data (label, link, anchor).
+     * @param markdownLink Raw markdown link (`[...](...#...)`).
+     */
+    constructor(markdownLink: string) {
+        this.__label = markdownLink.match(/\[.*?\]/g)![0].slice(1, -1);
+
+        const relativePath = markdownLink.match(/\(.*?\)/)![0].slice(1, -1);
+        const hasAnchor = relativePath.lastIndexOf("#") !== -1;
+
+        this.__link = hasAnchor
+            ? relativePath.slice(0, relativePath.lastIndexOf("#"))
+            : relativePath;
+        this.__anchor = hasAnchor
+            ? relativePath.slice(relativePath.lastIndexOf("#") + 1)
+            : undefined;
+    }
+
+    /**
+     * Retrieve original markdown link.
+     */
+    public get originalMarkdownLink(): string {
+        return `[${this.__label}](${this.__link}${
+            this.__anchor === undefined ? "" : `#${this.__anchor}`
+        })`;
+    }
+
+    /**
+     * Get markdown link's new label.
+     * @remarks By default, it will return the original label, but, if the label is `"myPackageDisplayName - myPackageVersion"`, it will return `"myPackageDisplayName"`, and if the label is "Exports", it will return `"myPackageVersion"`.
+     */
+    private get __newLabel(): string {
+        switch (this.__label) {
+            case packageData.name.display.versioned:
+                return packageData.name.display.name;
+            case "Exports":
+                return packageData.version;
+            default:
+                return this.__label;
+        }
+    }
+
+    /**
+     * Get markdown link's new link.
+     * @remarks By default, it will return a transformed link like `"classes/errors.aCustomError.md"` as `"packageVersion-errors.aCustomError"`, but if the link's basename is `"README.md"`, it will return `"Home"`, and if the link's basename is `"modules.md"`, it will return `"myPackageVersion"`.
+     */
+    private get __newLink(): string {
+        switch (path.basename(this.__link)) {
+            case "README.md":
+                return "Home";
+            case "modules.md":
+                return packageData.version;
+            default:
+                return `${packageData.version}/${this.__link
+                    .replace(/^\.\.\//g, "")
+                    .replace(/\.md$/g, "")}`
+                    .split("/")
+                    .filter((_, index) => {
+                        return index !== 1;
+                    })
+                    .join("-");
+        }
+    }
+
+    /**
+     * Generate the new markdown link to replace the old one.
+     * @example
+     * // "[Exports](../modules.md#myAnchor)"
+     * newMarkdownLink // "[myPackageVersion](../myPackageVersion#myAnchor)"
+     */
+    public get newMarkdownLink(): string {
+        return `[${this.__newLabel}](${this.__newLink}${
+            this.__anchor === undefined ? "" : `#${this.__anchor}`
+        })`;
+    }
+
+    /**
+     * If the link starts with `"http"`, will return `true`, `false` otherwise.
+     */
+    public get isHttp(): boolean {
+        return this.__link.startsWith("http");
+    }
+}
