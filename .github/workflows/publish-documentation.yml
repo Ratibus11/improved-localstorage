@@ -1,3 +1,6 @@
+# Workflow dedicated to publish automatically-generated documentation.
+# With TypeDoc's Markdown plugin, will generate app's documentation, then format it to work on Github's wiki service, then clone the wiki's repo and commit the new documentation.
+# This workflow can only be triggered manually (note that documentation publication task is also triggered if the application is published on NPM)
 name: Publish documentation
 
 on:

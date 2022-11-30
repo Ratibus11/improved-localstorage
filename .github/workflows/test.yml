@@ -1,3 +1,5 @@
+# Run TypeScript Jest's all existing tests (tests/**/*.test.ts files).
+# This workflow is triggered when a file in the src folder is modified. It can also be triggered manually.
 name: Test
 
 on:

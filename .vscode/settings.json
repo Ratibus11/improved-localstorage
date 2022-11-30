@@ -6,11 +6,12 @@
         "node_modules": true,
         "package-lock.json": true,
 
-        "build": true,
+        "build": false,
         "docs": true,
         "tests/.localstorage": true
     },
     "cSpell.words": [
+        "github",
         "GITHUB",
         "gulpfile",
         "localstorage",
@@ -21,12 +22,5 @@
     ],
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.tabSize": 4,
-    "prettier.printWidth": 100,
-    "codemap.ts": [
-        {
-            "pattern": "^/// (.*)",
-            "clear": "^/// ",
-            "icon": "pick"
-        }
-    ]
+    "prettier.printWidth": 100
 }

@@ -31,3 +31,9 @@ See in LICENSE in the repo's root.
 <div align="right">Made with &#10084; by <a href="https://github.com/Ratibus11">Ratibus11</a>.</div>
 
 ![](https://img.shields.io/github/stars/ratibus11/improved-localstorage?style=social)
+
+<sup>
+
+_Don't_ forget [_to put a_ :star:](https://github.com/Ratibus11/improved-localstorage) _if you like this project_ :wink:_!_
+
+</sup>

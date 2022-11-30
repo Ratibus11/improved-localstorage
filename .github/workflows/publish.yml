@@ -1,3 +1,8 @@
+# Workflow dedicated to publish all package:
+# 1. Run TypeScript Jest's all existing tests (tests/**/*.test.ts files)
+# 2. Build and publish package to NPM registry.
+# 3. Generate documentation and push it to repo's wiki.
+# This workflow is triggered only when a release is published on Github.
 name: Publish
 
 on:
@@ -16,8 +21,8 @@ jobs:
             - run: npm i
             - run: npm run test
 
-    publish:
-        name: Publish
+    publish_npm:
+        name: Publish on NPM
         needs: test
         runs-on: ubuntu-latest
         steps:
@@ -29,11 +34,26 @@ jobs:
             - run: npm i --omit=dev
             - run: npm publish
               env:
-                  NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    publish_github:
+        name: Publish on Github
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+                  registry-url: https://npm.pkg.github.com
+            - run: npm i --omit=dev
+            - run: npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GHP_TOKEN }}
 
     publish_doc:
         name: Publish documentation
-        needs: publish
+        needs: [publish_npm, publish_github]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3

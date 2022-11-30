@@ -52,8 +52,8 @@ const paths = {
         entry: path.resolve("src/main.ts"),
     },
     transpiled: {
-        folder: path.resolve("build/tmp"),
-        entry: path.resolve("build/tmp/main.js"),
+        folder: path.resolve("app/.tmp"),
+        entry: path.resolve("app/.tmp/main.js"),
     },
     build: {
         js: {
@@ -115,16 +115,14 @@ function clean(done: gulp.TaskFunctionCallback): void {
  * @remarks At this point, JS files are only transpiled and not bundled/minified.
  * @param done Callback function.
  */
-function transpile(done: gulp.TaskFunctionCallback): void {
+function transpile(done: gulp.TaskFunctionCallback): merge2.Merge2Stream {
     const typescriptProject = gulpTypescript.createProject(paths.tsconfig);
     const typescriptResult = gulp.src(paths.source.glob).pipe(typescriptProject());
 
-    merge2([
+    return merge2([
         typescriptResult.js.pipe(gulp.dest(paths.transpiled.folder)),
         typescriptResult.dts.pipe(gulp.dest(paths.build.dts)),
-    ]).on("end", () => {
-        done();
-    });
+    ]);
 }
 
 /**
@@ -149,7 +147,7 @@ function minify(done: gulp.TaskFunctionCallback): void {
 
 /**
  * Generate documentation with TypeDoc (in `docs/tmp`).
- * @param done
+ * @param done Callback function.
  */
 function generateRawDocumentation(done: gulp.TaskFunctionCallback): void {
     gulp.src(path.resolve(paths.source.entry))
