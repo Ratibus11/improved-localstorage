@@ -1,5 +1,6 @@
 import * as check from "@src/check";
 import * as errors from "@src/errors";
+import * as interfaces from "@src/interfaces";
 
 /**
  * Remove all local storage's content.
@@ -37,20 +38,6 @@ function exists(key: string): boolean | never {
 }
 
 /**
- * Getter's options.
- */
-interface GetOptions {
-    /**
-     * If `true`, will remove the entry after being loaded, even if an error occurred.
-     */
-    destroy?: boolean;
-    /**
-     * If `true`, will remove the entry only if an error occurred.
-     */
-    destroyOnError?: boolean;
-}
-
-/**
  * Get an entry's value from the local storage.
  * @param key Entry to get its value's key.
  * @param options Getter's options.
@@ -71,7 +58,7 @@ interface GetOptions {
  * get("hi") // null
  * @throws {@link errors.entry.CannotParse} if the localstorage's entry cannot be parsed as JSON.
  */
-function get(key: string, options?: GetOptions): any | null | never {
+function get(key: string, options?: interfaces.GetOptions): any | null | never {
     options = {
         destroy: options?.destroy === true,
         destroyOnError: options?.destroyOnError === true,
@@ -154,4 +141,4 @@ function set(key: string, value: any): void | never {
     localStorage.setItem(key, stringifiedValue);
 }
 
-export { clear, exists, get, set, remove, errors };
+export { clear, exists, get, set, remove, errors, interfaces };
