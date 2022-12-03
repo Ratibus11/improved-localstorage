@@ -23,14 +23,7 @@ module.exports = (): webpack.Configuration => {
                 {
                     test: /\.ts$/,
                     exclude: /node_modules/,
-                    use: {
-                        loader: "ts-loader",
-                        options: {
-                            compilerOptions: {
-                                rootDir: path.resolve("src"),
-                            },
-                        },
-                    },
+                    loader: "ts-loader",
                 },
             ],
         },
