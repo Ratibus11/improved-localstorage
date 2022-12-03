@@ -16,9 +16,12 @@ import * as packageJson from "./package.json";
 
 // ===== TASKS
 
-gulp.task("clean", clean);
+gulp.task("clean", cleanAll);
 
-gulp.task("document", gulp.series("clean", generateRawDocumentation, transformDocumentation));
+gulp.task(
+    "document",
+    gulp.series("clean", cleanDocumentation, generateRawDocumentation, transformDocumentation)
+);
 
 gulp.task(
     "publishDocumentation",
@@ -54,6 +57,11 @@ const paths = {
     source: {
         entry: path.resolve("src/main.ts"),
     },
+    build: {
+        js: {
+            path: path.resolve("app"),
+        },
+    },
     documentation: {
         typedocGeneration: path.resolve("docs/.tmp"),
         versioned: path.resolve("docs", packageData.version),
@@ -63,27 +71,48 @@ const paths = {
 /**
  * List of folders to delete before tasks' launch.
  */
-const foldersToClean = [
-    paths.documentation.versioned,
-    paths.documentation.wiki,
-    paths.documentation.typedocGeneration,
-].map((folderToClean) => {
-    return path.resolve(folderToClean);
-});
+const foldersToClean = {
+    build: [paths.build.js.path].map((folderToClean) => {
+        return path.resolve(folderToClean);
+    }),
+    documentation: [
+        paths.documentation.versioned,
+        paths.documentation.wiki,
+        paths.documentation.typedocGeneration,
+    ].map((folderToClean) => {
+        return path.resolve(folderToClean);
+    }),
+};
 
 // ===== TASKS FUNCTIONS
 
 /**
- * Delete all build folders (app and documentation).
- * @param done Callback function
+ * Clean elements.
+ * @param foldersToClean Files/folders to clean.
  */
-function clean(done: gulp.TaskFunctionCallback): void {
+function clean(foldersToClean: string[]): void {
     foldersToClean.forEach((folderToClean) => {
         if (fsExtra.existsSync(folderToClean)) {
             fsExtra.rmSync(folderToClean, { recursive: true });
         }
     });
+}
 
+/**
+ * Clean build and documentation folders.
+ * @param done Callback function.
+ */
+function cleanAll(done: gulp.TaskFunctionCallback): void {
+    clean([...foldersToClean.build, ...foldersToClean.documentation]);
+    done();
+}
+
+/**
+ * Clean only documentation folders.
+ * @param done Callback function.
+ */
+function cleanDocumentation(done: gulp.TaskFunctionCallback): void {
+    clean(foldersToClean.documentation);
     done();
 }
 
