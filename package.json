@@ -20,10 +20,12 @@
     "types": "app/types/main.d.ts",
     "scripts": {
         "build": "webpack",
-        "publishDocumentation": "gulp publishDocumentation",
-        "test": "jest --runInBand",
+        "clean": "gulp clean",
+        "document": "gulp document",
         "prepare": "ts-patch install -s",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "npm run build",
+        "publishDocumentation": "gulp publishDocumentation",
+        "test": "jest --runInBand"
     },
     "dependencies": {
         "cross-env": "^7.0.3",
