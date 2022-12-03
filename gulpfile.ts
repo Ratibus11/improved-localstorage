@@ -9,9 +9,10 @@ import * as gulpTypedoc from "gulp-typedoc";
 import * as fsExtra from "fs-extra";
 import * as path from "path";
 import * as glob from "glob";
-import * as packageJson from "./package.json";
 import * as simpleGit from "simple-git";
 import * as ChildProcess from "child_process";
+
+import * as packageJson from "./package.json";
 
 // ===== TASKS
 
