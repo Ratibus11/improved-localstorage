@@ -16,9 +16,7 @@ module.exports = (): webpack.Configuration => {
         output: {
             path: paths.build.js.path,
             filename: paths.build.js.name,
-            library: packageData.name.package,
             libraryTarget: "umd",
-            globalObject: "this",
         },
         mode: "production",
         module: {
