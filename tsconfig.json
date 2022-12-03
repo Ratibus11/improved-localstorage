@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "module": "CommonJS",
+        "target": "ESNext",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
 
         "baseUrl": "src",
         "rootDir": ".",
@@ -18,7 +19,6 @@
         "declaration": true,
         "declarationMap": false,
         "declarationDir": "app/types",
-        "moduleResolution": "node",
 
         "resolveJsonModule": true,
 
