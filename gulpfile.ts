@@ -16,6 +16,8 @@ import * as packageJson from "./package.json";
 
 // ===== TASKS
 
+gulp.task("clean", clean);
+
 gulp.task("document", gulp.series("clean", generateRawDocumentation, transformDocumentation));
 
 gulp.task(
@@ -77,13 +79,28 @@ const paths = {
  * List of folders to delete before tasks' launch.
  */
 const foldersToClean = [
-    paths.build.js.path,
     paths.documentation.versioned,
     paths.documentation.wiki,
     paths.documentation.typedocGeneration,
 ].map((folderToClean) => {
     return path.resolve(folderToClean);
 });
+
+// ===== TASKS FUNCTIONS
+
+/**
+ * Delete all build folders (app and documentation).
+ * @param done Callback function
+ */
+function clean(done: gulp.TaskFunctionCallback): void {
+    foldersToClean.forEach((folderToClean) => {
+        if (fsExtra.existsSync(folderToClean)) {
+            fsExtra.rmSync(folderToClean, { recursive: true });
+        }
+    });
+
+    done();
+}
 
 /**
  * Generate documentation with TypeDoc (in `docs/tmp`).

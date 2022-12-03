@@ -20,7 +20,6 @@
         "declarationDir": "app/types",
         "moduleResolution": "node",
 
-        "esModuleInterop": true,
         "resolveJsonModule": true,
 
         "paths": {

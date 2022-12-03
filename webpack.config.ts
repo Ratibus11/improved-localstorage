@@ -86,11 +86,6 @@ const paths = {
 /**
  * List of folders to delete before tasks' launch.
  */
-const foldersToClean = [
-    paths.build.js.path,
-    paths.documentation.versioned,
-    paths.documentation.wiki,
-    paths.documentation.typedocGeneration,
-].map((folderToClean) => {
+const foldersToClean = [paths.build.js.path].map((folderToClean) => {
     return path.resolve(folderToClean);
 });
