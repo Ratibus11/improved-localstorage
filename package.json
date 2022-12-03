@@ -32,6 +32,7 @@
         "gulp-typedoc": "^3.0.2",
         "simple-git": "^3.15.1",
         "ts-loader": "^9.4.2",
+        "ts-node": "^10.9.1",
         "ts-patch": "^2.0.2",
         "typedoc-plugin-markdown": "^3.14.0",
         "typescript-transform-paths": "^3.4.4",
