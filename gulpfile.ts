@@ -20,7 +20,12 @@ gulp.task("clean", cleanAll);
 
 gulp.task(
     "document",
-    gulp.series("clean", cleanDocumentation, generateRawDocumentation, transformDocumentation)
+    gulp.series(
+        cleanDocumentation,
+        cleanDocumentation,
+        generateRawDocumentation,
+        transformDocumentation
+    )
 );
 
 gulp.task(
