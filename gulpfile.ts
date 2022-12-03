@@ -160,7 +160,9 @@ function generateRawDocumentation(done: gulp.TaskFunctionCallback): void {
                     clearInterval(interval);
 
                     console.log(
-                        glob.sync(path.resolve("docs", paths.documentation.typedocGeneration))
+                        glob.sync(
+                            path.resolve("docs", paths.documentation.typedocGeneration, "**/*")
+                        )
                     );
                     throw "";
 
