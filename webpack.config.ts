@@ -27,7 +27,7 @@ module.exports = (): webpack.Configuration => {
                         loader: "ts-loader",
                         options: {
                             compilerOptions: {
-                                rootDir: "src",
+                                rootDir: path.resolve("src"),
                             },
                         },
                     },
