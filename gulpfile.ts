@@ -2,28 +2,18 @@ import * as gulp from "gulp";
 
 // ===== GULP PLUGINS
 
-import * as gulpTypescript from "gulp-typescript";
-import * as gulpUglify from "gulp-uglify";
 import * as gulpTypedoc from "gulp-typedoc";
 
 // ===== UTILS
 
 import * as fsExtra from "fs-extra";
 import * as path from "path";
-import * as merge2 from "merge2";
-import * as browserify from "browserify";
-import * as vinylSourceStream from "vinyl-source-stream";
-import * as vinylBuffer from "vinyl-buffer";
 import * as glob from "glob";
 import * as packageJson from "./package.json";
 import * as simpleGit from "simple-git";
 import * as ChildProcess from "child_process";
 
 // ===== TASKS
-
-gulp.task("clean", clean);
-
-gulp.task("build", gulp.series("clean", transpile, minify));
 
 gulp.task("document", gulp.series("clean", generateRawDocumentation, transformDocumentation));
 
@@ -93,72 +83,6 @@ const foldersToClean = [
 ].map((folderToClean) => {
     return path.resolve(folderToClean);
 });
-
-// ===== TASKS FUNCTIONS
-
-/**
- * Delete all build folders (app and documentation).
- * @param done Callback function
- */
-function clean(done: gulp.TaskFunctionCallback): void {
-    foldersToClean.forEach((folderToClean) => {
-        if (fsExtra.existsSync(folderToClean)) {
-            fsExtra.rmSync(folderToClean, { recursive: true });
-        }
-    });
-
-    // THIS WILL DELETE ALL `.ts` FILES OUTSIDE `src` FOLDER.
-    // PROCEED WITH CAUTION.
-    // SET `process.env.DELETE_TS_OUTSIDE_SRC` ONLY IF YOU'RE SURE YOU CAN GET BACK FILES OR THIS REPO COPY WILL BE DELETE.
-    if (process.env.DELETE_TS_OUTSIDE_SRC) {
-        console.warn("Deleting all .ts files outside the src folder.");
-
-        glob.sync("**/*.ts", { cwd: __dirname })
-            .filter((fileToFilter) => {
-                return !fileToFilter.endsWith(".d.ts") && !fileToFilter.startsWith("src");
-            })
-            .forEach((fileToDelete) => {
-                fsExtra.rmSync(path.resolve(__dirname, fileToDelete));
-            });
-    }
-
-    done();
-}
-
-/**
- * Transpile TypeScript project to declarations (`.d.ts` in `app/types`) and JavaScript (`.js` in `app/tmp`) files.
- * @remarks At this point, JS files are only transpiled and not bundled/minified.
- * @param done Callback function.
- */
-function transpile(done: gulp.TaskFunctionCallback): merge2.Merge2Stream {
-    const typescriptProject = gulpTypescript.createProject(paths.tsconfig);
-    const typescriptResult = gulp.src(paths.source.glob).pipe(typescriptProject());
-
-    return merge2([
-        typescriptResult.js.pipe(gulp.dest(paths.transpiled.folder)),
-        typescriptResult.dts.pipe(gulp.dest(paths.build.dts)),
-    ]);
-}
-
-/**
- * Load transpiled JS files (`app/tmp`) an minify them in a single file (`app/app.js`).
- * @param done Callback function.
- */
-function minify(done: gulp.TaskFunctionCallback): void {
-    browserify({
-        entries: paths.transpiled.entry,
-        debug: true,
-    })
-        .bundle()
-        .pipe(vinylSourceStream(paths.build.js.name))
-        .pipe(vinylBuffer())
-        .pipe(gulpUglify())
-        .pipe(gulp.dest(paths.build.js.path))
-        .on("end", () => {
-            fsExtra.rmSync(paths.transpiled.folder, { recursive: true });
-            done();
-        });
-}
 
 /**
  * Generate documentation with TypeDoc (in `docs/tmp`).

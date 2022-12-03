@@ -16,6 +16,7 @@ gulpfile.ts
 tests
 jest.config.ts
 docs
+webpack.config.ts
 
 # TMP build
 app/.tmp
