@@ -6,6 +6,7 @@ namespace options {
         export class EmptyString extends RangeError {
             constructor() {
                 super(`Provided key is an empty string. Must be a non-empty string.`);
+                this.name = "OptionsKeyEmptyString";
             }
         }
 
@@ -23,6 +24,7 @@ namespace options {
                 } catch {
                     super(`Provided key is a '${typeof invalidKey}'. Must be a string.`);
                 }
+                this.name = "OptionsKeyNotString";
             }
         }
     }
@@ -46,6 +48,7 @@ namespace entry {
             }
 
             super(`Cannot parse entry as JSON: ${error.message}`);
+            this.name = "EntryCannotParse";
         }
     }
 
@@ -65,6 +68,7 @@ namespace entry {
             }
 
             super(`Cannot stringify value as JSON: ${error.message}`);
+            this.name = "EntryCannotStringify";
         }
     }
 }
