@@ -42,12 +42,6 @@ module.exports = (): webpack.Configuration => {
 };
 
 /**
- * Project metadata.
- */
-const packageData = {
-    version: packageJson.version!,
-};
-/**
  * Project's paths.
  */
 const paths = {
