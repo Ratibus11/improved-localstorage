@@ -2,7 +2,6 @@ import * as webpack from "webpack";
 
 import * as path from "path";
 import * as fsExtra from "fs-extra";
-import * as packageJson from "./package.json";
 
 module.exports = (): webpack.Configuration => {
     foldersToClean.forEach((folderToClean) => {
