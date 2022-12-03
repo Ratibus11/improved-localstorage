@@ -2,7 +2,7 @@ import * as gulp from "gulp";
 
 // ===== GULP PLUGINS
 
-import * as gulpTypedoc from "gulp-typedoc";
+import gulpTypedoc from "gulp-typedoc";
 
 // ===== UTILS
 
