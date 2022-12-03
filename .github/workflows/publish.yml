@@ -31,7 +31,7 @@ jobs:
               with:
                   node-version: 16
                   registry-url: https://registry.npmjs.org/
-            - run: npm i --omit=dev
+            - run: npm i
             - run: npm publish
               env:
                   NODE_AUTH_TOKEN: ${{secrets.npm_token}}
@@ -45,5 +45,5 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 16
-            - run: npm i --omit=dev
+            - run: npm i
             - run: ./node_modules/.bin/cross-env DELETE_TS_OUTSIDE_SRC=1 GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} gulp publishDocumentation
