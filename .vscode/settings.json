@@ -10,16 +10,6 @@
         "docs": true,
         "tests/.localstorage": true
     },
-    "cSpell.words": [
-        "github",
-        "GITHUB",
-        "gulpfile",
-        "localstorage",
-        "localstorage's",
-        "nojekyll",
-        "ratibus",
-        "xmlhttprequest"
-    ],
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.tabSize": 4,
     "prettier.printWidth": 100
